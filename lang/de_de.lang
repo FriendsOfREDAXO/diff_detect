@@ -1,0 +1,25 @@
+diff_detect = Diff Detect
+id = ID
+name = Name
+url = URL
+categories = Kategorien
+
+http_auth_legend = HTTP-Authentifizierung
+http_auth_login = Login
+http_auth_password = Passwort
+
+add = URL hinzufügen
+title_list = URLs
+title_add = URL hinzufügen
+title_edit = URL bearbeiten
+
+empty_url = Gib eine URL ein.
+error_url = Die URL ist ungültig.
+
+status_active = aktiv
+status_inactive = inaktiv
+
+title_intervals_list = Intervalle
+title_interval_add = Intervall hinzufügen
+title_interval_edit = Intervall bearbeiten
+interval = Intervall

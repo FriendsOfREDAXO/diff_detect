@@ -1,8 +1,25 @@
-package: addon_key
+package: diff_detect
 version: '0.0.0'
-author: 'Friends Of REDAXO'
-supportpage: https://github.com/FriendsOfREDAXO/addon_key
+author: Robert Rupf
+supportpage: https://github.com/xong/redaxo_diff_detect
 requires:
-    redaxo: '^5.13.0'
+    redaxo: '^5.15.1'
+    packages:
+        yform: '>=4.1.0'
+        cronjob: '>=2.10.0'
     php:
-        version: '>=7.3, <9'
+        version: '>=8.2'
+
+page:
+    title: Diff Detection
+    perm: diff_detect[]
+    pjax: true
+    icon: rex-icon rex-icon-table
+    subpages:
+        dashboard:
+            title: 'Dashboard'
+        intervals:
+            title: 'Intervalle'
+#        settings:
+#            title: 'Einstellungen'
+#            perm: diff_detect[settings]

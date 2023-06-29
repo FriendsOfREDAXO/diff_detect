@@ -1,9 +1,14 @@
 $(document).on('rex:ready', function (event, container) {
-    setTimeout(function () {
-        $('.rex-js-widget-media.rex-js-widget-preview').trigger('mouseenter');
-    }, 100);
-
     if (tagsInput !== undefined) {
         [].forEach.call(document.querySelectorAll('input[type="tags"]'), tagsInput);
     }
+
+    $('.diff input[type="radio"]').on('change', function () {
+        if ($(this).is(':checked')) {
+            Cookies.set('diff_detect_' + $(this).attr('name'), $(this).val(), {
+                expires: 365,
+                sameSite: 'strict'
+            });
+        }
+    });
 });

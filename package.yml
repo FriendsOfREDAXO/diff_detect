@@ -17,9 +17,11 @@ page:
     icon: rex-icon rex-icon-table
     subpages:
         dashboard:
-            title: 'Dashboard'
+            title: 'translate:dashboard'
         intervals:
-            title: 'Intervalle'
+            title: 'translate:intervals'
+        filter:
+            title: 'translate:filter'
 #        settings:
 #            title: 'Einstellungen'
 #            perm: diff_detect[settings]

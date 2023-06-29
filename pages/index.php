@@ -11,6 +11,6 @@
 $Basedir = __DIR__;
 $subpage = rex_be_controller::getCurrentPagePart(2);
 
-echo rex_view::title('Bangladesch.org');
+echo rex_view::title('DiffDetect');
 
 require_once $subpage . '.php';

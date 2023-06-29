@@ -1,5 +1,7 @@
 {
     "require": {
-        "jfcherng/php-diff": "^6.15"
+        "jfcherng/php-diff": "^6.15",
+        "html2text/html2text": "^4.3",
+        "voku/simple_html_dom": "^4.8"
     }
 }

@@ -1,8 +1,19 @@
 diff_detect = Diff Detect
+dashboard = Dashboard
+intervals = Intervalle
+filter = Filter
+
+active = aktiv
+inactive = inaktiv
+active_title = auf "inaktiv" setzen
+inactive_title = auf "aktiv" setzen
+
 id = ID
 name = Name
 url = URL
 categories = Kategorien
+snapshot = Snapshot
+get_snapshot = Snapshot abrufen
 
 http_auth_legend = HTTP-Authentifizierung
 http_auth_login = Login
@@ -23,3 +34,24 @@ title_intervals_list = Intervalle
 title_interval_add = Intervall hinzufügen
 title_interval_edit = Intervall bearbeiten
 interval = Intervall
+
+title_filter_list = Filter
+type = Typ
+mode = Modus
+title_filter_edit = Filter bearbeiten
+title_filter_add = Filter hinzufügen
+filter_type_strip_tags = HTML-Tags
+filter_type_css = CSS-Selektor
+filter_type_regex = Regulärer Ausdruck
+filter_mode_remain = Behalten
+filter_mode_remove = Entfernen
+
+snapshots_title_list = Snapshots
+snapshots_show = Snapshots anzeigen
+compare = Vergleichen
+createdate = Erstellt am
+createuser = Erstellt von
+size = Größe
+
+diff_title = Vergleich "{0}" {1} ↔ {2}
+diff_error = Vergleich nicht möglich.

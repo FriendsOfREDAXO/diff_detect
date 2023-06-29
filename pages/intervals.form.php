@@ -1,13 +1,16 @@
 <?php
 
 $func = rex_request('func', 'string', '');
+$fieldset = 'edit' === $func ? $this->i18n('title_interval_edit') : $this->i18n('title_interval_add');
 
-$form = rex_cronjob_form::factory(rex::getTable('diff_detect_url'), '', 'id = ' . rex_request('id', 'int', 0));
+$form = rex_cronjob_form::factory(rex::getTable('diff_detect_interval'), $fieldset, 'id = ' . rex_request('id', 'int', 0));
 $form->setEditMode('edit' === $func);
 
 $field = $form->addTextField('name');
 $field->setLabel($this->i18n('name'));
 $field->setAttribute('maxlength', 255);
+
+$form->addHiddenField('nexttime');
 
 $form->addFieldset($this->i18n('interval'));
 $field = $form->addIntervalField('interval');

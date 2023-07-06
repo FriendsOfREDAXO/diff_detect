@@ -1,0 +1,16 @@
+.snapshot-action {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    white-space: nowrap;
+}
+
+.table .diff input {
+    cursor: pointer;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+.table .diff input:first-child {
+    margin-right: 1rem;
+}

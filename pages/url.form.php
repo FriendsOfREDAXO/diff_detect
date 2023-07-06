@@ -3,7 +3,7 @@
 $func = rex_request('func', 'string', '');
 $id = rex_get('id', 'int');
 
-$form = rex_form::factory(rex::getTable('diff_detect_url'), '', 'id = ' . $id);
+$form = rex_diff_detect_form::factory(rex::getTable('diff_detect_url'), '', 'id = ' . $id);
 
 if ($func === 'edit' and $id) {
     $form->setEditMode(true);
@@ -19,6 +19,15 @@ $field->setLabel($this->i18n('url'));
 $field->getValidator()
     ->add('notEmpty', $this->i18n('empty_url'))
     ->add('url', $this->i18n('invalid_url'));
+
+$field = $form->addSelectField('type');
+$field->setLabel($this->i18n('type'));
+$select = new rex_select();
+$select->addOptions([
+    'HTML' => $this->i18n('type_html'),
+    'RSS' => $this->i18n('type_rss'),
+]);
+$field->setSelect($select);
 
 $field = $form->addTextField('categories');
 $field->setLabel($this->i18n('categories'));
@@ -46,6 +55,33 @@ $select->addSqlOptions(
 '
 );
 $field->setSelect($select);
+
+/*$field = $form->addSelectField('filter_ids');
+$field->setLabel($this->i18n('filter'));
+$field->setAttribute('class', 'form-control selectpicker');
+$field->setAttribute('data-live-search', 'true');
+$select = new rex_select();
+$select->setMultiple();
+$sql = rex_sql::factory();
+$select->addSqlOptions(
+    '
+    SELECT
+        IF(`name`, `name`, CONCAT(
+            CASE WHEN `type` = "strip_tags" THEN "'.$this->i18n('filter_type_strip_tags_select').'"
+                 WHEN `type` = "CSS" THEN "'.$this->i18n('filter_type_css').'"
+                 ELSE "'.$this->i18n('filter_type_regex').'" END,
+            CASE WHEN (`type` = "CSS" OR `type` = "RegEx") AND `mode` = "remain" THEN CONCAT(", ", "'.$this->i18n('filter_mode_remain').'")
+                 WHEN (`type` = "CSS" OR `type` = "RegEx") AND `mode` = "remove" THEN CONCAT(", ", "'.$this->i18n('filter_mode_remove').'")
+                 WHEN `type` = "strip_tags" AND LENGTH(`params`) THEN CONCAT(", ", "'.$this->i18n('filter_mode_remain').'")
+                 ELSE "" END,
+            IF(LENGTH(`params`) > 0, CONCAT(": ", `params`), "")
+        )) `name`,
+        `id`
+    FROM        `'.rex::getTable('diff_detect_filter').'`
+    ORDER BY    `name` ASC
+'
+);
+$field->setSelect($select);*/
 
 $form->addFieldset($this->i18n('http_auth_legend'));
 

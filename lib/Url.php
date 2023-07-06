@@ -103,4 +103,9 @@ class Url
 
         return $response->decompressContent(true);
     }
+
+    public function getType(): string
+    {
+        return $this->getValue('type');
+    }
 }

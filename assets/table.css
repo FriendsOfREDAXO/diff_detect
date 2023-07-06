@@ -1,0 +1,64 @@
+.snapshot-action {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  white-space: nowrap;
+}
+
+.table .diff input {
+  cursor: pointer;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.table .diff input:first-child {
+  margin-right: 1rem;
+}
+
+ul.rss {
+  padding: 0;
+}
+
+ul.rss li {
+  list-style: none;
+  overflow: hidden;
+  position: relative;
+}
+
+ul.rss li.new::before {
+  content: "neu";
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #020;
+  color: #fff;
+  border-radius: 15%;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 0.7em;
+  border: 1px solid #fff;
+}
+
+ul.rss li.existing {
+  opacity: 0.3;
+  transition: all 0.2s;
+}
+
+ul.rss li.existing:hover {
+  opacity: 1;
+}
+
+ul.rss li a {
+  float: left;
+  margin: 0 1rem 0 0;
+  width: 18rem;
+  display: block;
+}
+
+ul.rss li a img {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/*# sourceMappingURL=table.css.map */

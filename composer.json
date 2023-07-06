@@ -2,6 +2,10 @@
     "require": {
         "jfcherng/php-diff": "^6.15",
         "html2text/html2text": "^4.3",
-        "voku/simple_html_dom": "^4.8"
+        "voku/simple_html_dom": "^4.8",
+        "phpoffice/phpspreadsheet": "^1.29",
+        "laminas/laminas-feed": "^2.20",
+        "mkalkbrenner/php-htmldiff-advanced": "^0.0.8",
+        "ezyang/htmlpurifier": "^4.16"
     }
 }

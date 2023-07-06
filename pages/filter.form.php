@@ -3,12 +3,13 @@
 $func = rex_request('func', 'string', '');
 $fieldset = 'edit' === $func ? $this->i18n('title_filter_edit') : $this->i18n('title_filter_add');
 
-$form = rex_cronjob_form::factory(rex::getTable('diff_detect_filter'), $fieldset, 'id = ' . rex_request('id', 'int', 0));
+$form = rex_diff_detect_form::factory(rex::getTable('diff_detect_filter'), $fieldset, 'id = ' . rex_request('id', 'int', 0));
 $form->setEditMode('edit' === $func);
 
 $field = $form->addTextField('name');
 $field->setLabel($this->i18n('name'));
 $field->setAttribute('maxlength', 255);
+$field->setAttribute('placeholder', $this->i18n('filter_name_placeholder'));
 
 $field = $form->addSelectField('type');
 $field->setLabel($this->i18n('type'));
@@ -28,6 +29,10 @@ $select->addOptions([
     'remove' => $this->i18n('filter_mode_remove'),
 ]);
 $field->setSelect($select);
+
+$field = $form->addTextAreaField('params');
+$field->setLabel($this->i18n('filter_params'));
+$field->setNotice($this->i18n('filter_params_notice'));
 
 $content = $form->get();
 

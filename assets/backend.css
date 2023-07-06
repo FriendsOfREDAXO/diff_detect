@@ -1,16 +1,85 @@
 .snapshot-action {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    white-space: nowrap;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  white-space: nowrap;
 }
 
 .table .diff input {
-    cursor: pointer;
-    height: 1.5rem;
-    width: 1.5rem;
+  cursor: pointer;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 .table .diff input:first-child {
-    margin-right: 1rem;
+  margin-right: 1rem;
 }
+
+ul.rss {
+  padding: 0;
+}
+ul.rss li {
+  list-style: none;
+  overflow: hidden;
+  position: relative;
+  padding: 5px;
+}
+ul.rss li.new .label, ul.rss li.modified .label {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 0.7em;
+  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+ul.rss li.existing {
+  opacity: 0.3;
+  transition: all 0.2s;
+}
+ul.rss li.existing:hover {
+  opacity: 1;
+}
+ul.rss li a {
+  float: left;
+  margin: 0 1rem 0 0;
+  width: 18rem;
+  display: block;
+}
+ul.rss li a img {
+  display: inline-block;
+  max-width: 100%;
+}
+ul.rss li del, ul.rss li ins {
+  color: #000;
+}
+ul.rss li del {
+  background-color: rgba(255, 200, 200, 0.9);
+  text-decoration: none;
+}
+ul.rss li ins {
+  background-color: rgba(200, 255, 200, 0.9);
+}
+ul.rss li ins > * {
+  box-shadow: inset 0 0 1px rgba(200, 255, 200, 0.9);
+}
+ul.rss li del > *, ul.rss li ins > * {
+  position: relative;
+}
+ul.rss li del > *::before, ul.rss li ins > *::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(200, 50, 50, 0.9);
+}
+ul.rss li ins > *::before {
+  border-color: rgba(50, 200, 50, 0.9);
+}
+
+/*# sourceMappingURL=backend.css.map */

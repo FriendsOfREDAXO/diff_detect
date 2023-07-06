@@ -11,6 +11,9 @@ inactive_title = auf "aktiv" setzen
 id = ID
 name = Name
 url = URL
+type = Typ
+type_html = HTML
+type_rss = RSS
 categories = Kategorien
 snapshot = Snapshot
 get_snapshot = Snapshot abrufen
@@ -36,15 +39,18 @@ title_interval_edit = Intervall bearbeiten
 interval = Intervall
 
 title_filter_list = Filter
-type = Typ
+filter_name_placeholder = Freilassen für automatischen Namen
 mode = Modus
 title_filter_edit = Filter bearbeiten
 title_filter_add = Filter hinzufügen
-filter_type_strip_tags = HTML-Tags
+filter_type_strip_tags = HTML-Tags entfernen (Modus hat keine Auswirkung)
+filter_type_strip_tags_select = HTML-Tags entfernen
 filter_type_css = CSS-Selektor
 filter_type_regex = Regulärer Ausdruck
 filter_mode_remain = Behalten
 filter_mode_remove = Entfernen
+filter_params = Parameter
+filter_params_notice = Beispiele:<br>HTML-Tags, die erhalten bleiben sollen: <code><a><p></code><br>CSS: <code>nav,.footer,.main-header</code><br>RegEx: <code>~<h1>.+</h1>~</code>.
 
 snapshots_title_list = Snapshots
 snapshots_show = Snapshots anzeigen
@@ -53,5 +59,7 @@ createdate = Erstellt am
 createuser = Erstellt von
 size = Größe
 
-diff_title = Vergleich "{0}" {1} ↔ {2}
+diff_title = <a href="{0}">{0}</a> <span class="label label-success">{1}</span> ↔ <span class="label label-danger">{2}</span>
 diff_error = Vergleich nicht möglich.
+new = neu
+modified = geändert

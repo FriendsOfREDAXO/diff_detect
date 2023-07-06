@@ -40,7 +40,10 @@ class Index
             $data[$key] = $sql->getValue($key);
         }
 
-        return self::fromSqlData($data);
+        $index = self::fromSqlData($data);
+        $index->setUrl(Url::get($index->getValue('url_id')));
+
+        return $index;
     }
 
     public function getId(): ?int
@@ -87,20 +90,36 @@ class Index
         return $dataset;
     }
 
-    public static function createSnapshot(Url $url)
+    public static function createSnapshot(Url $url): bool
     {
         $response = $url->getContent();
+        $hash = md5($response->getBody());
 
         $sql = \rex_sql::factory();
+        $sql->setTable(\rex::getTable('diff_detect_index'));
+        $sql->setWhere('url_id = ? ORDER BY createdate DESC LIMIT 1', [$url->getId()]);
+        $sql->select('id,`hash`');
+
+        if ($sql->getValue('hash') === $hash) {
+            $sql->setTable(\rex::getTable('diff_detect_index'));
+            $sql->setValue('updatedate', date(\rex_sql::FORMAT_DATETIME));
+            $sql->setWhere('id = :id', ['id' => $sql->getValue('id')]);
+            $sql->update();
+            return false;
+        }
+
         $sql->setTable(\rex::getTable('diff_detect_index'));
         $sql->addGlobalCreateFields();
         $sql->addGlobalUpdateFields();
         $sql->setValue('url_id', $url->getId());
         $sql->setValue('content', $response->getBody());
+        $sql->setValue('hash', $hash);
         $sql->setValue('header', $response->getHeader());
         $sql->setValue('statusCode', $response->getStatusCode());
         $sql->setValue('statusMessage', $response->getStatusMessage());
         $sql->insert();
+
+        return true;
     }
 
     public function setUrl(Url $url)
@@ -109,8 +128,17 @@ class Index
         return $this;
     }
 
+    public function getUrl(): ?Url
+    {
+        return $this->url;
+    }
+
     public function getContent()
     {
+        if ($this->url?->getType() === 'RSS') {
+            return $this->getValue('content');
+        }
+
         $content = $this->getValue('content');
         $content = (new Html2Text($content))->getText();
         return $content;

@@ -18,20 +18,31 @@ else {
     $indexBefore = \DiffDetect\Index::get($idBefore);
     $indexAfter = \DiffDetect\Index::get($idAfter);
 
-    $title = $this->i18n('diff_title',
+    $title = \rex_i18n::rawMsg('diff_title',
         $url->getValue('url'),
         rex_formatter::intlDateTime($indexBefore->getValue('createdate')),
         rex_formatter::intlDateTime($indexAfter->getValue('createdate'))
     );
 
-    $content = \Jfcherng\Diff\DiffHelper::calculate($indexAfter->getContent(), $indexBefore->getContent(), 'Combined', [
-        'context' => \Jfcherng\Diff\Differ::CONTEXT_ALL,
-        'ignoreLineEnding' => true,
-        'ignoreWhitespace' => true,
-    ], [
-        'detailLevel' => 'line',
-        'language' => 'deu',
-    ]);
+    if ($url->getType() === 'RSS') {
+        $content = (new \DiffDetect\RssDiff($indexBefore->getContent(), $indexAfter->getContent()))->calculate();
+    }
+    else {
+        $content = \Jfcherng\Diff\DiffHelper::calculate(
+            $indexAfter->getContent(),
+            $indexBefore->getContent(),
+            'Inline',
+            [
+                //'context' => \Jfcherng\Diff\Differ::CONTEXT_ALL,
+                'ignoreLineEnding' => true,
+                'ignoreWhitespace' => true,
+            ],
+            [
+                'detailLevel' => 'line',
+                'language' => 'deu',
+            ]
+        );
+    }
 }
 
 $fragment = new rex_fragment();

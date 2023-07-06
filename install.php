@@ -11,9 +11,11 @@ rex_sql_table::get(
     ->ensurePrimaryIdColumn()
     ->ensureColumn(new rex_sql_column('name', 'VARCHAR(255)', true))
     ->ensureColumn(new rex_sql_column('url', 'text', false, ''))
+    ->ensureColumn(new rex_sql_column('type', 'ENUM("HTML","RSS")', true))
     ->ensureColumn(new rex_sql_column('categories', 'text', false, ''))
     ->ensureColumn(new rex_sql_column('status', 'tinyint', false, 0))
     ->ensureColumn(new rex_sql_column('interval_ids', 'text', true))
+    ->ensureColumn(new rex_sql_column('filter_ids', 'text', true))
     ->ensureColumn(new rex_sql_column('http_auth_login', 'VARCHAR(100)', true))
     ->ensureColumn(new rex_sql_column('http_auth_password', 'VARCHAR(100)', true))
     ->ensureGlobalColumns()
@@ -36,7 +38,7 @@ rex_sql_table::get(
     ->ensureColumn(new rex_sql_column('name', 'VARCHAR(255)', false, ''))
     ->ensureColumn(new rex_sql_column('type', 'ENUM("strip_tags","CSS","RegEx")', true))
     ->ensureColumn(new rex_sql_column('mode', 'ENUM("remain","remove")', true))
-    ->ensureColumn(new rex_sql_column('value', 'text', false, ''))
+    ->ensureColumn(new rex_sql_column('params', 'text', false, ''))
     ->ensureGlobalColumns()
     ->ensure();
 
@@ -46,6 +48,7 @@ rex_sql_table::get(
     ->ensurePrimaryIdColumn()
     ->ensureColumn(new rex_sql_column('url_id', 'int', false))
     ->ensureColumn(new rex_sql_column('content', 'longtext', false, ''))
+    ->ensureColumn(new rex_sql_column('hash', 'VARCHAR(32)', false, ''))
     ->ensureColumn(new rex_sql_column('header', 'longtext', false, ''))
     ->ensureColumn(new rex_sql_column('statusCode', 'int', true))
     ->ensureColumn(new rex_sql_column('statusMessage', 'text', true))

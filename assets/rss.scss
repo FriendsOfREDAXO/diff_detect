@@ -16,6 +16,7 @@ ul.rss {
 
         >div {
             overflow: hidden;
+            padding: 1px;
 
             >a,>img {
                 float: left;
@@ -56,11 +57,12 @@ ul.rss {
 
         del {
             background-color: rgba(255, 200, 200, 0.9);
-            text-decoration: none;
+            box-shadow: 0 0 0 1px rgba(255, 200, 200, 0.9);
         }
 
         ins {
             background-color: rgba(200, 255, 200, 0.9);
+            box-shadow: 0 0 0 1px rgba(200, 255, 200, 0.9);
         }
 
         ins>* {
@@ -68,6 +70,9 @@ ul.rss {
         }
 
         del,ins {
+            text-decoration: none;
+            display: inline-block;
+
             > * {
                 position: relative;
                 display: inline-block;
@@ -88,6 +93,10 @@ ul.rss {
 
         ins>*::before {
             border-color: rgba(50, 200, 50, 0.9)
+        }
+
+        del+ins {
+            margin-left: 2px;
         }
 
         .link {

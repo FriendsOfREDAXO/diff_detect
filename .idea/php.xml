@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/jfcherng/php-color-output" />
+      <path value="$PROJECT_DIR$/vendor/jfcherng/php-diff" />
+      <path value="$PROJECT_DIR$/vendor/voku/simple_html_dom" />
+      <path value="$PROJECT_DIR$/vendor/jfcherng/php-sequence-matcher" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/jfcherng/php-mb-string" />
+      <path value="$PROJECT_DIR$/vendor/markbaker/complex" />
+      <path value="$PROJECT_DIR$/vendor/markbaker/matrix" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/phpoffice/phpspreadsheet" />
+      <path value="$PROJECT_DIR$/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-feed" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-stdlib" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-servicemanager" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-escaper" />
+      <path value="$PROJECT_DIR$/vendor/mkalkbrenner/php-htmldiff-advanced" />
+      <path value="$PROJECT_DIR$/vendor/caxy/php-htmldiff" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
+    <option name="suggestChangeDefaultLanguageLevel" value="false" />
+  </component>
+</project>

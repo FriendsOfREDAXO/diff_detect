@@ -59,9 +59,9 @@ class RssDiff
             }
 
             if ($link = $item->getLink()) {
-                if ($linkAfter = $itemsAfter[$id]->getLink() and $link !== $linkAfter) {
+                if ($linkAfter = ($itemsAfter[$id] ?? null)?->getLink() and $link !== $linkAfter) {
                     $output .= '<a class="link" href="'.$link.'" target="_blank"><ins>'.$link.'</ins></a>';
-                    $output .= '<a class="link" href="'.$linkAfter.'" target="_blank"><del>'.$link.'</del></a>';
+                    $output .= '<a class="link" href="'.$linkAfter.'" target="_blank"><del>'.$linkAfter.'</del></a>';
                 }
                 else {
                     $output .= '<a class="link" href="'.$link.'" target="_blank">'.$link.'</a>';

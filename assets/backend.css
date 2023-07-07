@@ -31,6 +31,7 @@ ul.rss li img {
 }
 ul.rss li > div {
   overflow: hidden;
+  padding: 1px;
 }
 ul.rss li > div > a, ul.rss li > div > img {
   float: left;
@@ -64,13 +65,18 @@ ul.rss li del, ul.rss li ins {
 }
 ul.rss li del {
   background-color: rgba(255, 200, 200, 0.9);
-  text-decoration: none;
+  box-shadow: 0 0 0 1px rgba(255, 200, 200, 0.9);
 }
 ul.rss li ins {
   background-color: rgba(200, 255, 200, 0.9);
+  box-shadow: 0 0 0 1px rgba(200, 255, 200, 0.9);
 }
 ul.rss li ins > * {
   box-shadow: inset 0 0 1px rgba(200, 255, 200, 0.9);
+}
+ul.rss li del, ul.rss li ins {
+  text-decoration: none;
+  display: inline-block;
 }
 ul.rss li del > *, ul.rss li ins > * {
   position: relative;
@@ -89,6 +95,9 @@ ul.rss li del > *::before, ul.rss li ins > *::before {
 }
 ul.rss li ins > *::before {
   border-color: rgba(50, 200, 50, 0.9);
+}
+ul.rss li del + ins {
+  margin-left: 2px;
 }
 ul.rss li .link {
   font-size: 0.9em;

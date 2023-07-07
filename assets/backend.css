@@ -90,5 +90,10 @@ ul.rss li del > *::before, ul.rss li ins > *::before {
 ul.rss li ins > *::before {
   border-color: rgba(50, 200, 50, 0.9);
 }
+ul.rss li .link {
+  font-size: 0.9em;
+  padding: 0.25rem 1rem;
+  display: block;
+}
 
 /*# sourceMappingURL=backend.css.map */

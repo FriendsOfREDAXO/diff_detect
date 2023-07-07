@@ -35,6 +35,7 @@ class RssDiff
         $itemsAfter = $this->getItems($this->after);
 
         $output = '';
+        /** @var Laminas\Feed\Reader\Entry\Rss $item */
         foreach ($itemsBefore as $id => $item) {
             if (array_key_exists($id, $itemsAfter)) {
                 $diff = \HtmlDiffAdvanced::create($this->renderItem($item), $this->renderItem($itemsAfter[$id]));
@@ -51,11 +52,23 @@ class RssDiff
                 $output .= '<li class="'.$class.'"><div>';
                 $output .= $label;
                 $output .= $diffContent;
-                $output .= '</div></li>';
+                $output .= '</div>';
             }
             else {
-                $output .= '<li class="new"><div><span class="label label-success">'.\rex_addon::get('diff_detect')->i18n('new').'</span>' . $this->renderItem($item) . '</div></li>';
+                $output .= '<li class="new"><div><span class="label label-success">'.\rex_addon::get('diff_detect')->i18n('new').'</span>' . $this->renderItem($item) . '</div>';
             }
+
+            if ($link = $item->getLink()) {
+                if ($linkAfter = $itemsAfter[$id]->getLink() and $link !== $linkAfter) {
+                    $output .= '<a class="link" href="'.$link.'" target="_blank"><ins>'.$link.'</ins></a>';
+                    $output .= '<a class="link" href="'.$linkAfter.'" target="_blank"><del>'.$link.'</del></a>';
+                }
+                else {
+                    $output .= '<a class="link" href="'.$link.'" target="_blank">'.$link.'</a>';
+                }
+            }
+
+            $output .= '</li>';
         }
 
         return '<ul class="rss">' . $output . '</ul>';

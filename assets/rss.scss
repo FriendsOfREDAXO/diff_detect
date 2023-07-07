@@ -89,5 +89,11 @@ ul.rss {
         ins>*::before {
             border-color: rgba(50, 200, 50, 0.9)
         }
+
+        .link {
+            font-size: 0.9em;
+            padding: 0.25rem 1rem;
+            display: block;
+        }
     }
 }

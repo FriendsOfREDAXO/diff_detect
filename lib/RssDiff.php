@@ -46,15 +46,15 @@ class RssDiff
                 }
                 else {
                     $class = 'existing';
-                    $label = '';
+                    $label = '<span class="label label-default">'.\rex_addon::get('diff_detect')->i18n('old').'</span>';
                 }
-                $output .= '<li class="'.$class.'">';
+                $output .= '<li class="'.$class.'"><div>';
                 $output .= $label;
                 $output .= $diffContent;
-                $output .= '</li>';
+                $output .= '</div></li>';
             }
             else {
-                $output .= '<li class="new"><span class="label label-success">'.\rex_addon::get('diff_detect')->i18n('new').'</span>' . $this->renderItem($item) . '</li>';
+                $output .= '<li class="new"><div><span class="label label-success">'.\rex_addon::get('diff_detect')->i18n('new').'</span>' . $this->renderItem($item) . '</div></li>';
             }
         }
 

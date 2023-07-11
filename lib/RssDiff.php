@@ -1,5 +1,5 @@
 <?php
-namespace DiffDetect;
+namespace FriendsOfRedaxo\DiffDetect;
 
 use Caxy\HtmlDiff\HtmlDiffConfig;
 use Jfcherng\Diff\DiffHelper;

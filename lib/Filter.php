@@ -1,6 +1,6 @@
 <?php
 
-namespace DiffDetect;
+namespace FriendsOfRedaxo\DiffDetect;
 
 class Filter
 {

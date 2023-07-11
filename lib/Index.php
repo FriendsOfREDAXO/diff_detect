@@ -1,6 +1,6 @@
 <?php
 
-namespace DiffDetect;
+namespace FriendsOfRedaxo\DiffDetect;
 
 use Html2Text\Html2Text;
 use voku\helper\HtmlDomParser;

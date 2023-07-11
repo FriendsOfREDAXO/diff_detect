@@ -1,8 +1,8 @@
 <?php
 
-use DiffDetect\HtmlOnepage;
-use DiffDetect\Url;
-use DiffDetect\Index;
+use FriendsOfRedaxo\DiffDetect\HtmlOnepage;
+use FriendsOfRedaxo\DiffDetect\Url;
+use FriendsOfRedaxo\DiffDetect\Index;
 
 switch (rex_get('func')) {
     case 'status':

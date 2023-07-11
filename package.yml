@@ -1,7 +1,7 @@
 package: diff_detect
-version: '0.0.0'
+version: '0.1.0'
 author: Robert Rupf
-supportpage: https://github.com/xong/redaxo_diff_detect
+supportpage: https://github.com/FriendsOfREDAXO/diff_detect
 requires:
     redaxo: '^5.15.1'
     packages:
@@ -25,3 +25,13 @@ page:
 #        settings:
 #            title: 'Einstellungen'
 #            perm: diff_detect[settings]
+
+installer_ignore:
+    - .github
+    - .gitignore
+    - composer.json
+    - composer.lock
+    - assets/backend.scss
+    - assets/backend.css.map
+    - assets/table.scss
+    - assets/table.css.map

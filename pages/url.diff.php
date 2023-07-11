@@ -13,9 +13,9 @@ if (!$urlId or !$idBefore or !$idAfter or $idBefore === $idAfter) {
     $title = '';
     $content = '';
 } else {
-    $url = \DiffDetect\Url::get($urlId);
-    $indexBefore = \DiffDetect\Index::get($idBefore);
-    $indexAfter = \DiffDetect\Index::get($idAfter);
+    $url = \FriendsOfRedaxo\DiffDetect\Url::get($urlId);
+    $indexBefore = \FriendsOfRedaxo\DiffDetect\Index::get($idBefore);
+    $indexAfter = \FriendsOfRedaxo\DiffDetect\Index::get($idAfter);
 
     $title = \rex_i18n::rawMsg(
         'diff_title',
@@ -25,7 +25,7 @@ if (!$urlId or !$idBefore or !$idAfter or $idBefore === $idAfter) {
     );
 
     if ($url->getType() === 'RSS') {
-        $content = (new \DiffDetect\RssDiff($indexBefore->getContent(), $indexAfter->getContent()))->calculate();
+        $content = (new \FriendsOfRedaxo\DiffDetect\RssDiff($indexBefore->getContent(), $indexAfter->getContent()))->calculate();
     } else {
         $content = \Jfcherng\Diff\DiffHelper::calculate(
             $indexAfter->getContent(),

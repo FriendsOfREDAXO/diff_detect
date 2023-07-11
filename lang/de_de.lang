@@ -3,6 +3,8 @@ dashboard = Dashboard
 intervals = Intervalle
 filter = Filter
 
+diff_detect_create_snapshots = DiffDetect: Snapshots erstellen
+
 active = aktiv
 inactive = inaktiv
 active_title = auf "inaktiv" setzen
@@ -37,6 +39,7 @@ title_intervals_list = Intervalle
 title_interval_add = Intervall hinzufügen
 title_interval_edit = Intervall bearbeiten
 interval = Intervall
+interval_minutes = Intervall in Minuten
 
 title_filter_list = Filter
 filter_name_placeholder = Freilassen für automatischen Namen

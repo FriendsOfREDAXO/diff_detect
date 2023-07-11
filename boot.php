@@ -18,3 +18,7 @@ if (rex::isBackend()) {
 
     });
 }
+
+if (rex_addon::get('cronjob')->isAvailable() && !rex::isSafeMode()) {
+    rex_cronjob_manager::registerType(rex_cronjob_diff_detect::class);
+}

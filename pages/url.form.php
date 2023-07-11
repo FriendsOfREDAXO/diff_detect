@@ -42,7 +42,10 @@ $select->addOptions([
 ]);
 $field->setSelect($select);
 
-$field = $form->addSelectField('interval_ids');
+$field = $form->addTextField('interval');
+$field->setLabel($this->i18n('interval_minutes'));
+$field->setAttribute('type', 'number');
+/*$field = $form->addSelectField('interval_ids');
 $field->setLabel($this->i18n('intervals'));
 $field->setAttribute('class', 'form-control selectpicker');
 $select = new rex_select();
@@ -54,7 +57,7 @@ $select->addSqlOptions(
     ORDER BY    `name` ASC
 '
 );
-$field->setSelect($select);
+$field->setSelect($select);*/
 
 /*$field = $form->addSelectField('filter_ids');
 $field->setLabel($this->i18n('filter'));

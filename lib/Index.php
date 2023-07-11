@@ -3,6 +3,7 @@
 namespace DiffDetect;
 
 use Html2Text\Html2Text;
+use voku\helper\HtmlDomParser;
 
 class Index
 {
@@ -93,7 +94,16 @@ class Index
     public static function createSnapshot(Url $url): bool
     {
         $response = $url->getContent();
-        $hash = md5($response->getBody());
+        $content = $response->getBody();
+
+        if ($url->getType() === 'HTML') {
+            $onepage = (new HtmlOnepage($url->getUrl(), $content))->get();
+        }
+        else {
+            $onepage = '';
+        }
+
+        $hash = md5($content);
 
         $sql = \rex_sql::factory();
         $sql->setTable(\rex::getTable('diff_detect_index'));
@@ -113,6 +123,7 @@ class Index
         $sql->addGlobalUpdateFields();
         $sql->setValue('url_id', $url->getId());
         $sql->setValue('content', $response->getBody());
+        $sql->setValue('onepage', $onepage);
         $sql->setValue('hash', $hash);
         $sql->setValue('header', $response->getHeader());
         $sql->setValue('statusCode', $response->getStatusCode());
@@ -140,7 +151,13 @@ class Index
         }
 
         $content = $this->getValue('content');
+        // $content = HtmlDomParser::str_get_html($content)->findOne('#content')->innerHtml();
         $content = (new Html2Text($content))->getText();
         return $content;
+    }
+
+    public function getOnepage()
+    {
+        return $this->getValue('onepage');
     }
 }

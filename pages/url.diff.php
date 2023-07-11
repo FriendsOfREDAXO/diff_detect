@@ -12,13 +12,13 @@ if (!$urlId or !$idBefore or !$idAfter or $idBefore === $idAfter) {
     $content = rex_view::error($this->i18n('diff_error'));
     $title = '';
     $content = '';
-}
-else {
+} else {
     $url = \DiffDetect\Url::get($urlId);
     $indexBefore = \DiffDetect\Index::get($idBefore);
     $indexAfter = \DiffDetect\Index::get($idAfter);
 
-    $title = \rex_i18n::rawMsg('diff_title',
+    $title = \rex_i18n::rawMsg(
+        'diff_title',
         $url->getValue('url'),
         rex_formatter::intlDateTime($indexBefore->getValue('createdate')),
         rex_formatter::intlDateTime($indexAfter->getValue('createdate'))
@@ -26,14 +26,13 @@ else {
 
     if ($url->getType() === 'RSS') {
         $content = (new \DiffDetect\RssDiff($indexBefore->getContent(), $indexAfter->getContent()))->calculate();
-    }
-    else {
+    } else {
         $content = \Jfcherng\Diff\DiffHelper::calculate(
             $indexAfter->getContent(),
             $indexBefore->getContent(),
-            'Inline',
+            'Combined',
             [
-                //'context' => \Jfcherng\Diff\Differ::CONTEXT_ALL,
+                'context' => \Jfcherng\Diff\Differ::CONTEXT_ALL,
                 'ignoreLineEnding' => true,
                 'ignoreWhitespace' => true,
             ],
@@ -42,6 +41,13 @@ else {
                 'language' => 'deu',
             ]
         );
+
+        if (!$content) {
+            $content = '<table class="diff-wrapper diff diff-html diff-combined">
+    <thead><tr><th>Keine Unterschiede</th></tr></thead>
+    <tbody class="change change-eq"><tr data-type=" "><td class="new">'.$indexAfter->getContent().'</td></tr></tbody>
+</table>';
+        }
     }
 }
 

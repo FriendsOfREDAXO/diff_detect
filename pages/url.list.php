@@ -1,5 +1,6 @@
 <?php
 
+use DiffDetect\HtmlOnepage;
 use DiffDetect\Url;
 use DiffDetect\Index;
 

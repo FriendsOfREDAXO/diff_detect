@@ -49,6 +49,7 @@ rex_sql_table::get(
     ->ensureColumn(new rex_sql_column('url_id', 'int', false))
     ->ensureColumn(new rex_sql_column('content', 'longtext', false, ''))
     ->ensureColumn(new rex_sql_column('hash', 'VARCHAR(32)', false, ''))
+    ->ensureColumn(new rex_sql_column('onepage', 'longtext', false, ''))
     ->ensureColumn(new rex_sql_column('header', 'longtext', false, ''))
     ->ensureColumn(new rex_sql_column('statusCode', 'int', true))
     ->ensureColumn(new rex_sql_column('statusMessage', 'text', true))

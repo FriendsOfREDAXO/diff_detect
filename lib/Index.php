@@ -97,7 +97,8 @@ class Index
         $content = $response->getBody();
 
         if ($url->getType() === 'HTML') {
-            $onepage = (new HtmlOnepage($url->getUrl(), $content))->get();
+//            $onepage = (new HtmlOnepage($url->getUrl(), $content))->get();
+            $onepage = '';
         }
         else {
             $onepage = '';

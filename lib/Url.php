@@ -108,4 +108,9 @@ class Url
     {
         return $this->getValue('type');
     }
+
+    public function getUrl(): string
+    {
+        return $this->getValue('url');
+    }
 }

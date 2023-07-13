@@ -4,6 +4,7 @@ $func = rex_request('func', 'string', '');
 $id = rex_get('id', 'int');
 
 $form = rex_diff_detect_form::factory(rex::getTable('diff_detect_url'), '', 'id = ' . $id);
+$form->setFormAttribute('autocomplete', 'off');
 
 if ($func === 'edit' and $id) {
     $form->setEditMode(true);
@@ -90,10 +91,11 @@ $form->addFieldset($this->i18n('http_auth_legend'));
 
 $field = $form->addTextField('http_auth_login');
 $field->setLabel($this->i18n('http_auth_login'));
+$field->setAttribute('autocomplete', 'off');
 
 $field = $form->addTextField('http_auth_password');
 $field->setLabel($this->i18n('http_auth_password'));
-$field->setAttribute('type', 'password');
+$field->setAttribute('autocomplete', 'off');
 
 $content = $form->get();
 

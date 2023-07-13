@@ -1,6 +1,6 @@
 package: diff_detect
-version: '0.1.0'
-author: Robert Rupf
+version: '1.0'
+author: Friends Of REDAXO
 supportpage: https://github.com/FriendsOfREDAXO/diff_detect
 requires:
     redaxo: '^5.15.1'

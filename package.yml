@@ -13,18 +13,10 @@ requires:
 page:
     title: Diff Detection
     perm: diff_detect[]
-    pjax: true
     icon: rex-icon rex-icon-table
     subpages:
         dashboard:
             title: 'translate:dashboard'
-#        intervals:
-#            title: 'translate:intervals'
-#        filter:
-#            title: 'translate:filter'
-#        settings:
-#            title: 'Einstellungen'
-#            perm: diff_detect[settings]
 
 installer_ignore:
     - .github

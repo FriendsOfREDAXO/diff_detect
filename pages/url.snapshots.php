@@ -1,65 +1,77 @@
 <?php
 
 $urlId = rex_request('id', 'int');
-$idBefore = rex_cookie('diff_detect_before', 'int');
-$idAfter = rex_cookie('diff_detect_after', 'int');
+$idBefore = rex_request('before', 'int', null);
+$idAfter = rex_request('after', 'int', null);
+$counter = 0;
 
-switch (rex_get('func')) {
-    case 'diff':
+$Url = \FriendsOfRedaxo\DiffDetect\Url::get($urlId);
+$Snapshots = $Url->getSnapshots();
 
-        break;
-}
-
-$list = rex_list::factory(
-    '
-SELECT      i.id, i.createdate, i.createuser, LENGTH(i.content) size
-FROM        '.rex::getTable('diff_detect_index').' i
-WHERE       i.url_id = '.$urlId.'
-ORDER BY    i.createdate DESC'
-);
-
-$list->addTableAttribute('class', 'table-striped table-hover');
-
-// set column labels
-foreach ($list->getColumnNames() as $columnName) {
-    $list->setColumnLabel($columnName, $this->i18n($columnName));
-}
-
-$list->setColumnLabel('id', $this->i18n('compare'));
-$list->setColumnFormat('id', 'custom', function ($params) use ($idBefore, $idAfter) {
+$rows = [];
+foreach ($Snapshots as $snapshot) {
+    ++$counter;
     $checkedBefore = '';
     $checkedAfter = '';
-    if ($params['list']->getValue('id') === $idBefore) {
+
+    if (null === $idBefore && 1 === $counter) {
         $checkedBefore = ' checked';
     }
-    if ($params['list']->getValue('id') === $idAfter) {
+    if ($idBefore === $snapshot['id']) {
+        $checkedBefore = ' checked';
+    }
+    if ($idAfter === $snapshot['id'] ||
+        1 === count($Snapshots) ||
+        (null === $idAfter && 2 === $counter)) {
         $checkedAfter = ' checked';
     }
-    
-    return '<div class="diff"><input type="radio" name="before" value="###id###"'.$checkedBefore.'><input type="radio" name="after" value="###id###"'.$checkedAfter.'></div>';
-});
 
-$list->setColumnFormat('size', 'bytes');
-$list->setColumnFormat('createdate', 'intlDateTime');
+    $diff_radios = '<div class="diff">
+        <input type="radio" name="before" value="'.$snapshot['id'].'"'.$checkedBefore.'>
+        <input type="radio" name="after" value="'.$snapshot['id'].'"'.$checkedAfter.'>
+        </div>';
 
-$content = $list->get();
+    $rows[] = '
+    <tr>
+        <td>'.$diff_radios.'</td>
+        <td>'.rex_escape(rex_formatter::intlDateTime((string) $snapshot['createdate'], IntlDateFormatter::MEDIUM)).'</td>
+        <td>'.rex_escape($snapshot['createuser']).'</td>
+        <td>'.rex_escape(rex_formatter::bytes($snapshot['size'], [2])).'</td>
+    </tr>';
+}
 
-// buttons
+$content =
+    '<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>'.rex_i18n::msg('compare').'</th>
+            <th>'.rex_i18n::msg('createdate').'</th>
+            <th>'.rex_i18n::msg('createuser').'</th>
+            <th>'.rex_i18n::msg('size').'</th>
+        </tr>
+    </thead>
+    <tbody>
+        '.implode('', $rows).'
+    </tbody>
+    </table>';
+
 $formElements = [];
 $n = [];
-$n['field'] = '<a class="btn btn-primary" href="'.rex_url::currentBackendPage([
-        'func' => 'diff',
-        'id' => $urlId,
-    ]).'">'.$this->i18n('compare').'</a>';
+$n['field'] = '<button class="btn btn-primary" type="submit" name="compare_submit">' . rex_i18n::msg('compare') . '</button>';
 $formElements[] = $n;
 
 $fragment = new rex_fragment();
 $fragment->setVar('elements', $formElements, false);
 $buttons = $fragment->parse('core/form/submit.php');
-//$content = str_replace('</form>', '<footer class="panel-footer">' . $buttons . '</footer></form>', $content);
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('snapshots_title_list'), false);
+$fragment->setVar('title', $this->i18n('snapshots_title_list', $Url->getName()), false);
 $fragment->setVar('content', $content, false);
 $fragment->setVar('buttons', $buttons, false);
-echo $fragment->parse('core/page/section.php');
+
+echo '<form action="'.rex_url::currentBackendPage([
+    'func' => 'diff',
+    'id' => $urlId,
+]).'" method="post">
+        ' . $fragment->parse('core/page/section.php') . '
+    </form>';

@@ -1,5 +1,6 @@
 <?php
 
+
 switch ($func = rex_request('func')) {
     case 'add':
     case 'edit':

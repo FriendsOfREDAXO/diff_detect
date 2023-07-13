@@ -9,7 +9,6 @@ if (rex::isBackend()) {
         rex_view::addJsFile($this->getAssetsUrl('tagsinput.js'));
         rex_view::addCssFile($this->getAssetsUrl('tagsinput.css'));
         rex_view::addCssFile($this->getAssetsUrl('diff-table.css'));
-        rex_view::addJsFile($this->getAssetsUrl('cookie.js'));
         rex_view::addJsFile($this->getAssetsUrl('backend.js'));
         rex_view::addCssFile($this->getAssetsUrl('backend.css'));
     }

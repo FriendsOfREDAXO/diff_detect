@@ -55,7 +55,7 @@ filter_mode_remove = Entfernen
 filter_params = Parameter
 filter_params_notice = Beispiele:<br>HTML-Tags, die erhalten bleiben sollen: <code><a><p></code><br>CSS: <code>nav,.footer,.main-header</code><br>RegEx: <code>~<h1>.+</h1>~</code>.
 
-snapshots_title_list = Snapshots
+snapshots_title_list = Snapshots von `{0}`
 snapshots_show = Snapshots anzeigen
 compare = Vergleichen
 createdate = Erstellt am
@@ -67,3 +67,8 @@ diff_error = Vergleich nicht möglich.
 old = alt
 new = neu
 modified = geändert
+
+diff_detect_snapshot_created = Snapshot von `{0}` wurde erstellt.
+diff_detect_snapshot_not_created = Es wurde kein neuer Snapshot von `{0}` erstellt.
+diff_detect_snapshot_error = Snapshot von `{0}` konnte nicht erstellt werden. Fehlermeldung: `{1}`
+back_to_snapshots = Zurück zu Snapshots

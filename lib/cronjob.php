@@ -23,7 +23,17 @@ class rex_cronjob_diff_detect extends rex_cronjob
         ');
 
         for ($i = 0; $i < $sql->getRows(); $i++) {
-            \FriendsOfRedaxo\DiffDetect\Index::createSnapshot(\FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id')));
+            $Url = \FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id'));
+            try {
+                if (\FriendsOfRedaxo\DiffDetect\Index::createSnapshot($Url)) {
+                    echo rex_view::success(rex_i18n::msg('diff_detect_snapshot_created', $Url->getName()));
+                } else {
+                    echo rex_view::success(rex_i18n::msg('diff_detect_snapshot_not_created', $Url->getName()));
+                }
+            } catch (rex_exception $e) {
+                echo rex_view::error(rex_i18n::msg('diff_detect_snapshot_error', $Url->getName(), $e->getMessage()));
+                break;
+            }
             $sql->next();
         }
 

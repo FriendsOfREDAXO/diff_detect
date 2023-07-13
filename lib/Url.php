@@ -8,6 +8,7 @@ class Url
 
     protected ?int $id = null;
     protected $data = [];
+    public static $timeout = 5;
 
     private function __construct($id)
     {
@@ -43,6 +44,11 @@ class Url
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->data['name'];
     }
 
     /**
@@ -89,8 +95,9 @@ class Url
         $socket = \rex_socket::factoryUrl($this->getValue('url'));
         $socket->acceptCompression();
         $socket->followRedirects(3);
+        $socket->setTimeout(self::$timeout);
 
-        if ($login = $this->getValue('http_auth_login') and $password = $this->getValue('http_auth_password')) {
+        if ($login = $this->getValue('http_auth_login') && $password = $this->getValue('http_auth_password')) {
             $socket->addBasicAuthorization($login, $password);
         }
 
@@ -112,5 +119,16 @@ class Url
     public function getUrl(): string
     {
         return $this->getValue('url');
+    }
+
+    public function getSnapshots(): array
+    {
+        return \rex_sql::factory()->getArray(
+            '
+SELECT      i.id, i.createdate, i.createuser, LENGTH(i.content) size
+FROM        '.\rex::getTable('diff_detect_index').' i
+WHERE       i.url_id = '.$this->getId().'
+ORDER BY    i.createdate DESC'
+        );
     }
 }

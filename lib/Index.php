@@ -93,44 +93,46 @@ class Index
 
     public static function createSnapshot(Url $url): bool
     {
-        $response = $url->getContent();
-        $content = $response->getBody();
+        try {
+            $response = $url->getContent();
+            $content = $response->getBody();
 
-        if ($url->getType() === 'HTML') {
+            if ('HTML' === $url->getType()) {
 //            $onepage = (new HtmlOnepage($url->getUrl(), $content))->get();
-            $onepage = '';
-        }
-        else {
-            $onepage = '';
-        }
+                $onepage = '';
+            } else {
+                $onepage = '';
+            }
 
-        $hash = md5($content);
+            $hash = md5($content);
 
-        $sql = \rex_sql::factory();
-        $sql->setTable(\rex::getTable('diff_detect_index'));
-        $sql->setWhere('url_id = ? ORDER BY createdate DESC LIMIT 1', [$url->getId()]);
-        $sql->select('id,`hash`');
-
-        if ($sql->getRows() and $sql->getValue('hash') === $hash) {
+            $sql = \rex_sql::factory();
             $sql->setTable(\rex::getTable('diff_detect_index'));
-            $sql->setValue('updatedate', date(\rex_sql::FORMAT_DATETIME));
-            $sql->setWhere('id = :id', ['id' => $sql->getValue('id')]);
-            $sql->update();
-            return false;
+            $sql->setWhere('url_id = ? ORDER BY createdate DESC LIMIT 1', [$url->getId()]);
+            $sql->select('id,`hash`');
+
+            if ($sql->getRows() && $sql->getValue('hash') === $hash) {
+                $sql->setTable(\rex::getTable('diff_detect_index'));
+                $sql->setValue('updatedate', date(\rex_sql::FORMAT_DATETIME));
+                $sql->setWhere('id = :id', ['id' => $sql->getValue('id')]);
+                $sql->update();
+                return false;
+            }
+
+            $sql->setTable(\rex::getTable('diff_detect_index'));
+            $sql->addGlobalCreateFields();
+            $sql->addGlobalUpdateFields();
+            $sql->setValue('url_id', $url->getId());
+            $sql->setValue('content', $response->getBody());
+            $sql->setValue('onepage', $onepage);
+            $sql->setValue('hash', $hash);
+            $sql->setValue('header', $response->getHeader());
+            $sql->setValue('statusCode', $response->getStatusCode());
+            $sql->setValue('statusMessage', $response->getStatusMessage());
+            $sql->insert();
+        } catch (\rex_socket_exception $e) {
+            throw new \rex_exception($e->getMessage());
         }
-
-        $sql->setTable(\rex::getTable('diff_detect_index'));
-        $sql->addGlobalCreateFields();
-        $sql->addGlobalUpdateFields();
-        $sql->setValue('url_id', $url->getId());
-        $sql->setValue('content', $response->getBody());
-        $sql->setValue('onepage', $onepage);
-        $sql->setValue('hash', $hash);
-        $sql->setValue('header', $response->getHeader());
-        $sql->setValue('statusCode', $response->getStatusCode());
-        $sql->setValue('statusMessage', $response->getStatusMessage());
-        $sql->insert();
-
         return true;
     }
 
@@ -147,7 +149,7 @@ class Index
 
     public function getContent()
     {
-        if ($this->url?->getType() === 'RSS') {
+        if ('RSS' === $this->url?->getType()) {
             return $this->getValue('content');
         }
 

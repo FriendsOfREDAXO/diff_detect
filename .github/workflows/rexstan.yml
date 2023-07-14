@@ -2,7 +2,7 @@ name: rexstan
 
 on:
   push:
-    branches: [ master, main,  workflows ]
+    branches: [ master, main ]
   pull_request:
     branches: [ master, main ]
 

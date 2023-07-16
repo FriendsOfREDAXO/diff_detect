@@ -1,5 +1,7 @@
 <?php
 
+/** @var rex_addon $this */
+
 $urlId = rex_request('id', 'int');
 $idBefore = rex_request('before', 'int', null);
 $idAfter = rex_request('after', 'int', null);

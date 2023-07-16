@@ -1,5 +1,7 @@
 <?php // Boot code
 
+/** @var rex_addon $this */
+
 if (rex::isBackend()) {
     if (!defined('') and file_exists(__DIR__ . '/vendor/ezyang/htmlpurifier/library/HTMLPurifier.composer.php')) {
         include_once __DIR__ . '/vendor/ezyang/htmlpurifier/library/HTMLPurifier.composer.php';

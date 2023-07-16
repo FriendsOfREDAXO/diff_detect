@@ -67,7 +67,7 @@ class HtmlOnepage
     function dataUri(
         $url
     ): string {
-        $socket = \rex_socket::factoryURL($this->getUrl($url));
+        $socket = \rex_socket::factoryUrl($this->getUrl($url));
         $socket->followRedirects(3);
         $response = $socket->doGet();
         if ($response->isOk()) {
@@ -122,7 +122,7 @@ class HtmlOnepage
                     return $match[0];
                 }
 
-                $socket = \rex_socket::factoryURL($this->getUrl($match[2]));
+                $socket = \rex_socket::factoryUrl($this->getUrl($match[2]));
                 $socket->followRedirects(3);
                 $response = $socket->doGet();
                 if ($response->isOk()) {
@@ -144,7 +144,7 @@ class HtmlOnepage
             '~(<script[^>]+?src=[\"\'])(.*?)([\"\'][^>]*>\s*</script>)~is',
             function ($match) {
                 return '';
-                // $socket = \rex_socket::factoryURL($this->getUrl($match[2]));
+                // $socket = \rex_socket::factoryUrl($this->getUrl($match[2]));
                 // $socket->followRedirects(3);
                 // $response = $socket->doGet();
                 // if ($response->isOk()) {

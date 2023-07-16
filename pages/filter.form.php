@@ -1,5 +1,7 @@
 <?php
 
+/** @var rex_addon $this */
+
 $func = rex_request('func', 'string', '');
 $fieldset = 'edit' === $func ? $this->i18n('title_filter_edit') : $this->i18n('title_filter_add');
 

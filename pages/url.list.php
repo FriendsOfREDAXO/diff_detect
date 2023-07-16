@@ -1,5 +1,7 @@
 <?php
 
+/** @var rex_addon $this */
+
 use FriendsOfRedaxo\DiffDetect\Index;
 use FriendsOfRedaxo\DiffDetect\Url;
 

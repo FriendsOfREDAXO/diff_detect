@@ -1,5 +1,7 @@
 <?php
 
+/** @var rex_addon $this */
+
 $func = rex_request('func', 'string', '');
 $id = rex_get('id', 'int');
 

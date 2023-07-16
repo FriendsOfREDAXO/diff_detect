@@ -1,5 +1,7 @@
 <?php
 
+/** @var rex_addon $this */
+
 $list = rex_list::factory(
     '
 SELECT      id, name

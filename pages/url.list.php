@@ -38,7 +38,7 @@ switch (rex_get('func')) {
 
 $list = rex_list::factory(
     '
-SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, s.snapshot
+SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, u.last_scan, s.snapshot
 FROM        '.rex::getTable('diff_detect_url').' u
 LEFT JOIN   (SELECT url_id, MAX(updatedate) AS snapshot FROM '.rex::getTable('diff_detect_index').' GROUP BY url_id) s
 ON          u.id = s.url_id

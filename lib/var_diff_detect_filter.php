@@ -32,7 +32,7 @@ class rex_var_diff_detect_filter extends rex_var
                 continue;
             }
             if ($item = \DiffDetect\Filter::get((int) $selectedId)) {
-                $options .= '<option value="' . $selectedId . '">' . rex_escape(trim(sprintf('%s [%s]', $item->getName(), $item->getId()))) . '</option>';
+                $options .= '<option value="' . $selectedId . '">' . rex_escape(trim(sprintf('%s [%s]', (string) $item->getName(), (string) $item->getId()))) . '</option>';
             }
         }
 

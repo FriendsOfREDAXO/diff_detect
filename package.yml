@@ -21,8 +21,6 @@ page:
 installer_ignore:
     - .github
     - .gitignore
-    - composer.json
-    - composer.lock
     - assets/backend.scss
     - assets/backend.css.map
     - assets/table.scss

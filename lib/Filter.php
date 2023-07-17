@@ -21,7 +21,7 @@ class Filter
     {
         if ($id <= 0) {
             throw new \InvalidArgumentException(
-                sprintf('$id has to be an integer greater than 0, but "%s" given', $id)
+                sprintf('$id has to be an integer greater than 0, but "%s" given', (string) $id)
             );
         }
 

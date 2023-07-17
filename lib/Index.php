@@ -24,7 +24,7 @@ class Index
     public static function get(int $id): ?self
     {
         if ($id <= 0) {
-            throw new \InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', $id));
+            throw new \InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', (string) $id));
         }
 
         $sql = \rex_sql::factory();
@@ -94,6 +94,8 @@ class Index
     public static function createSnapshot(Url $url): bool
     {
         try {
+
+            $url->setLastScan();
             $response = $url->getContent();
             $content = $response->getBody();
 
@@ -103,7 +105,6 @@ class Index
             } else {
                 $onepage = '';
             }
-
             $hash = md5($content);
 
             $sql = \rex_sql::factory();
@@ -131,7 +132,8 @@ class Index
             $sql->setValue('statusMessage', $response->getStatusMessage());
             $sql->insert();
         } catch (\rex_socket_exception $e) {
-            throw new \rex_exception($e->getMessage());
+            // throw new \rex_exception($e->getMessage());
+            return false;
         }
         return true;
     }

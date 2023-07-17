@@ -17,8 +17,8 @@ class rex_cronjob_diff_detect extends rex_cronjob
             ON          u.id = i.url_id
             WHERE       u.status = 1
             AND         (
-                i.createdate IS NULL
-                OR  i.createdate < DATE_SUB(NOW(), INTERVAL u.interval MINUTE)
+                u.last_scan IS NULL
+                OR  u.last_scan < DATE_SUB(NOW(), INTERVAL u.interval MINUTE)
             )
         ');
 

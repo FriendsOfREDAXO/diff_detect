@@ -2,9 +2,16 @@
 
 namespace FriendsOfRedaxo\DiffDetect;
 
+use InvalidArgumentException;
+use rex;
+use rex_instance_pool_trait;
+use rex_socket;
+use rex_socket_response;
+use rex_sql;
+
 class Url
 {
-    use \rex_instance_pool_trait;
+    use rex_instance_pool_trait;
 
     protected ?int $id = null;
     protected $data = [];
@@ -21,11 +28,11 @@ class Url
     public static function get(int $id): ?self
     {
         if ($id <= 0) {
-            throw new \InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', $id));
+            throw new InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', $id));
         }
 
-        $sql = \rex_sql::factory();
-        $sql->setTable(\rex::getTable('diff_detect_url'));
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('diff_detect_url'));
         $sql->setWhere('id = ?', [$id]);
         $sql->select();
 
@@ -90,9 +97,9 @@ class Url
         return $dataset;
     }
 
-    public function getContent(): \rex_socket_response
+    public function getContent(): rex_socket_response
     {
-        $socket = \rex_socket::factoryUrl($this->getValue('url'));
+        $socket = rex_socket::factoryUrl($this->getValue('url'));
         $socket->acceptCompression();
         $socket->followRedirects(3);
         $socket->setTimeout(self::$timeout);
@@ -123,12 +130,12 @@ class Url
 
     public function getSnapshots(): array
     {
-        return \rex_sql::factory()->getArray(
+        return rex_sql::factory()->getArray(
             '
 SELECT      i.id, i.createdate, i.createuser, LENGTH(i.content) size
-FROM        '.\rex::getTable('diff_detect_index').' i
-WHERE       i.url_id = '.$this->getId().'
-ORDER BY    i.createdate DESC'
+FROM        ' . rex::getTable('diff_detect_index') . ' i
+WHERE       i.url_id = ' . $this->getId() . '
+ORDER BY    i.createdate DESC',
         );
     }
 }

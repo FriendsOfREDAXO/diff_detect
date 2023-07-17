@@ -38,7 +38,6 @@ $field->setNotice($this->i18n('filter_params_notice'));
 
 $content = $form->get();
 
-
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('title_filter_' . rex_request('func', 'string', 'add')), false);
 $fragment->setVar('body', $content, false);

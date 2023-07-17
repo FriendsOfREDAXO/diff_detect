@@ -22,7 +22,7 @@ class rex_cronjob_diff_detect extends rex_cronjob
             )
         ');
 
-        for ($i = 0; $i < $sql->getRows(); $i++) {
+        for ($i = 0; $i < $sql->getRows(); ++$i) {
             $Url = \FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id'));
             try {
                 if (\FriendsOfRedaxo\DiffDetect\Index::createSnapshot($Url)) {

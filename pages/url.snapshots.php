@@ -29,16 +29,16 @@ foreach ($Snapshots as $snapshot) {
     }
 
     $diff_radios = '<div class="diff">
-        <input type="radio" name="before" value="'.$snapshot['id'].'"'.$checkedBefore.'>
-        <input type="radio" name="after" value="'.$snapshot['id'].'"'.$checkedAfter.'>
+        <input type="radio" name="before" value="' . $snapshot['id'] . '"' . $checkedBefore . '>
+        <input type="radio" name="after" value="' . $snapshot['id'] . '"' . $checkedAfter . '>
         </div>';
 
     $rows[] = '
     <tr>
-        <td>'.$diff_radios.'</td>
-        <td>'.rex_escape(rex_formatter::intlDateTime((string) $snapshot['createdate'], IntlDateFormatter::MEDIUM)).'</td>
-        <td>'.rex_escape($snapshot['createuser']).'</td>
-        <td>'.rex_escape(rex_formatter::bytes($snapshot['size'], [2])).'</td>
+        <td>' . $diff_radios . '</td>
+        <td>' . rex_escape(rex_formatter::intlDateTime((string) $snapshot['createdate'], IntlDateFormatter::MEDIUM)) . '</td>
+        <td>' . rex_escape($snapshot['createuser']) . '</td>
+        <td>' . rex_escape(rex_formatter::bytes($snapshot['size'], [2])) . '</td>
     </tr>';
 }
 
@@ -46,14 +46,14 @@ $content =
     '<table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>'.rex_i18n::msg('compare').'</th>
-            <th>'.rex_i18n::msg('createdate').'</th>
-            <th>'.rex_i18n::msg('createuser').'</th>
-            <th>'.rex_i18n::msg('size').'</th>
+            <th>' . rex_i18n::msg('compare') . '</th>
+            <th>' . rex_i18n::msg('createdate') . '</th>
+            <th>' . rex_i18n::msg('createuser') . '</th>
+            <th>' . rex_i18n::msg('size') . '</th>
         </tr>
     </thead>
     <tbody>
-        '.implode('', $rows).'
+        ' . implode('', $rows) . '
     </tbody>
     </table>';
 
@@ -71,9 +71,9 @@ $fragment->setVar('title', $this->i18n('snapshots_title_list', $Url->getName()),
 $fragment->setVar('content', $content, false);
 $fragment->setVar('buttons', $buttons, false);
 
-echo '<form action="'.rex_url::currentBackendPage([
+echo '<form action="' . rex_url::currentBackendPage([
     'func' => 'diff',
     'id' => $urlId,
-]).'" method="post">
+]) . '" method="post">
         ' . $fragment->parse('core/page/section.php') . '
     </form>';

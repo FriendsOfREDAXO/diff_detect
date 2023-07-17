@@ -36,7 +36,7 @@ class rex_var_diff_detect_filter extends rex_var
             }
         }
 
-        $quotedId = "'".rex_escape($id, 'js')."'";
+        $quotedId = "'" . rex_escape($id, 'js') . "'";
         $openFunc = 'openDiffDetectFilterlist(' . $quotedId . ', \'&popup=1\');';
         $deleteFunc = 'deleteDiffDetectFilterlist(' . $quotedId . ');';
 

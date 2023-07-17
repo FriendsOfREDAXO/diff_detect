@@ -19,7 +19,7 @@ if (!$urlId || !$idBefore || !$idAfter) {
         'diff_title',
         $url->getValue('url'),
         rex_formatter::intlDateTime($indexBefore->getValue('createdate')),
-        rex_formatter::intlDateTime($indexAfter->getValue('createdate'))
+        rex_formatter::intlDateTime($indexAfter->getValue('createdate')),
     );
 
     if ('RSS' === $url->getType()) {
@@ -37,13 +37,13 @@ if (!$urlId || !$idBefore || !$idAfter) {
             [
                 'detailLevel' => 'line',
                 'language' => 'deu',
-            ]
+            ],
         );
 
         if (!$content) {
             $content = '<table class="diff-wrapper diff diff-html diff-combined">
     <thead><tr><th>Keine Unterschiede</th></tr></thead>
-    <tbody class="change change-eq"><tr data-type=" "><td class="new">'.$indexAfter->getContent().'</td></tr></tbody>
+    <tbody class="change change-eq"><tr data-type=" "><td class="new">' . $indexAfter->getContent() . '</td></tr></tbody>
 </table>';
         }
     }
@@ -53,9 +53,9 @@ if (!$urlId || !$idBefore || !$idAfter) {
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 
-    echo rex_view::info('<a href="'.rex_url::currentBackendPage([
+    echo rex_view::info('<a href="' . rex_url::currentBackendPage([
         'func' => 'snapshots',
         'before' => $idBefore,
         'after' => $idAfter,
-        'id' => $urlId, ]).'">'.$this->i18n('back_to_snapshots').'</a>');
+        'id' => $urlId, ]) . '">' . $this->i18n('back_to_snapshots') . '</a>');
 }

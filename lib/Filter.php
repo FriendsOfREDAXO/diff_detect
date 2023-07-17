@@ -2,9 +2,15 @@
 
 namespace FriendsOfRedaxo\DiffDetect;
 
+use InvalidArgumentException;
+use rex;
+use rex_addon;
+use rex_instance_pool_trait;
+use rex_sql;
+
 class Filter
 {
-    use \rex_instance_pool_trait;
+    use rex_instance_pool_trait;
 
     protected ?int $id = null;
     protected $data = [];
@@ -20,13 +26,11 @@ class Filter
     public static function get(int $id): ?self
     {
         if ($id <= 0) {
-            throw new \InvalidArgumentException(
-                sprintf('$id has to be an integer greater than 0, but "%s" given', $id)
-            );
+            throw new InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', $id));
         }
 
-        $sql = \rex_sql::factory();
-        $sql->setTable(\rex::getTable('diff_detect_filter'));
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('diff_detect_filter'));
         $sql->setWhere('id = ?', [$id]);
         $sql->select();
 
@@ -80,7 +84,7 @@ class Filter
             return $this->getValue('name');
         }
 
-        $addon = \rex_addon::get('diff_detect');
+        $addon = rex_addon::get('diff_detect');
 
         $name = '';
         switch ($this->getValue('type')) {
@@ -95,16 +99,16 @@ class Filter
         }
 
         switch (true) {
-            case ($this->getValue('type') === 'CSS' or $this->getValue('type') === 'RegEx') and $this->getValue('mode') === 'remain':
-            case $this->getValue('type') === 'strip_tags' and strlen($this->getValue('params')) > 0:
+            case ('CSS' === $this->getValue('type') || 'RegEx' === $this->getValue('type')) && 'remain' === $this->getValue('mode'):
+            case 'strip_tags' === $this->getValue('type') && '' !== $this->getValue('params'):
                 $name .= ', ' . $addon->i18n('filter_mode_remain');
                 break;
-            case ($this->getValue('type') === 'CSS' or $this->getValue('type') === 'RegEx') and $this->getValue('mode') === 'remove':
+            case ('CSS' === $this->getValue('type') || 'RegEx' === $this->getValue('type')) && 'remove' === $this->getValue('mode'):
                 $name .= ', ' . $addon->i18n('filter_mode_remove');
                 break;
         }
 
-        if (strlen($this->getValue('params')) > 0) {
+        if ('' !== $this->getValue('params')) {
             $name .= ': ' . $this->getValue('params');
         }
 

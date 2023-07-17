@@ -8,7 +8,7 @@ $id = rex_get('id', 'int');
 $form = rex_diff_detect_form::factory(rex::getTable('diff_detect_url'), '', 'id = ' . $id);
 $form->setFormAttribute('autocomplete', 'off');
 
-if ($func === 'edit' and $id) {
+if ('edit' === $func && $id) {
     $form->setEditMode(true);
     $form->addParam('id', $id);
 }
@@ -102,6 +102,6 @@ $field->setAttribute('autocomplete', 'off');
 $content = $form->get();
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('title_'.rex_request('func', 'string', 'add')), false);
+$fragment->setVar('title', $this->i18n('title_' . rex_request('func', 'string', 'add')), false);
 $fragment->setVar('body', $content, false);
 echo $fragment->parse('core/page/section.php');

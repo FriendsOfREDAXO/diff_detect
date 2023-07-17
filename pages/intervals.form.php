@@ -29,7 +29,6 @@ $field->getValidator()->add('custom', $this->i18n('error_interval_incomplete'), 
 
 $content = $form->get();
 
-
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('title_interval_' . rex_request('func', 'string', 'add')), false);
 $fragment->setVar('body', $content, false);

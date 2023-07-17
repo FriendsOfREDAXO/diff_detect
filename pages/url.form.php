@@ -51,7 +51,7 @@ $field->setLabel($this->i18n('interval'));
 $intervall_options = new rex_select();
 
 foreach ([5, 15, 30, 60, 180, 360, 1440, 4320, 10080, 20160, 43200] as $interval) {
-    $intervall_options->addOption($this->i18n('interval_in_min_'.$interval), $interval);
+    $intervall_options->addOption($this->i18n('interval_in_min_' . $interval), $interval);
 }
 $field->setSelect($intervall_options);
 

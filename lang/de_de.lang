@@ -1,6 +1,5 @@
 diff_detect = Diff Detect
 dashboard = Dashboard
-intervals = Intervalle
 filter = Filter
 
 diff_detect_create_snapshots = DiffDetect: Snapshots erstellen
@@ -35,11 +34,7 @@ error_url = Die URL ist ungültig.
 status_active = aktiv
 status_inactive = inaktiv
 
-title_intervals_list = Intervalle
-title_interval_add = Intervall hinzufügen
-title_interval_edit = Intervall bearbeiten
 interval = Intervall
-interval_minutes = Intervall in Minuten
 
 title_filter_list = Filter
 filter_name_placeholder = Freilassen für automatischen Namen
@@ -55,8 +50,9 @@ filter_mode_remove = Entfernen
 filter_params = Parameter
 filter_params_notice = Beispiele:<br>HTML-Tags, die erhalten bleiben sollen: <code><a><p></code><br>CSS: <code>nav,.footer,.main-header</code><br>RegEx: <code>~<h1>.+</h1>~</code>.
 
+snapshots = Snapshots
 snapshots_title_list = Snapshots von `{0}`
-snapshots_show = Snapshots anzeigen
+snapshots_show = anzeigen
 compare = Vergleichen
 createdate = Erstellt am
 createuser = Erstellt von
@@ -72,3 +68,17 @@ diff_detect_snapshot_created = Snapshot von `{0}` wurde erstellt.
 diff_detect_snapshot_not_created = Es wurde kein neuer Snapshot von `{0}` erstellt.
 diff_detect_snapshot_error = Snapshot von `{0}` konnte nicht erstellt werden. Fehlermeldung: `{1}`
 back_to_snapshots = Zurück zu Snapshots
+last_scan = Letzter Scanversuch
+
+interval_in_min_5 = 5 Minuten
+interval_in_min_15 = 15 Minuten
+interval_in_min_30 = 30 Minuten
+interval_in_min_60 = 1 Stunde
+interval_in_min_180 = 3 Stunden
+interval_in_min_360 = 6 Stunden
+interval_in_min_1440 = 1 Tag
+interval_in_min_4320 = 3 Tage
+interval_in_min_10080 = 1 Woche
+interval_in_min_20160 = 2 Wochen
+interval_in_min_43200 = 30 Tage / 1 Monat
+

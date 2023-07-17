@@ -21,10 +21,6 @@ page:
 installer_ignore:
     - .github
     - .gitignore
-    - .php-cs-fixer.dist.php
-    - .tools
-    - composer.json
-    - composer.lock
     - assets/backend.scss
     - assets/backend.css.map
     - assets/table.scss

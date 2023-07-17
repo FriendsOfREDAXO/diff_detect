@@ -38,12 +38,12 @@ switch (rex_get('func')) {
 
 $list = rex_list::factory(
     '
-SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, s.snapshot
-FROM        ' . rex::getTable('diff_detect_url') . ' u
-LEFT JOIN   (SELECT url_id, MAX(updatedate) AS snapshot FROM ' . rex::getTable('diff_detect_index') . ' GROUP BY url_id) s
+SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, u.last_scan, s.snapshot
+FROM        '.rex::getTable('diff_detect_url').' u
+LEFT JOIN   (SELECT url_id, MAX(updatedate) AS snapshot FROM '.rex::getTable('diff_detect_index').' GROUP BY url_id) s
 ON          u.id = s.url_id
 GROUP BY    u.id
-ORDER BY    name ASC',
+ORDER BY    name ASC'
 );
 
 $list->addTableAttribute('class', 'table-striped table-hover');
@@ -55,14 +55,14 @@ foreach ($list->getColumnNames() as $columnName) {
     $list->setColumnLabel($columnName, $this->i18n($columnName));
 }
 
-$thIcon = '<a class="rex-link-expanded" href="' . $list->getUrl(['func' => 'add']) . '" title="' . $this->i18n(
-    'add',
-) . '"><i class="rex-icon rex-icon-add"></i></a>';
+$thIcon = '<a class="rex-link-expanded" href="'.$list->getUrl(['func' => 'add']).'" title="'.$this->i18n(
+    'add'
+).'"><i class="rex-icon rex-icon-add"></i></a>';
 $list->addColumn(
     $thIcon,
     '',
     0,
-    ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>'],
+    ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']
 );
 $list->setColumnParams($thIcon, ['func' => 'edit', 'id' => '###id###']);
 $list->setColumnFormat($thIcon, 'custom', static function () use ($list, $thIcon) {
@@ -90,40 +90,40 @@ $list->setColumnFormat('categories', 'custom', static function ($params) {
 $list->setColumnFormat('status', 'custom', static function ($params) {
     /** @var \rex_list $list */
     $list = $params['list'];
-    $containerId = 'status-' . $list->getName() . '-' . $list->getValue('id');
+    $containerId = 'status-'.$list->getName().'-'.$list->getValue('id');
     $urlParams = [
         'func' => 'status',
         'id' => $list->getValue('id'),
         'status' => $list->getValue('status') ? '0' : '1',
     ];
 
-    if ($start = rex_request($startKey = $list->getName() . '_start')) {
+    if ($start = rex_request($startKey = $list->getName().'_start')) {
         $urlParams[$startKey] = $start;
     }
 
     $addon = rex_addon::get('diff_detect');
 
-    return '<div><a href="' . $list->getUrl(
-        $urlParams,
-    ) . '" title="' . $addon->i18n(
+    return '<div><a href="'.$list->getUrl(
+        $urlParams
+    ).'" title="'.$addon->i18n(
         $list->getValue('status')
                 ? 'active_title'
-                : 'inactive_title',
-    ) . '" class="diff-status-' . ($list->getValue(
-        'status',
-    ) ? 'green' : 'red') . '">' . $addon->i18n($list->getValue('status') ? 'active' : 'inactive') . '</a></div>';
+                : 'inactive_title'
+    ).'" class="diff-status-'.($list->getValue(
+        'status'
+    ) ? 'green' : 'red').'">'.$addon->i18n($list->getValue('status') ? 'active' : 'inactive').'</a></div>';
 });
 
 $list->setColumnFormat('snapshot', 'custom', static function ($params) {
     /** @var \rex_list $list */
     $list = $params['list'];
-    $containerId = 'snapshot-' . $list->getName() . '-' . $list->getValue('id');
+    $containerId = 'snapshot-'.$list->getName().'-'.$list->getValue('id');
     $urlParams = [
         'func' => 'snapshot',
         'id' => $list->getValue('id'),
     ];
 
-    if ($start = rex_request($startKey = $list->getName() . '_start')) {
+    if ($start = rex_request($startKey = $list->getName().'_start')) {
         $urlParams[$startKey] = $start;
     }
 
@@ -134,10 +134,10 @@ $list->setColumnFormat('snapshot', 'custom', static function ($params) {
     }
 
     $addon = rex_addon::get('diff_detect');
-    return '<div class="snapshot-action">' . $timestamp . '
+    return '<div class="snapshot-action">'.$timestamp.'
     <a
-    href="' . $list->getUrl($urlParams) . '"
-    title="' . $addon->i18n('get_snapshot') . '"
+    href="'.$list->getUrl($urlParams).'"
+    title="'.$addon->i18n('get_snapshot').'"
     >
         <i class="rex-icon fa-rotate-right"></i>
     </a>

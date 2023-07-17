@@ -8,7 +8,7 @@ $id = rex_get('id', 'int');
 $form = rex_diff_detect_form::factory(rex::getTable('diff_detect_url'), '', 'id = ' . $id);
 $form->setFormAttribute('autocomplete', 'off');
 
-if ($func === 'edit' and $id) {
+if ('edit' === $func && $id) {
     $form->setEditMode(true);
     $form->addParam('id', $id);
 }
@@ -45,22 +45,15 @@ $select->addOptions([
 ]);
 $field->setSelect($select);
 
-$field = $form->addTextField('interval');
-$field->setLabel($this->i18n('interval_minutes'));
-$field->setAttribute('type', 'number');
-/*$field = $form->addSelectField('interval_ids');
-$field->setLabel($this->i18n('intervals'));
-$field->setAttribute('class', 'form-control selectpicker');
-$select = new rex_select();
-$select->setMultiple();
-$select->addSqlOptions(
-    '
-    SELECT      `name`, `id`
-    FROM        `'.rex::getTable('diff_detect_interval').'`
-    ORDER BY    `name` ASC
-'
-);
-$field->setSelect($select);*/
+$field = $form->addSelectField('interval');
+$field->setLabel($this->i18n('interval'));
+
+$intervall_options = new rex_select();
+
+foreach ([5, 15, 30, 60, 180, 360, 1440, 4320, 10080, 20160, 43200] as $interval) {
+    $intervall_options->addOption($this->i18n('interval_in_min_'.$interval), $interval);
+}
+$field->setSelect($intervall_options);
 
 /*$field = $form->addSelectField('filter_ids');
 $field->setLabel($this->i18n('filter'));

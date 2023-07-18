@@ -92,6 +92,15 @@ $field = $form->addTextField('http_auth_password');
 $field->setLabel($this->i18n('http_auth_password'));
 $field->setAttribute('autocomplete', 'off');
 
+rex_extension::register('REX_FORM_SAVED', static function ($ep) {
+    $params = $ep->getParams();
+    $id = $params['sql']->getLastId();
+    if ($id && $id > 0) {
+        $Url = \FriendsOfRedaxo\DiffDetect\Url::get($id);
+        \FriendsOfRedaxo\DiffDetect\Index::createSnapshot($Url);
+    }
+});
+
 $content = $form->get();
 
 $fragment = new rex_fragment();

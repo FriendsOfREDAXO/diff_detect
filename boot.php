@@ -16,10 +16,6 @@ if (rex::isBackend()) {
         rex_view::addJsFile($this->getAssetsUrl('backend.js'));
         rex_view::addCssFile($this->getAssetsUrl('backend.css'));
     }
-
-    rex_extension::register('PACKAGES_INCLUDED', static function ($params) {
-
-    });
 }
 
 if (rex_addon::get('cronjob')->isAvailable() && !rex::isSafeMode()) {

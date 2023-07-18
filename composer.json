@@ -6,7 +6,8 @@
         "phpoffice/phpspreadsheet": "^1.29",
         "laminas/laminas-feed": "^2.20",
         "mkalkbrenner/php-htmldiff-advanced": "^0.0.8",
-        "ezyang/htmlpurifier": "^4.16"
+        "ezyang/htmlpurifier": "^4.16",
+        "psr/http-message": "^1.0"
     },
     "require-dev": {
         "redaxo/php-cs-fixer-config": "^2.2",

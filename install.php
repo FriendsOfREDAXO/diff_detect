@@ -31,6 +31,7 @@ rex_sql_table::get(
     ->ensureColumn(new rex_sql_column('header', 'longtext', false, ''))
     ->ensureColumn(new rex_sql_column('statusCode', 'int', true))
     ->ensureColumn(new rex_sql_column('statusMessage', 'text', true))
+    ->ensureColumn(new rex_sql_column('checked', 'tinyint', false, '0'))
     ->ensureGlobalColumns()
     // ->ensureForeignKey(new rex_sql_foreign_key('fk_url', \rex::getTable('diff_detect_url'), ['url_id' => 'id'],
     //     rex_sql_foreign_key::CASCADE, rex_sql_foreign_key::CASCADE))

@@ -6,8 +6,7 @@
         "phpoffice/phpspreadsheet": "^1.29",
         "laminas/laminas-feed": "^2.20",
         "mkalkbrenner/php-htmldiff-advanced": "^0.0.8",
-        "ezyang/htmlpurifier": "^4.16",
-        "psr/http-message": "^1.0"
+        "ezyang/htmlpurifier": "^4.16"
     },
     "require-dev": {
         "redaxo/php-cs-fixer-config": "^2.2",
@@ -16,5 +15,9 @@
     "scripts": {
         "cs-dry": "php-cs-fixer fix -v --ansi --dry-run --config=.php-cs-fixer.dist.php",
         "cs-fix": "php-cs-fixer fix -v --ansi --config=.php-cs-fixer.dist.php"
+    },
+    "replace": {
+        "psr/http-message": "*",
+        "psr/http-client": "*"
     }
 }

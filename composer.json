@@ -17,7 +17,8 @@
         "cs-fix": "php-cs-fixer fix -v --ansi --config=.php-cs-fixer.dist.php"
     },
     "replace": {
+        "psr/container": "*",
         "psr/http-message": "*",
-        "psr/http-client": "*"
+        "psr/log": "*"
     }
 }

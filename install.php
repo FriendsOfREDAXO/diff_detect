@@ -14,37 +14,13 @@ rex_sql_table::get(
     ->ensureColumn(new rex_sql_column('type', 'ENUM("HTML","RSS")', true))
     ->ensureColumn(new rex_sql_column('categories', 'text', false, ''))
     ->ensureColumn(new rex_sql_column('status', 'tinyint', false, '0'))
-    // ->ensureColumn(new rex_sql_column('interval_ids', 'text', true))
     ->ensureColumn(new rex_sql_column('interval', 'int(10) unsigned', false, '1440'))
-    // ->ensureColumn(new rex_sql_column('filter_ids', 'text', true))
     ->ensureColumn(new rex_sql_column('http_auth_login', 'VARCHAR(100)', true))
     ->ensureColumn(new rex_sql_column('http_auth_password', 'VARCHAR(100)', true))
     ->ensureColumn(new rex_sql_column('last_scan', 'datetime', true))
     ->ensureGlobalColumns()
     ->ensure();
 
-// intervals
-/*rex_sql_table::get(
-    rex::getTable('diff_detect_interval'))
-    ->ensurePrimaryIdColumn()
-    ->ensureColumn(new rex_sql_column('name', 'VARCHAR(255)', false, ''))
-    ->ensureColumn(new rex_sql_column('interval', 'text'))
-    ->ensureColumn(new rex_sql_column('nexttime', 'datetime', true))
-    ->ensureGlobalColumns()
-    ->ensure();*/
-
-// intervals
-/*rex_sql_table::get(
-    rex::getTable('diff_detect_filter'))
-    ->ensurePrimaryIdColumn()
-    ->ensureColumn(new rex_sql_column('name', 'VARCHAR(255)', false, ''))
-    ->ensureColumn(new rex_sql_column('type', 'ENUM("strip_tags","CSS","RegEx")', true))
-    ->ensureColumn(new rex_sql_column('mode', 'ENUM("remain","remove")', true))
-    ->ensureColumn(new rex_sql_column('params', 'text', false, ''))
-    ->ensureGlobalColumns()
-    ->ensure();*/
-
-// diff datasets
 rex_sql_table::get(
     rex::getTable('diff_detect_index'))
     ->ensurePrimaryIdColumn()

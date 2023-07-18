@@ -99,7 +99,6 @@ class Index
     public static function createSnapshot(Url $url): bool
     {
         try {
-
             $url->setLastScan();
             $response = $url->getContent();
             $content = $response->getBody();

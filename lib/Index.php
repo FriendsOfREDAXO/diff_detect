@@ -10,7 +10,7 @@ use rex_socket_exception;
 use rex_sql;
 use voku\helper\HtmlDomParser;
 
-class Index
+final class Index
 {
     use rex_instance_pool_trait;
 

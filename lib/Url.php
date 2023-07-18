@@ -9,7 +9,7 @@ use rex_socket;
 use rex_socket_response;
 use rex_sql;
 
-class Url
+final class Url
 {
     use rex_instance_pool_trait;
 

@@ -37,7 +37,7 @@ class RssDiff
         $itemsAfter = $this->getItems($this->after);
 
         $output = '';
-        /** @var Laminas\Feed\Reader\Entry\Rss $item */
+        /** @var \Laminas\Feed\Reader\Entry\Rss $item */
         foreach ($itemsBefore as $id => $item) {
             if (array_key_exists($id, $itemsAfter)) {
                 $diff = HtmlDiffAdvanced::create($this->renderItem($item), $this->renderItem($itemsAfter[$id]));
@@ -59,7 +59,7 @@ class RssDiff
             }
 
             if ($link = $item->getLink()) {
-                if ($linkAfter = ($itemsAfter[$id] ?? null)?->getLink() && $link !== $linkAfter) {
+                if (($linkAfter = ($itemsAfter[$id] ?? null)?->getLink()) && $link !== $linkAfter) {
                     $output .= '<a class="link" href="' . $link . '" target="_blank"><ins>' . $link . '</ins></a>';
                     $output .= '<a class="link" href="' . $linkAfter . '" target="_blank"><del>' . $linkAfter . '</del></a>';
                 } else {

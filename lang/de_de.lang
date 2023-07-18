@@ -83,4 +83,8 @@ interval_in_min_20160 = 2 Wochen
 interval_in_min_43200 = 30 Tage / 1 Monat
 
 invalid_url = Die URL ist ungültig. Bitte inkl http[s]:// angeben.
-
+diff_detect_url_not_found = Die URL wurde nicht gefunden.
+checked = Geprüft
+not_checked = Nicht geprüft
+index_checked = Index wurde geprüft.
+index_not_checked = Index wurde nicht geprüft.

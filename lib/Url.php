@@ -133,7 +133,7 @@ class Url
     {
         return rex_sql::factory()->getArray(
             '
-SELECT      i.id, i.createdate, i.createuser, LENGTH(i.content) size
+SELECT      i.id, i.createdate, i.createuser, LENGTH(i.content) size, i.checked
 FROM        ' . rex::getTable('diff_detect_index') . ' i
 WHERE       i.url_id = ' . $this->getId() . '
 ORDER BY    i.createdate DESC',

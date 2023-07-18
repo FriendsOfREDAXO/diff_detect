@@ -6,8 +6,25 @@ $urlId = rex_request('id', 'int');
 $idBefore = rex_request('before', 'int', null);
 $idAfter = rex_request('after', 'int', null);
 $counter = 0;
+$checked = rex_get('checked', 'int', null);
+$indexId = rex_request('index_id', 'int', null);
+
+if (null !== $checked && null !== $indexId) {
+    $sql = rex_sql::factory();
+    $sql->setTable(rex::getTable('diff_detect_index'));
+    $sql->setWhere('id = :id', ['id' => $indexId]);
+    $sql->setValue('checked', 1 == $checked ? 1 : 0);
+    $sql->addGlobalUpdateFields();
+    $sql->update();
+    echo rex_view::success(( (1 == $checked) ? rex_i18n::msg('index_checked') : rex_i18n::msg('index_not_checked')));
+}
 
 $Url = \FriendsOfRedaxo\DiffDetect\Url::get($urlId);
+if (!$Url) {
+    echo rex_view::error(rex_i18n::msg('diff_detect_url_not_found'));
+    return;
+}
+
 $Snapshots = $Url->getSnapshots();
 
 $rows = [];
@@ -39,6 +56,7 @@ foreach ($Snapshots as $snapshot) {
         <td>' . rex_escape(rex_formatter::intlDateTime((string) $snapshot['createdate'], IntlDateFormatter::MEDIUM)) . '</td>
         <td>' . rex_escape($snapshot['createuser']) . '</td>
         <td>' . rex_escape(rex_formatter::bytes($snapshot['size'], [2])) . '</td>
+        <td><a href="index.php?page=diff_detect/dashboard&func=snapshots&id=' . $urlId . '&index_id=' . $snapshot['id'] . '&checked=' . (1 == $snapshot['checked'] ? 0 : 1) .'">' . (1 == $snapshot['checked'] ? $this->i18n('checked') : $this->i18n('not_checked')) . '</a></td>
     </tr>';
 }
 
@@ -50,6 +68,7 @@ $content =
             <th>' . rex_i18n::msg('createdate') . '</th>
             <th>' . rex_i18n::msg('createuser') . '</th>
             <th>' . rex_i18n::msg('size') . '</th>
+            <th>' . rex_i18n::msg('status') . '</th>
         </tr>
     </thead>
     <tbody>

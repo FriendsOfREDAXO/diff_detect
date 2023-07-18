@@ -82,3 +82,5 @@ interval_in_min_10080 = 1 Woche
 interval_in_min_20160 = 2 Wochen
 interval_in_min_43200 = 30 Tage / 1 Monat
 
+invalid_url = Die URL ist ungültig. Bitte inkl http[s]:// angeben.
+

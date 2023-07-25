@@ -38,9 +38,9 @@ switch (rex_get('func')) {
 
 $list = rex_list::factory(
     '
-SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, u.last_scan, s.snapshot
+SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, u.last_scan, u.interval, s.snapshot
 FROM        ' . rex::getTable('diff_detect_url') . ' u
-LEFT JOIN   (SELECT url_id, MAX(updatedate) AS snapshot FROM ' . rex::getTable('diff_detect_index') . ' GROUP BY url_id) s
+LEFT JOIN   (SELECT url_id, MAX(createdate) AS snapshot FROM ' . rex::getTable('diff_detect_index') . ' GROUP BY url_id) s
 ON          u.id = s.url_id
 GROUP BY    u.id
 ORDER BY    name ASC',
@@ -71,6 +71,30 @@ $list->setColumnFormat($thIcon, 'custom', static function () use ($list, $thIcon
 });
 
 $list->setColumnFormat('id', 'url');
+$list->removeColumn('name');
+
+$list->setColumnFormat('url', 'custom', static function ($params) {
+
+    /** @var rex_list $list */
+    $list = $params['list'];
+
+    $title = $list->getValue('name');
+    if (60 < mb_strlen($title)) {
+        $title = mb_substr($title, 0, 25).' ... '.mb_substr($title, -25);
+    }
+    $title = '<span class="nowrap" title="'.rex_escape($list->getValue('name')).'">'.rex_escape($title).'</span>';
+
+    $value = $params['value'];
+    if (60 < mb_strlen($value)) {
+        $value = mb_substr($value, 0, 25).' ... '.mb_substr($value, -25);
+    }
+    $value = '<span class="nowrap"><a href="'.rex_escape($params['value']).'" title="'.rex_escape($params['value']).'" target="_blank">'.$value.'</a></span>';
+
+    $categories = $list->getValue('categories');
+    $categories = '<br /><span>'.implode(' ', array_map(static fn ($item) => '<span class="label label-default">' . $item . '</span>', explode(',', $categories))).'</span>';
+
+    return $title.'<br />'.$value.$categories;
+});
 
 $list->setColumnFormat('type', 'custom', static function ($params) {
     switch ($params['value']) {
@@ -83,9 +107,7 @@ $list->setColumnFormat('type', 'custom', static function ($params) {
     return $params['value'];
 });
 
-$list->setColumnFormat('categories', 'custom', static function ($params) {
-    return implode(' ', array_map(static fn ($item) => '<span class="label label-default">' . $item . '</span>', explode(',', $params['value'])));
-});
+$list->removeColumn('categories');
 
 $list->setColumnFormat('status', 'custom', static function ($params) {
     /** @var \rex_list $list */
@@ -114,9 +136,24 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
     ) ? 'green' : 'red') . '">' . $addon->i18n($list->getValue('status') ? 'active' : 'inactive') . '</a></div>';
 });
 
+$list->removeColumn('last_scan');
+
+$list->setColumnFormat('interval', 'custom', static function ($params) {
+    return rex_i18n::msg('interval_in_min_'.$params['value']);
+});
+
+$list->setColumnLabel('snapshot', $this->i18n('last_scan').'/ '.$this->i18n('last_snapshot'));
+
 $list->setColumnFormat('snapshot', 'custom', static function ($params) {
     /** @var \rex_list $list */
     $list = $params['list'];
+
+    $timestamp_last_scan = '-';
+    if ($params['list']->getValue('last_scan')) {
+        $timestamp_last_scan = rex_formatter::intlDateTime($params['list']->getValue('last_scan'));
+    }
+    $timestamp_last_scan = '<span class="nowrap">'.$timestamp_last_scan.'</span>';
+
     $containerId = 'snapshot-' . $list->getName() . '-' . $list->getValue('id');
     $urlParams = [
         'func' => 'snapshot',
@@ -134,7 +171,7 @@ $list->setColumnFormat('snapshot', 'custom', static function ($params) {
     }
 
     $addon = rex_addon::get('diff_detect');
-    return '<div class="snapshot-action">' . $timestamp . '
+    return $timestamp_last_scan.'<div class="snapshot-action">' . $timestamp . '
     <a
     href="' . $list->getUrl($urlParams) . '"
     title="' . $addon->i18n('get_snapshot') . '"

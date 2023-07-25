@@ -69,6 +69,7 @@ diff_detect_snapshot_not_created = Es wurde kein neuer Snapshot von `{0}` erstel
 diff_detect_snapshot_error = Snapshot von `{0}` konnte nicht erstellt werden. Fehlermeldung: `{1}`
 back_to_snapshots = Zurück zu Snapshots
 last_scan = Letzter Scanversuch
+last_snapshot = Letzter Snapshot
 
 interval_in_min_5 = 5 Minuten
 interval_in_min_15 = 15 Minuten

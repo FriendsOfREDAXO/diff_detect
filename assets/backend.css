@@ -15,6 +15,10 @@
   margin-right: 1rem;
 }
 
+.table .nowrap {
+    white-space: nowrap;
+}
+
 ul.rss {
   padding: 0;
 }

@@ -2,6 +2,9 @@
 
 /** @var rex_addon $this */
 
+use FriendsOfRedaxo\DiffDetect\Index;
+use FriendsOfRedaxo\DiffDetect\Url;
+
 $func = rex_request('func', 'string', '');
 $id = rex_get('id', 'int');
 
@@ -96,8 +99,25 @@ rex_extension::register('REX_FORM_SAVED', static function ($ep) {
     $params = $ep->getParams();
     $id = $params['sql']->getLastId();
     if ($id && $id > 0) {
-        $Url = \FriendsOfRedaxo\DiffDetect\Url::get($id);
-        \FriendsOfRedaxo\DiffDetect\Index::createSnapshot($Url);
+        $Url = Url::get($id);
+        Index::createSnapshot($Url);
+    }
+});
+
+rex_extension::register('REX_FORM_DELETED', static function ($ep) {
+
+    /** @var rex_extension_point $ep */
+    $params = $ep->getParams();
+
+    if ('rex_diff_detect_form' == get_class($params['form'])) {
+        /** @var rex_diff_detect_form $form */
+        $form = $params['form'];
+        $form_params = $form->getParams();
+
+        rex_sql::factory()->setQuery('delete from `'.rex::getTable('diff_detect_index').'` where url_id=:url_id', [
+            'url_id' => $form_params['id'],
+        ]);
+
     }
 });
 

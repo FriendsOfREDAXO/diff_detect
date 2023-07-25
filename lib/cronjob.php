@@ -20,6 +20,7 @@ class rex_cronjob_diff_detect extends rex_cronjob
                 u.last_scan IS NULL
                 OR  u.last_scan < DATE_SUB(NOW(), INTERVAL u.interval MINUTE)
             )
+            order by u.last_scan
         ');
 
         for ($i = 0; $i < $sql->getRows(); ++$i) {

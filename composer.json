@@ -12,5 +12,13 @@
         "psr/container": "*",
         "psr/http-message": "*",
         "psr/log": "*"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "rm -rf vendor/composer && rm -f vendor/autoload.php"
+        ],
+        "post-update-cmd": [
+            "rm -rf vendor/composer && rm -f vendor/autoload.php"
+        ]
     }
 }

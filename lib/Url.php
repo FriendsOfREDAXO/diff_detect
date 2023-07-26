@@ -62,6 +62,7 @@ final class Url
     /**
      * @param mixed $value
      * @return $this
+     * @api
      */
     public function setValue(string $key, $value): self
     {
@@ -124,6 +125,7 @@ final class Url
         return $this->getValue('type');
     }
 
+    /** @api */
     public function getUrl(): string
     {
         return $this->getValue('url');

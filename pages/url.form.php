@@ -11,7 +11,7 @@ $id = rex_get('id', 'int');
 $form = rex_diff_detect_form::factory(rex::getTable('diff_detect_url'), '', 'id = ' . $id);
 $form->setFormAttribute('autocomplete', 'off');
 
-if ('edit' === $func && $id) {
+if ('edit' === $func && 0 < $id) {
     $form->setEditMode(true);
     $form->addParam('id', $id);
 }
@@ -109,7 +109,7 @@ rex_extension::register('REX_FORM_DELETED', static function ($ep) {
     /** @var rex_extension_point $ep */
     $params = $ep->getParams();
 
-    if ('rex_diff_detect_form' == get_class($params['form'])) {
+    if ('rex_diff_detect_form' === get_class($params['form'])) {
         /** @var rex_diff_detect_form $form */
         $form = $params['form'];
         $form_params = $form->getParams();

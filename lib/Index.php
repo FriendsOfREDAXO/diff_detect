@@ -52,6 +52,7 @@ final class Index
         return $index;
     }
 
+    /** @api */
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +61,7 @@ final class Index
     /**
      * @param mixed $value
      * @return $this
+     * @api
      */
     public function setValue(string $key, $value): self
     {
@@ -148,6 +150,7 @@ final class Index
         return $this;
     }
 
+    /** @api */
     public function getUrl(): ?Url
     {
         return $this->url;
@@ -165,6 +168,7 @@ final class Index
         return $content;
     }
 
+    /** @api */
     public function getOnepage()
     {
         return $this->getValue('onepage');

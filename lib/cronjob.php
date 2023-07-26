@@ -18,10 +18,13 @@ class rex_cronjob_diff_detect extends rex_cronjob
             WHERE       u.status = 1
             AND         (
                 u.last_scan IS NULL
-                OR  u.last_scan < DATE_SUB("'.date(rex_sql::FORMAT_DATETIME).'", INTERVAL u.interval MINUTE)
+                OR  u.last_scan < DATE_SUB(:datetime, INTERVAL u.interval MINUTE)
             )
             order by u.last_scan
-        ');
+        ',
+        [
+            'datetime' => date(rex_sql::FORMAT_DATETIME)
+        ]);
 
         for ($i = 0; $i < $sql->getRows(); ++$i) {
             $Url = \FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id'));

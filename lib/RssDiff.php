@@ -2,11 +2,7 @@
 
 namespace FriendsOfRedaxo\DiffDetect;
 
-use HtmlDiffAdvanced;
 use Laminas\Feed\Reader\Entry\Rss;
-use rex_addon;
-
-use function array_key_exists;
 
 class RssDiff
 {
@@ -39,26 +35,26 @@ class RssDiff
         $output = '';
         /** @var \Laminas\Feed\Reader\Entry\Rss $item */
         foreach ($itemsBefore as $id => $item) {
-            if (array_key_exists($id, $itemsAfter)) {
-                $diff = HtmlDiffAdvanced::create($this->renderItem($item), $this->renderItem($itemsAfter[$id]));
+            if (\array_key_exists($id, $itemsAfter)) {
+                $diff = \HtmlDiffAdvanced::create($this->renderItem($item), $this->renderItem($itemsAfter[$id]));
                 $diffContent = $diff->build();
 
-                if ($diff->getDifference()) {
+                if ('' !== $diff->getDifference()) {
                     $class = 'modified';
-                    $label = '<span class="label label-info">' . rex_addon::get('diff_detect')->i18n('modified') . '</span>';
+                    $label = '<span class="label label-info">' . \rex_addon::get('diff_detect')->i18n('modified') . '</span>';
                 } else {
                     $class = 'existing';
-                    $label = '<span class="label label-default">' . rex_addon::get('diff_detect')->i18n('old') . '</span>';
+                    $label = '<span class="label label-default">' . \rex_addon::get('diff_detect')->i18n('old') . '</span>';
                 }
                 $output .= '<li class="' . $class . '"><div>';
                 $output .= $label;
                 $output .= $diffContent;
                 $output .= '</div>';
             } else {
-                $output .= '<li class="new"><div><span class="label label-success">' . rex_addon::get('diff_detect')->i18n('new') . '</span>' . $this->renderItem($item) . '</div>';
+                $output .= '<li class="new"><div><span class="label label-success">' . \rex_addon::get('diff_detect')->i18n('new') . '</span>' . $this->renderItem($item) . '</div>';
             }
-
-            if ($link = $item->getLink()) {
+            $link = $item->getLink();
+            if (is_string($link)) {
                 if (($linkAfter = ($itemsAfter[$id] ?? null)?->getLink()) && $link !== $linkAfter) {
                     $output .= '<a class="link" href="' . $link . '" target="_blank"><ins>' . $link . '</ins></a>';
                     $output .= '<a class="link" href="' . $linkAfter . '" target="_blank"><del>' . $linkAfter . '</del></a>';

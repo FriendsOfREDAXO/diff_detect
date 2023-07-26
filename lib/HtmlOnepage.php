@@ -30,6 +30,9 @@ class HtmlOnepage
         }
     }
 
+    /**
+     * @api
+     */
     public function get(): string
     {
         $this->process();
@@ -88,7 +91,7 @@ class HtmlOnepage
             return $url;
         }
 
-        if ($this->base) {
+        if (is_string($this->base)) {
             return rtrim($this->base, '/') . '/' . ltrim($url, '/');
         }
 

@@ -5,7 +5,8 @@ class rex_cronjob_diff_detect extends rex_cronjob
     public function execute()
     {
         $sql = rex_sql::factory();
-        $sql->setQuery('
+        $sql->setQuery(
+            '
             SELECT      u.*
                         , i.createdate AS last_index_date
             FROM        ' . rex::getTable('diff_detect_url') . ' u
@@ -22,23 +23,31 @@ class rex_cronjob_diff_detect extends rex_cronjob
             )
             order by u.last_scan
         ',
-        [
-            'datetime' => date(rex_sql::FORMAT_DATETIME)
-        ]);
+            [
+                'datetime' => date(rex_sql::FORMAT_DATETIME),
+            ]
+        );
 
         for ($i = 0; $i < $sql->getRows(); ++$i) {
             $Url = \FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id'));
             try {
                 if (\FriendsOfRedaxo\DiffDetect\Index::createSnapshot($Url)) {
                     echo rex_view::success(rex_i18n::msg('diff_detect_snapshot_created', $Url->getName()));
+                    $this->setMessage('snapshot created for '.$Url->getName().' ['.$Url->getId().']');
                 } else {
                     echo rex_view::success(rex_i18n::msg('diff_detect_snapshot_not_created', $Url->getName()));
+                    $this->setMessage('snapshot not created for '.$Url->getName().' ['.$Url->getId().']');
                 }
-            } catch (rex_exception $e) {
+            } catch (Exception $e) {
                 echo rex_view::error(rex_i18n::msg('diff_detect_snapshot_error', $Url->getName(), $e->getMessage()));
+                $this->setMessage('snapshot error for '.$Url->getName().' ['.$Url->getId().']');
                 break;
             }
             $sql->next();
+        }
+
+        if (0 === $sql->getRows()) {
+            $this->setMessage('no snapshots');
         }
 
         return true;

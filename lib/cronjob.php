@@ -32,14 +32,11 @@ class rex_cronjob_diff_detect extends rex_cronjob
             $Url = \FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id'));
             try {
                 if (\FriendsOfRedaxo\DiffDetect\Index::createSnapshot($Url)) {
-                    echo rex_view::success(rex_i18n::msg('diff_detect_snapshot_created', $Url->getName()));
                     $this->setMessage('snapshot created for '.$Url->getName().' ['.$Url->getId().']');
                 } else {
-                    echo rex_view::success(rex_i18n::msg('diff_detect_snapshot_not_created', $Url->getName()));
                     $this->setMessage('snapshot not created for '.$Url->getName().' ['.$Url->getId().']');
                 }
             } catch (Exception $e) {
-                echo rex_view::error(rex_i18n::msg('diff_detect_snapshot_error', $Url->getName(), $e->getMessage()));
                 $this->setMessage('snapshot error for '.$Url->getName().' ['.$Url->getId().']');
                 break;
             }

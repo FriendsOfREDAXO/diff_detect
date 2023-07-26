@@ -2,11 +2,11 @@
 
 /** @var rex_addon $this */
 
-$urlId = rex_request('id', 'int');
+$urlId = rex_request('id', 'int', null);
 $idBefore = rex_request('before', 'int', null);
 $idAfter = rex_request('after', 'int', null);
 
-if (!$urlId || !$idBefore || !$idAfter) {
+if (null === $urlId || null === $idBefore || null === $idAfter) {
     echo rex_view::error($this->i18n('diff_error'));
     $title = '';
     $content = '';
@@ -40,7 +40,7 @@ if (!$urlId || !$idBefore || !$idAfter) {
             ],
         );
 
-        if (!$content) {
+        if ('' === $content) {
             $content = '<table class="diff-wrapper diff diff-html diff-combined">
     <thead><tr><th>Keine Unterschiede</th></tr></thead>
     <tbody class="change change-eq"><tr data-type=" "><td class="new">' . $indexAfter->getContent() . '</td></tr></tbody>

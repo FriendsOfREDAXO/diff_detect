@@ -5,9 +5,11 @@
 use FriendsOfRedaxo\DiffDetect\Index;
 use FriendsOfRedaxo\DiffDetect\Url;
 
+$id = rex_request('id', 'int');
+
 switch (rex_get('func')) {
     case 'status':
-        if ($id = rex_request('id', 'int')) {
+        if (0 < $id) {
             $status = rex_get('status', 'bool');
 
             $sql = rex_sql::factory();
@@ -20,7 +22,7 @@ switch (rex_get('func')) {
         break;
 
     case 'snapshot':
-        if ($id = rex_request('id', 'int')) {
+        if (0 < $id) {
             $Url = Url::get($id);
             try {
                 if (Index::createSnapshot($Url)) {
@@ -119,7 +121,8 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
         'status' => $list->getValue('status') ? '0' : '1',
     ];
 
-    if ($start = rex_request($startKey = $list->getName() . '_start')) {
+    $start = rex_request($startKey = $list->getName() . '_start', 'string', '');
+    if ('' !== $start) {
         $urlParams[$startKey] = $start;
     }
 
@@ -160,7 +163,8 @@ $list->setColumnFormat('snapshot', 'custom', static function ($params) {
         'id' => $list->getValue('id'),
     ];
 
-    if ($start = rex_request($startKey = $list->getName() . '_start')) {
+    $start = rex_request($startKey = $list->getName() . '_start','string','');
+    if ('' !== $start) {
         $urlParams[$startKey] = $start;
     }
 

@@ -3,16 +3,11 @@
 namespace FriendsOfRedaxo\DiffDetect;
 
 use Html2Text\Html2Text;
-use InvalidArgumentException;
-use rex;
-use rex_instance_pool_trait;
-use rex_socket_exception;
-use rex_sql;
 use voku\helper\HtmlDomParser;
 
 final class Index
 {
-    use rex_instance_pool_trait;
+    use \rex_instance_pool_trait;
 
     protected ?Url $url;
     protected ?int $id = null;
@@ -29,15 +24,15 @@ final class Index
     public static function get(int $id): ?self
     {
         if ($id <= 0) {
-            throw new InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', (string) $id));
+            throw new \InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', (string) $id));
         }
 
-        $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('diff_detect_index'));
+        $sql = \rex_sql::factory();
+        $sql->setTable(\rex::getTable('diff_detect_index'));
         $sql->setWhere('id = ?', [$id]);
         $sql->select();
 
-        if (!$sql->getRows()) {
+        if (null === $sql->getRows()) {
             return null;
         }
 
@@ -59,7 +54,6 @@ final class Index
     }
 
     /**
-     * @param mixed $value
      * @return $this
      * @api
      */
@@ -70,9 +64,6 @@ final class Index
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getValue(string $key)
     {
         if ('id' === $key) {
@@ -113,20 +104,20 @@ final class Index
             }
             $hash = md5($content);
 
-            $sql = rex_sql::factory();
-            $sql->setTable(rex::getTable('diff_detect_index'));
+            $sql = \rex_sql::factory();
+            $sql->setTable(\rex::getTable('diff_detect_index'));
             $sql->setWhere('url_id = ? ORDER BY createdate DESC LIMIT 1', [$url->getId()]);
             $sql->select('id,`hash`');
 
-            if ($sql->getRows() && $sql->getValue('hash') === $hash) {
-                $sql->setTable(rex::getTable('diff_detect_index'));
-                $sql->setValue('updatedate', date(rex_sql::FORMAT_DATETIME));
+            if (null !== $sql->getRows() && $sql->getValue('hash') === $hash) {
+                $sql->setTable(\rex::getTable('diff_detect_index'));
+                $sql->setValue('updatedate', date(\rex_sql::FORMAT_DATETIME));
                 $sql->setWhere('id = :id', ['id' => $sql->getValue('id')]);
                 $sql->update();
                 return false;
             }
 
-            $sql->setTable(rex::getTable('diff_detect_index'));
+            $sql->setTable(\rex::getTable('diff_detect_index'));
             $sql->addGlobalCreateFields();
             $sql->addGlobalUpdateFields();
             $sql->setValue('url_id', $url->getId());
@@ -137,7 +128,7 @@ final class Index
             $sql->setValue('statusCode', $response->getStatusCode());
             $sql->setValue('statusMessage', $response->getStatusMessage());
             $sql->insert();
-        } catch (rex_socket_exception $e) {
+        } catch (\rex_socket_exception $e) {
             // throw new \rex_exception($e->getMessage());
             return false;
         }

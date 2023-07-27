@@ -28,24 +28,28 @@ class rex_cronjob_diff_detect extends rex_cronjob
             ]
         );
 
+        $messages = [];
+
         for ($i = 0; $i < $sql->getRows(); ++$i) {
             $Url = \FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id'));
             try {
                 if (\FriendsOfRedaxo\DiffDetect\Index::createSnapshot($Url)) {
-                    $this->setMessage('snapshot created for '.$Url->getName().' ['.$Url->getId().']');
+                    $messages[] = 'snapshot created for '.$Url->getName().' ['.$Url->getId().']';
                 } else {
-                    $this->setMessage('snapshot not created for '.$Url->getName().' ['.$Url->getId().']');
+                    $messages[] = 'snapshot not created for '.$Url->getName().' ['.$Url->getId().']';
                 }
             } catch (Exception $e) {
-                $this->setMessage('snapshot error for '.$Url->getName().' ['.$Url->getId().']');
+                $messages[] = 'snapshot error for '.$Url->getName().' ['.$Url->getId().']';
                 break;
             }
             $sql->next();
         }
 
         if (0 === $sql->getRows()) {
-            $this->setMessage('no snapshots');
+            $messages[] = 'no snapshots';
         }
+
+        $this->setMessage(implode("\n", $messages));
 
         return true;
     }

@@ -40,12 +40,18 @@ switch (rex_get('func')) {
 
 $list = rex_list::factory(
     '
-SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, u.last_scan, u.interval, s.snapshot
+SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, u.interval, i.createdate as snapshot, u.last_scan, i.checked
 FROM        ' . rex::getTable('diff_detect_url') . ' u
-LEFT JOIN   (SELECT url_id, MAX(createdate) AS snapshot FROM ' . rex::getTable('diff_detect_index') . ' GROUP BY url_id) s
-ON          u.id = s.url_id
-GROUP BY    u.id
-ORDER BY    name ASC',
+JOIN   (
+    SELECT url_id, MAX(createdate) AS MaxTime
+	 FROM ' . rex::getTable('diff_detect_index') . '
+	 GROUP BY url_id
+) as LatestSnapshot
+ON u.id = LatestSnapshot.url_id
+JOIN ' . rex::getTable('diff_detect_index') . ' i
+ON u.id=i.url_id AND i.createdate = LatestSnapshot.MaxTime
+ORDER BY snapshot DESC
+',
 );
 
 $list->addTableAttribute('class', 'table-striped table-hover');
@@ -139,14 +145,13 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
     ) ? 'green' : 'red') . '">' . $addon->i18n($list->getValue('status') ? 'active' : 'inactive') . '</a></div>';
 });
 
-$list->removeColumn('last_scan');
+// $list->removeColumn('last_scan');
 
 $list->setColumnFormat('interval', 'custom', static function ($params) {
     return rex_i18n::msg('interval_in_min_'.$params['value']);
 });
 
-$list->setColumnLabel('snapshot', $this->i18n('last_scan').'/ '.$this->i18n('last_snapshot'));
-
+$list->setColumnLabel('snapshot', $this->i18n('last_scan').'/ <br />'.$this->i18n('last_snapshot'));
 $list->setColumnFormat('snapshot', 'custom', static function ($params) {
     /** @var \rex_list $list */
     $list = $params['list'];
@@ -157,32 +162,51 @@ $list->setColumnFormat('snapshot', 'custom', static function ($params) {
     }
     $timestamp_last_scan = '<span class="nowrap">'.$timestamp_last_scan.'</span>';
 
-    $containerId = 'snapshot-' . $list->getName() . '-' . $list->getValue('id');
-    $urlParams = [
-        'func' => 'snapshot',
-        'id' => $list->getValue('id'),
-    ];
-
-    $start = rex_request($startKey = $list->getName() . '_start','string','');
-    if ('' !== $start) {
-        $urlParams[$startKey] = $start;
-    }
-
     if ($list->getValue('snapshot')) {
         $timestamp = rex_formatter::intlDateTime($list->getValue('snapshot'));
     } else {
         $timestamp = '-';
     }
 
+    return $timestamp_last_scan.'<div class="snapshot-action">' . $timestamp . '</div>';
+});
+
+$list->setColumnFormat('checked', 'custom', static function ($params) {
+    /** @var \rex_list $list */
+    $list = $params['list'];
     $addon = rex_addon::get('diff_detect');
-    return $timestamp_last_scan.'<div class="snapshot-action">' . $timestamp . '
-    <a
+    $checked = $list->getValue('checked');
+    if (1 === $checked) {
+        $checked = '<span class="label label-success">'.$addon->i18n('checked').'</span>';
+    } else {
+        $checked = '<span class="label label-warning">'.$addon->i18n('not_checked').'</span>';
+    }
+    return $checked;
+});
+
+$list->setColumnLabel('last_scan', '-');
+$list->setColumnFormat('last_scan', 'custom', static function ($params) {
+    /** @var \rex_list $list */
+    $list = $params['list'];
+
+    $urlParams = [
+        'func' => 'snapshot',
+        'id' => $list->getValue('id'),
+    ];
+
+    $start = rex_request($startKey = $list->getName() . '_start', 'string', '');
+    if ('' !== $start) {
+        $urlParams[$startKey] = $start;
+    }
+
+    $addon = rex_addon::get('diff_detect');
+
+    return '<a
     href="' . $list->getUrl($urlParams) . '"
     title="' . $addon->i18n('get_snapshot') . '"
     >
         <i class="rex-icon fa-rotate-right"></i>
-    </a>
-</div>';
+    </a>';
 });
 
 $list->addColumn($this->i18n('snapshots_show'), $this->i18n('snapshots_show'));

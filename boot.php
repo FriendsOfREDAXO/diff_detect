@@ -15,6 +15,7 @@ if (rex::isBackend()) {
         rex_view::addCssFile($this->getAssetsUrl('diff-table.css'));
         rex_view::addJsFile($this->getAssetsUrl('backend.js'));
         rex_view::addCssFile($this->getAssetsUrl('backend.css'));
+        rex_view::addCssFile($this->getAssetsUrl('table.css'));
     }
 }
 

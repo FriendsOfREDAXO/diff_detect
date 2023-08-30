@@ -65,4 +65,12 @@ ul.rss li a img {
   max-width: 100%;
 }
 
+a.diff-status-green {
+    color: #28a745;
+}
+
+a.diff-status-red {
+    color: #dc3545;
+}
+
 /*# sourceMappingURL=table.css.map */

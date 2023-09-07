@@ -97,11 +97,12 @@ final class Index
             $content = $response->getBody();
 
             if ('HTML' === $url->getType()) {
-                //            $onepage = (new HtmlOnepage($url->getUrl(), $content))->get();
-                $onepage = '';
-            } else {
-                $onepage = '';
+                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $content);
+                $content = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $content);
+                $content = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is', '', $content);
+                $content = strip_tags($content, ['img', 'video']);
             }
+
             $hash = md5($content);
 
             $sql = \rex_sql::factory();
@@ -122,7 +123,6 @@ final class Index
             $sql->addGlobalUpdateFields();
             $sql->setValue('url_id', $url->getId());
             $sql->setValue('content', $response->getBody());
-            $sql->setValue('onepage', $onepage);
             $sql->setValue('hash', $hash);
             $sql->setValue('header', $response->getHeader());
             $sql->setValue('statusCode', $response->getStatusCode());
@@ -147,7 +147,7 @@ final class Index
         return $this->url;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         if ('RSS' === $this->url?->getType()) {
             return $this->getValue('content');
@@ -157,11 +157,5 @@ final class Index
         // $content = HtmlDomParser::str_get_html($content)->findOne('#content')->innerHtml();
         $content = (new Html2Text($content))->getText();
         return $content;
-    }
-
-    /** @api */
-    public function getOnepage()
-    {
-        return $this->getValue('onepage');
     }
 }

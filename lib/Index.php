@@ -110,7 +110,7 @@ final class Index
             $sql->setWhere('url_id = ? ORDER BY createdate DESC LIMIT 1', [$url->getId()]);
             $sql->select('id,`hash`');
 
-            if (0 !== $sql->getRows() ?? 0 && $sql->getValue('hash') === $hash) {
+            if (0 !== ($sql->getRows() ?? 0) && $sql->getValue('hash') === $hash) {
                 $sql->setTable(\rex::getTable('diff_detect_index'));
                 $sql->setValue('updatedate', date(\rex_sql::FORMAT_DATETIME));
                 $sql->setWhere('id = :id', ['id' => $sql->getValue('id')]);

@@ -98,3 +98,5 @@ settings = Konfiguration
 cleanup_interval = Snapshots die älter sind als __ löschen
 settings_updated = Konfiguration wurde gespeichert
 config_save = speichern
+
+hitme = Zum ersten Treffer

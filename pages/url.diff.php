@@ -22,6 +22,7 @@ if (null === $urlId || null === $idBefore || null === $idAfter) {
         rex_formatter::intlDateTime($indexAfter->getValue('createdate')),
     );
 
+    $first_detect = '';
     if ('RSS' === $url->getType()) {
         $content = (new \FriendsOfRedaxo\DiffDetect\RssDiff($indexBefore->getContent(), $indexAfter->getContent()))->calculate();
     } else {
@@ -42,14 +43,18 @@ if (null === $urlId || null === $idBefore || null === $idAfter) {
 
         if ('' === $content) {
             $content = '<table class="diff-wrapper diff diff-html diff-combined">
-    <thead><tr><th>Keine Unterschiede</th></tr></thead>
-    <tbody class="change change-eq"><tr data-type=" "><td class="new">' . $indexAfter->getContent() . '</td></tr></tbody>
-</table>';
+                            <thead><tr><th>Keine Unterschiede</th></tr></thead>
+                            <tbody class="change change-eq"><tr data-type=" "><td class="new">' . $indexAfter->getContent() . '</td></tr></tbody>
+                        </table>';
+        } else {
+            // HTML Div gefunden
+            $content = preg_replace('/<del\b[^>]*>(.*?)<\/del>/is', '<del id="diff_detect_first_hit">$1</del>', $content, 1);
+            $first_detect = ' <a href="#diff_detect_first_hit" class="">'.$this->i18n('hitme').'</a>';
         }
     }
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', $title, false);
+    $fragment->setVar('title', $title.$first_detect, false);
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 

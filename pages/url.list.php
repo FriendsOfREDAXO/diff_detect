@@ -42,16 +42,16 @@ $list = rex_list::factory(
     '
 SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, u.interval, i.createdate as snapshot, u.last_scan, i.checked
 FROM        ' . rex::getTable('diff_detect_url') . ' u
-JOIN   (
+LEFT JOIN   (
     SELECT url_id, MAX(createdate) AS MaxTime
 	 FROM ' . rex::getTable('diff_detect_index') . '
 	 GROUP BY url_id
 ) as LatestSnapshot
 ON u.id = LatestSnapshot.url_id
-JOIN ' . rex::getTable('diff_detect_index') . ' i
+LEFT JOIN ' . rex::getTable('diff_detect_index') . ' i
 ON u.id=i.url_id AND i.createdate = LatestSnapshot.MaxTime
 ORDER BY snapshot DESC
-',
+',50
 );
 
 $list->addTableAttribute('class', 'table-striped table-hover');

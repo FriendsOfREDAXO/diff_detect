@@ -11,9 +11,12 @@ final class Index
 
     protected ?Url $url;
     protected ?int $id = null;
+    /**
+     * @var array<string, mixed>
+     */
     protected $data = [];
 
-    private function __construct($id)
+    private function __construct(int $id)
     {
         $this->id = $id;
     }
@@ -57,14 +60,14 @@ final class Index
      * @return $this
      * @api
      */
-    public function setValue(string $key, $value): self
+    public function setValue(string $key, mixed $value): self
     {
         $this->data[$key] = $value;
 
         return $this;
     }
 
-    public function getValue(string $key)
+    public function getValue(string $key): mixed
     {
         if ('id' === $key) {
             return $this->id;
@@ -74,7 +77,8 @@ final class Index
     }
 
     /**
-     * @return static
+     * @param array<string, mixed> $data
+     * @return self
      */
     private static function fromSqlData(array $data): self
     {
@@ -135,7 +139,31 @@ final class Index
         return true;
     }
 
-    public function setUrl(Url $url)
+    public static function cleanUpSnapshots(): void
+    {
+        $addon = \rex_addon::get('diff_detect');
+        $cleanup_interval = $addon->getConfig('cleanup_interval');
+
+        if (null === $cleanup_interval || 0 === $cleanup_interval) {
+            return;
+        }
+
+        $cleanup_interval = (int) $cleanup_interval;
+
+        $sql = \rex_sql::factory();
+        $sql->setTable(\rex::getTable('diff_detect_index'));
+        $sql->setWhere('createdate < DATE_SUB(:datetime, INTERVAL :interval SECOND)', [
+            'datetime' => date(\rex_sql::FORMAT_DATETIME),
+            'interval' => $cleanup_interval,
+        ]);
+        $sql->delete();
+        if (null !== $sql->getError()) {
+            throw new \rex_exception($sql->getError());
+        }
+
+    }
+
+    public function setUrl(Url $url): self
     {
         $this->url = $url;
         return $this;

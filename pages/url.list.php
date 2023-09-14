@@ -10,7 +10,7 @@ $id = rex_request('id', 'int');
 switch (rex_get('func')) {
     case 'status':
         if (0 < $id) {
-            $status = rex_get('status', 'bool');
+            $status = (bool) rex_get('status', 'bool');
 
             $sql = rex_sql::factory();
             $sql->setTable(rex::getTable('diff_detect_url'));
@@ -86,7 +86,7 @@ $list->setColumnFormat('url', 'custom', static function ($params) {
     /** @var rex_list $list */
     $list = $params['list'];
 
-    $title = $list->getValue('name');
+    $title = (string) $list->getValue('name');
     if (60 < mb_strlen($title)) {
         $title = mb_substr($title, 0, 25).' ... '.mb_substr($title, -25);
     }
@@ -98,7 +98,7 @@ $list->setColumnFormat('url', 'custom', static function ($params) {
     }
     $value = '<span class="nowrap"><a href="'.rex_escape($params['value']).'" title="'.rex_escape($params['value']).'" target="_blank">'.$value.'</a></span>';
 
-    $categories = $list->getValue('categories');
+    $categories = (string) $list->getValue('categories');
     $categories = '<br /><span>'.implode(' ', array_map(static fn ($item) => '<span class="label label-default">' . $item . '</span>', explode(',', $categories))).'</span>';
 
     return $title.'<br />'.$value.$categories;
@@ -124,7 +124,7 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
     $urlParams = [
         'func' => 'status',
         'id' => $list->getValue('id'),
-        'status' => $list->getValue('status') ? '0' : '1',
+        'status' => ('0' === $list->getValue('status')) ? '0' : '1',
     ];
 
     $start = rex_request($startKey = $list->getName() . '_start', 'string', '');
@@ -133,11 +133,10 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
     }
 
     $addon = rex_addon::get('diff_detect');
-
     return '<div><a href="' . $list->getUrl(
         $urlParams,
     ) . '" title="' . $addon->i18n(
-        $list->getValue('status')
+        ('1' === $list->getValue('status'))
                 ? 'active_title'
                 : 'inactive_title',
     ) . '" class="diff-status-' . ($list->getValue(

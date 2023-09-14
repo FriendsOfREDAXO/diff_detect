@@ -19,7 +19,7 @@ if (null !== $checked && null !== $indexId) {
     echo rex_view::success(( (1 === $checked) ? rex_i18n::msg('index_checked') : rex_i18n::msg('index_not_checked')));
 }
 
-$Url = \FriendsOfRedaxo\DiffDetect\Url::get($urlId);
+$Url = \FriendsOfRedaxo\DiffDetect\Url::get((int) $urlId);
 if (null === $Url) {
     echo rex_view::error(rex_i18n::msg('diff_detect_url_not_found'));
     return;

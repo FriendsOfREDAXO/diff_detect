@@ -107,6 +107,7 @@ rex_extension::register('REX_FORM_SAVED', static function ($ep) {
 rex_extension::register('REX_FORM_DELETED', static function ($ep) {
 
     /** @var rex_extension_point $ep */
+    /** @var array<string, mixed> $params */
     $params = $ep->getParams();
 
     if ('rex_diff_detect_form' === get_class($params['form'])) {

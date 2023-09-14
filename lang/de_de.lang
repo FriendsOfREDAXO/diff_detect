@@ -2,7 +2,7 @@ diff_detect = Diff Detect
 dashboard = Dashboard
 filter = Filter
 
-diff_detect_create_snapshots = DiffDetect: Snapshots erstellen
+diff_detect_create_snapshots = DiffDetect: Snapshots erstellen und CleanUp durchführen
 
 active = aktiv
 inactive = inaktiv
@@ -82,6 +82,10 @@ interval_in_min_4320 = 3 Tage
 interval_in_min_10080 = 1 Woche
 interval_in_min_20160 = 2 Wochen
 interval_in_min_43200 = 30 Tage / 1 Monat
+interval_in_min_129600 = 3 Monate
+interval_in_min_259200 = 6 Monate
+interval_in_min_518400 = 1 Jahr
+no_cleanup = CleanUp wird nicht durchgeführt
 
 invalid_url = Die URL ist ungültig. Bitte inkl http[s]:// angeben.
 diff_detect_url_not_found = Die URL wurde nicht gefunden.
@@ -89,3 +93,8 @@ checked = Geprüft
 not_checked = Nicht geprüft
 index_checked = Index wurde geprüft.
 index_not_checked = Index wurde nicht geprüft.
+
+settings = Konfiguration
+cleanup_interval = Snapshots die älter sind als __ löschen
+settings_updated = Konfiguration wurde gespeichert
+config_save = speichern

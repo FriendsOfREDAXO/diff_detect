@@ -17,6 +17,8 @@ page:
     subpages:
         dashboard:
             title: 'translate:dashboard'
+        settings:
+            title: 'translate:settings'
 
 installer_ignore:
     - .github

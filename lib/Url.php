@@ -7,11 +7,14 @@ final class Url
     use \rex_instance_pool_trait;
 
     protected ?int $id = null;
-    protected $data = [];
+    /**
+     * @var array<string, mixed> $data
+     */
+    protected array $data = [];
     private static int $timeout = 5;
     private static int $maxRedirects = 5;
 
-    private function __construct($id)
+    private function __construct(int $id)
     {
         $this->id = $id;
     }
@@ -56,14 +59,14 @@ final class Url
      * @return $this
      * @api
      */
-    public function setValue(string $key, $value): self
+    public function setValue(string $key, mixed $value): self
     {
         $this->data[$key] = $value;
 
         return $this;
     }
 
-    public function getValue(string $key)
+    public function getValue(string $key): mixed
     {
         if ('id' === $key) {
             return $this->id;
@@ -73,7 +76,7 @@ final class Url
     }
 
     /**
-     * @return static
+     * @param array<string, mixed> $data
      */
     private static function fromSqlData(array $data): self
     {
@@ -124,6 +127,10 @@ final class Url
         return $this->getValue('url');
     }
 
+    /**
+     * @throws \rex_sql_exception
+     * @return array<int, array<string, mixed>>
+     */
     public function getSnapshots(): array
     {
         return \rex_sql::factory()->getArray(

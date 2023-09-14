@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\DiffDetect\Index;
+
 class rex_cronjob_diff_detect extends rex_cronjob
 {
     public function execute()
@@ -31,9 +33,9 @@ class rex_cronjob_diff_detect extends rex_cronjob
         $messages = [];
 
         for ($i = 0; $i < $sql->getRows(); ++$i) {
-            $Url = \FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id'));
+            $Url = \FriendsOfRedaxo\DiffDetect\Url::get((int) $sql->getValue('id'));
             try {
-                if (\FriendsOfRedaxo\DiffDetect\Index::createSnapshot($Url)) {
+                if (Index::createSnapshot($Url)) {
                     $messages[] = 'snapshot created for '.$Url->getName().' ['.$Url->getId().']';
                 } else {
                     $messages[] = 'snapshot not created for '.$Url->getName().' ['.$Url->getId().']';
@@ -50,6 +52,8 @@ class rex_cronjob_diff_detect extends rex_cronjob
         }
 
         $this->setMessage(implode("\n", $messages));
+
+        Index::cleanUpSnapshots();
 
         return true;
     }

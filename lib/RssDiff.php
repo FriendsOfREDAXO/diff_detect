@@ -3,21 +3,25 @@
 namespace FriendsOfRedaxo\DiffDetect;
 
 use Laminas\Feed\Reader\Entry\Rss;
+use Laminas\Feed\Reader\Reader;
 
 class RssDiff
 {
     protected string $before = '';
     protected string $after = '';
 
-    public function __construct($before, $after)
+    public function __construct(string $before, string $after)
     {
         $this->before = $before;
         $this->after = $after;
     }
 
-    protected function getItems($content): array
+    /**
+     * @return array<int|string, mixed>
+     */
+    protected function getItems(string $content): array
     {
-        $feed = \Laminas\Feed\Reader\Reader::importString($content);
+        $feed = Reader::importString($content);
         $items = [];
 
         foreach ($feed as $item) {
@@ -54,7 +58,7 @@ class RssDiff
                 $output .= '<li class="new"><div><span class="label label-success">' . \rex_addon::get('diff_detect')->i18n('new') . '</span>' . $this->renderItem($item) . '</div>';
             }
             $link = $item->getLink();
-            if (is_string($link)) {
+            if (\is_string($link)) {
                 if (($linkAfter = ($itemsAfter[$id] ?? null)?->getLink()) && $link !== $linkAfter) {
                     $output .= '<a class="link" href="' . $link . '" target="_blank"><ins>' . $link . '</ins></a>';
                     $output .= '<a class="link" href="' . $linkAfter . '" target="_blank"><del>' . $linkAfter . '</del></a>';

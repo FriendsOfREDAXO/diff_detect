@@ -48,7 +48,7 @@ if (null === $urlId || null === $idBefore || null === $idAfter) {
                         </table>';
         } else {
             // HTML Div gefunden
-            $content = preg_replace('/<del\b[^>]*>(.*?)<\/del>/is', '<del id="diff_detect_first_hit">$1</del>', $content, 1);
+            $content = preg_replace('/data-type="([\+\-])"/is', 'data-type="$1" id="diff_detect_first_hit"', $content, 1);
             $first_detect = ' <a href="#diff_detect_first_hit" class="">'.$this->i18n('hitme').'</a>';
         }
     }

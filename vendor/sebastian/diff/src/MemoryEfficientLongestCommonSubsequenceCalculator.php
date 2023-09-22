@@ -20,7 +20,7 @@ use function max;
 final class MemoryEfficientLongestCommonSubsequenceCalculator implements LongestCommonSubsequenceCalculator
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function calculate(array $from, array $to): array
     {

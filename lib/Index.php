@@ -3,17 +3,22 @@
 namespace FriendsOfRedaxo\DiffDetect;
 
 use Html2Text\Html2Text;
+use InvalidArgumentException;
+use rex;
+use rex_addon;
+use rex_exception;
+use rex_instance_pool_trait;
+use rex_socket_exception;
+use rex_sql;
 use voku\helper\HtmlDomParser;
 
 final class Index
 {
-    use \rex_instance_pool_trait;
+    use rex_instance_pool_trait;
 
     protected ?Url $url;
     protected ?int $id = null;
-    /**
-     * @var array<string, mixed>
-     */
+    /** @var array<string, mixed> */
     protected $data = [];
 
     private function __construct(int $id)
@@ -27,11 +32,11 @@ final class Index
     public static function get(int $id): ?self
     {
         if ($id <= 0) {
-            throw new \InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', (string) $id));
+            throw new InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', (string) $id));
         }
 
-        $sql = \rex_sql::factory();
-        $sql->setTable(\rex::getTable('diff_detect_index'));
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('diff_detect_index'));
         $sql->setWhere('id = ?', [$id]);
         $sql->select();
 
@@ -78,7 +83,6 @@ final class Index
 
     /**
      * @param array<string, mixed> $data
-     * @return self
      */
     private static function fromSqlData(array $data): self
     {
@@ -109,20 +113,20 @@ final class Index
 
             $hash = md5($content);
 
-            $sql = \rex_sql::factory();
-            $sql->setTable(\rex::getTable('diff_detect_index'));
+            $sql = rex_sql::factory();
+            $sql->setTable(rex::getTable('diff_detect_index'));
             $sql->setWhere('url_id = ? ORDER BY createdate DESC LIMIT 1', [$url->getId()]);
             $sql->select('id,`hash`');
 
             if (0 !== ($sql->getRows() ?? 0) && $sql->getValue('hash') === $hash) {
-                $sql->setTable(\rex::getTable('diff_detect_index'));
-                $sql->setValue('updatedate', date(\rex_sql::FORMAT_DATETIME));
+                $sql->setTable(rex::getTable('diff_detect_index'));
+                $sql->setValue('updatedate', date(rex_sql::FORMAT_DATETIME));
                 $sql->setWhere('id = :id', ['id' => $sql->getValue('id')]);
                 $sql->update();
                 return false;
             }
 
-            $sql->setTable(\rex::getTable('diff_detect_index'));
+            $sql->setTable(rex::getTable('diff_detect_index'));
             $sql->addGlobalCreateFields();
             $sql->addGlobalUpdateFields();
             $sql->setValue('url_id', $url->getId());
@@ -132,7 +136,7 @@ final class Index
             $sql->setValue('statusCode', $response->getStatusCode());
             $sql->setValue('statusMessage', $response->getStatusMessage());
             $sql->insert();
-        } catch (\rex_socket_exception $e) {
+        } catch (rex_socket_exception $e) {
             // throw new \rex_exception($e->getMessage());
             return false;
         }
@@ -141,7 +145,7 @@ final class Index
 
     public static function cleanUpSnapshots(): void
     {
-        $addon = \rex_addon::get('diff_detect');
+        $addon = rex_addon::get('diff_detect');
         $cleanup_interval = $addon->getConfig('cleanup_interval');
 
         if (null === $cleanup_interval || 0 === $cleanup_interval) {
@@ -150,15 +154,15 @@ final class Index
 
         $cleanup_interval = (int) $cleanup_interval;
 
-        $sql = \rex_sql::factory();
-        $sql->setTable(\rex::getTable('diff_detect_index'));
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('diff_detect_index'));
         $sql->setWhere('createdate < DATE_SUB(:datetime, INTERVAL :interval SECOND)', [
-            'datetime' => date(\rex_sql::FORMAT_DATETIME),
+            'datetime' => date(rex_sql::FORMAT_DATETIME),
             'interval' => $cleanup_interval,
         ]);
         $sql->delete();
         if (null !== $sql->getError()) {
-            throw new \rex_exception($sql->getError());
+            throw new rex_exception($sql->getError());
         }
 
     }

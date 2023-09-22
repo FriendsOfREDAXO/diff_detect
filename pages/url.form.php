@@ -115,7 +115,7 @@ rex_extension::register('REX_FORM_DELETED', static function ($ep) {
         $form = $params['form'];
         $form_params = $form->getParams();
 
-        rex_sql::factory()->setQuery('delete from `'.rex::getTable('diff_detect_index').'` where url_id=:url_id', [
+        rex_sql::factory()->setQuery('delete from `' . rex::getTable('diff_detect_index') . '` where url_id=:url_id', [
             'url_id' => $form_params['id'],
         ]);
 

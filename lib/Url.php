@@ -2,14 +2,20 @@
 
 namespace FriendsOfRedaxo\DiffDetect;
 
+use InvalidArgumentException;
+use rex;
+use rex_instance_pool_trait;
+use rex_socket;
+use rex_socket_response;
+use rex_sql;
+use rex_sql_exception;
+
 final class Url
 {
-    use \rex_instance_pool_trait;
+    use rex_instance_pool_trait;
 
     protected ?int $id = null;
-    /**
-     * @var array<string, mixed> $data
-     */
+    /** @var array<string, mixed> */
     protected array $data = [];
     private static int $timeout = 5;
     private static int $maxRedirects = 5;
@@ -25,11 +31,11 @@ final class Url
     public static function get(int $id): ?self
     {
         if ($id <= 0) {
-            throw new \InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', (string) $id));
+            throw new InvalidArgumentException(sprintf('$id has to be an integer greater than 0, but "%s" given', (string) $id));
         }
 
-        $sql = \rex_sql::factory();
-        $sql->setTable(\rex::getTable('diff_detect_url'));
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('diff_detect_url'));
         $sql->setWhere('id = ?', [$id]);
         $sql->select();
 
@@ -91,9 +97,9 @@ final class Url
         return $dataset;
     }
 
-    public function getContent(): \rex_socket_response
+    public function getContent(): rex_socket_response
     {
-        $socket = \rex_socket::factoryUrl($this->getValue('url'));
+        $socket = rex_socket::factoryUrl($this->getValue('url'));
         $socket->acceptCompression();
         $socket->followRedirects(self::$maxRedirects);
         $socket->setTimeout(self::$timeout);
@@ -128,15 +134,15 @@ final class Url
     }
 
     /**
-     * @throws \rex_sql_exception
+     * @throws rex_sql_exception
      * @return array<int, array<string, mixed>>
      */
     public function getSnapshots(): array
     {
-        return \rex_sql::factory()->getArray(
+        return rex_sql::factory()->getArray(
             '
 SELECT      i.id, i.createdate, i.createuser, LENGTH(i.content) size, i.checked
-FROM        ' . \rex::getTable('diff_detect_index') . ' i
+FROM        ' . rex::getTable('diff_detect_index') . ' i
 WHERE       i.url_id = ' . $this->getId() . '
 ORDER BY    i.createdate DESC',
         );
@@ -144,11 +150,11 @@ ORDER BY    i.createdate DESC',
 
     public function setLastScan(): void
     {
-        \rex_sql::factory()->setQuery(
-            'update ' . \rex::getTable('diff_detect_url') . ' set last_scan = :last_scan where id = :id',
+        rex_sql::factory()->setQuery(
+            'update ' . rex::getTable('diff_detect_url') . ' set last_scan = :last_scan where id = :id',
             [
                 'id' => $this->getId(),
-                'last_scan' => date(\rex_sql::FORMAT_DATETIME),
+                'last_scan' => date(rex_sql::FORMAT_DATETIME),
             ],
         );
     }

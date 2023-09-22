@@ -49,12 +49,12 @@ if (null === $urlId || null === $idBefore || null === $idAfter) {
         } else {
             // HTML Div gefunden
             $content = preg_replace('/data-type="([\+\-])"/is', 'data-type="$1" id="diff_detect_first_hit"', $content, 1);
-            $first_detect = ' <a href="#diff_detect_first_hit" class="">'.$this->i18n('hitme').'</a>';
+            $first_detect = ' <a href="#diff_detect_first_hit" class="">' . $this->i18n('hitme') . '</a>';
         }
     }
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', $title.$first_detect, false);
+    $fragment->setVar('title', $title . $first_detect, false);
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 

@@ -27,7 +27,7 @@ class rex_cronjob_diff_detect extends rex_cronjob
         ',
             [
                 'datetime' => date(rex_sql::FORMAT_DATETIME),
-            ]
+            ],
         );
 
         $messages = [];
@@ -36,12 +36,12 @@ class rex_cronjob_diff_detect extends rex_cronjob
             $Url = \FriendsOfRedaxo\DiffDetect\Url::get((int) $sql->getValue('id'));
             try {
                 if (Index::createSnapshot($Url)) {
-                    $messages[] = 'snapshot created for '.$Url->getName().' ['.$Url->getId().']';
+                    $messages[] = 'snapshot created for ' . $Url->getName() . ' [' . $Url->getId() . ']';
                 } else {
-                    $messages[] = 'snapshot not created for '.$Url->getName().' ['.$Url->getId().']';
+                    $messages[] = 'snapshot not created for ' . $Url->getName() . ' [' . $Url->getId() . ']';
                 }
             } catch (Exception $e) {
-                $messages[] = 'snapshot error for '.$Url->getName().' ['.$Url->getId().']';
+                $messages[] = 'snapshot error for ' . $Url->getName() . ' [' . $Url->getId() . ']';
                 break;
             }
             $sql->next();

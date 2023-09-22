@@ -51,7 +51,7 @@ ON u.id = LatestSnapshot.url_id
 LEFT JOIN ' . rex::getTable('diff_detect_index') . ' i
 ON u.id=i.url_id AND i.createdate = LatestSnapshot.MaxTime
 ORDER BY snapshot DESC
-',50
+', 50,
 );
 
 $list->addTableAttribute('class', 'table-striped table-hover');
@@ -88,20 +88,20 @@ $list->setColumnFormat('url', 'custom', static function ($params) {
 
     $title = (string) $list->getValue('name');
     if (60 < mb_strlen($title)) {
-        $title = mb_substr($title, 0, 25).' ... '.mb_substr($title, -25);
+        $title = mb_substr($title, 0, 25) . ' ... ' . mb_substr($title, -25);
     }
-    $title = '<span class="nowrap" title="'.rex_escape($list->getValue('name')).'">'.rex_escape($title).'</span>';
+    $title = '<span class="nowrap" title="' . rex_escape($list->getValue('name')) . '">' . rex_escape($title) . '</span>';
 
     $value = $params['value'];
     if (60 < mb_strlen($value)) {
-        $value = mb_substr($value, 0, 25).' ... '.mb_substr($value, -25);
+        $value = mb_substr($value, 0, 25) . ' ... ' . mb_substr($value, -25);
     }
-    $value = '<span class="nowrap"><a href="'.rex_escape($params['value']).'" title="'.rex_escape($params['value']).'" target="_blank">'.$value.'</a></span>';
+    $value = '<span class="nowrap"><a href="' . rex_escape($params['value']) . '" title="' . rex_escape($params['value']) . '" target="_blank">' . $value . '</a></span>';
 
     $categories = (string) $list->getValue('categories');
-    $categories = '<br /><span>'.implode(' ', array_map(static fn ($item) => '<span class="label label-default">' . $item . '</span>', explode(',', $categories))).'</span>';
+    $categories = '<br /><span>' . implode(' ', array_map(static fn ($item) => '<span class="label label-default">' . $item . '</span>', explode(',', $categories))) . '</span>';
 
-    return $title.'<br />'.$value.$categories;
+    return $title . '<br />' . $value . $categories;
 });
 
 $list->setColumnFormat('type', 'custom', static function ($params) {
@@ -147,10 +147,10 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
 // $list->removeColumn('last_scan');
 
 $list->setColumnFormat('interval', 'custom', static function ($params) {
-    return rex_i18n::msg('interval_in_min_'.$params['value']);
+    return rex_i18n::msg('interval_in_min_' . $params['value']);
 });
 
-$list->setColumnLabel('snapshot', $this->i18n('last_scan').'/ <br />'.$this->i18n('last_snapshot'));
+$list->setColumnLabel('snapshot', $this->i18n('last_scan') . '/ <br />' . $this->i18n('last_snapshot'));
 $list->setColumnFormat('snapshot', 'custom', static function ($params) {
     /** @var \rex_list $list */
     $list = $params['list'];
@@ -159,7 +159,7 @@ $list->setColumnFormat('snapshot', 'custom', static function ($params) {
     if ($params['list']->getValue('last_scan')) {
         $timestamp_last_scan = rex_formatter::intlDateTime($params['list']->getValue('last_scan'));
     }
-    $timestamp_last_scan = '<span class="nowrap">'.$timestamp_last_scan.'</span>';
+    $timestamp_last_scan = '<span class="nowrap">' . $timestamp_last_scan . '</span>';
 
     if ($list->getValue('snapshot')) {
         $timestamp = rex_formatter::intlDateTime($list->getValue('snapshot'));
@@ -167,7 +167,7 @@ $list->setColumnFormat('snapshot', 'custom', static function ($params) {
         $timestamp = '-';
     }
 
-    return $timestamp_last_scan.'<div class="snapshot-action">' . $timestamp . '</div>';
+    return $timestamp_last_scan . '<div class="snapshot-action">' . $timestamp . '</div>';
 });
 
 $list->setColumnFormat('checked', 'custom', static function ($params) {
@@ -176,9 +176,9 @@ $list->setColumnFormat('checked', 'custom', static function ($params) {
     $addon = rex_addon::get('diff_detect');
     $checked = $list->getValue('checked');
     if (1 === $checked) {
-        $checked = '<span class="label label-success">'.$addon->i18n('checked').'</span>';
+        $checked = '<span class="label label-success">' . $addon->i18n('checked') . '</span>';
     } else {
-        $checked = '<span class="label label-warning">'.$addon->i18n('not_checked').'</span>';
+        $checked = '<span class="label label-warning">' . $addon->i18n('not_checked') . '</span>';
     }
     return $checked;
 });

@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - uses: shivammathur/setup-php@v2
+      with:
+        php-version: "latest"
+    - uses: ramsey/composer-install@v2
+      with:
+        composer-options: "--no-dev"
     - uses: FriendsOfREDAXO/installer-action@v1
       with:
         myredaxo-username: ${{ secrets.MYREDAXO_USERNAME }}

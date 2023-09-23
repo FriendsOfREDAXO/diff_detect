@@ -47,7 +47,7 @@ class rex_cronjob_diff_detect extends rex_cronjob
             $sql->next();
         }
 
-        if (0 === $sql->getRows()) {
+        if ($sql->getRows() === 0) {
             $messages[] = 'no snapshots';
         }
 

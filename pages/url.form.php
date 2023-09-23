@@ -11,7 +11,7 @@ $id = rex_get('id', 'int');
 $form = rex_diff_detect_form::factory(rex::getTable('diff_detect_url'), '', 'id = ' . $id);
 $form->setFormAttribute('autocomplete', 'off');
 
-if ('edit' === $func && 0 < $id) {
+if ($func === 'edit' && $id > 0) {
     $form->setEditMode(true);
     $form->addParam('id', $id);
 }
@@ -105,12 +105,11 @@ rex_extension::register('REX_FORM_SAVED', static function ($ep) {
 });
 
 rex_extension::register('REX_FORM_DELETED', static function ($ep) {
-
     /** @var rex_extension_point $ep */
     /** @var array<string, mixed> $params */
     $params = $ep->getParams();
 
-    if ('rex_diff_detect_form' === get_class($params['form'])) {
+    if (get_class($params['form']) === 'rex_diff_detect_form') {
         /** @var rex_diff_detect_form $form */
         $form = $params['form'];
         $form_params = $form->getParams();
@@ -118,7 +117,6 @@ rex_extension::register('REX_FORM_DELETED', static function ($ep) {
         rex_sql::factory()->setQuery('delete from `' . rex::getTable('diff_detect_index') . '` where url_id=:url_id', [
             'url_id' => $form_params['id'],
         ]);
-
     }
 });
 

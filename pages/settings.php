@@ -7,7 +7,7 @@
 
 $addon = rex_addon::get('diff_detect');
 
-if ('update' === rex_request('func', 'string')) {
+if (rex_request('func', 'string') === 'update') {
     $this->setConfig('cleanup_interval', rex_request('diff_detect_cleanup_interval', 'int', null));
     echo rex_view::success($this->i18n('settings_updated'));
 }

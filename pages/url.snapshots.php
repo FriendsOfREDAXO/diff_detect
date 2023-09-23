@@ -9,18 +9,18 @@ $counter = 0;
 $checked = rex_get('checked', 'int', null);
 $indexId = rex_request('index_id', 'int', null);
 
-if (null !== $checked && null !== $indexId) {
+if ($checked !== null && $indexId !== null) {
     $sql = rex_sql::factory();
     $sql->setTable(rex::getTable('diff_detect_index'));
     $sql->setWhere('id = :id', ['id' => $indexId]);
-    $sql->setValue('checked', 1 === $checked ? 1 : 0);
+    $sql->setValue('checked', $checked === 1 ? 1 : 0);
     $sql->addGlobalUpdateFields();
     $sql->update();
-    echo rex_view::success((1 === $checked) ? rex_i18n::msg('index_checked') : rex_i18n::msg('index_not_checked'));
+    echo rex_view::success(($checked === 1) ? rex_i18n::msg('index_checked') : rex_i18n::msg('index_not_checked'));
 }
 
 $Url = \FriendsOfRedaxo\DiffDetect\Url::get((int) $urlId);
-if (null === $Url) {
+if ($Url === null) {
     echo rex_view::error(rex_i18n::msg('diff_detect_url_not_found'));
     return;
 }
@@ -33,15 +33,15 @@ foreach ($Snapshots as $snapshot) {
     $checkedBefore = '';
     $checkedAfter = '';
 
-    if (null === $idBefore && 1 === $counter) {
+    if ($idBefore === null && $counter === 1) {
         $checkedBefore = ' checked';
     }
     if ($idBefore === $snapshot['id']) {
         $checkedBefore = ' checked';
     }
-    if ($idAfter === $snapshot['id'] ||
-        1 === count($Snapshots) ||
-        (null === $idAfter && 2 === $counter)) {
+    if ($idAfter === $snapshot['id']
+        || count($Snapshots) === 1
+        || ($idAfter === null && $counter === 2)) {
         $checkedAfter = ' checked';
     }
 
@@ -56,7 +56,7 @@ foreach ($Snapshots as $snapshot) {
         <td>' . rex_escape(rex_formatter::intlDateTime((string) $snapshot['createdate'], IntlDateFormatter::MEDIUM)) . '</td>
         <td>' . rex_escape($snapshot['createuser']) . '</td>
         <td>' . rex_escape(rex_formatter::bytes($snapshot['size'], [2])) . '</td>
-        <td><a href="index.php?page=diff_detect/dashboard&func=snapshots&id=' . $urlId . '&index_id=' . $snapshot['id'] . '&checked=' . (1 === $snapshot['checked'] ? 0 : 1) . '">' . (1 === $snapshot['checked'] ? $this->i18n('checked') : $this->i18n('not_checked')) . '</a></td>
+        <td><a href="index.php?page=diff_detect/dashboard&func=snapshots&id=' . $urlId . '&index_id=' . $snapshot['id'] . '&checked=' . ($snapshot['checked'] === 1 ? 0 : 1) . '">' . ($snapshot['checked'] === 1 ? $this->i18n('checked') : $this->i18n('not_checked')) . '</a></td>
     </tr>';
 }
 

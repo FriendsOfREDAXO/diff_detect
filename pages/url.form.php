@@ -100,7 +100,11 @@ rex_extension::register('REX_FORM_SAVED', static function ($ep) {
     $id = $params['sql']->getLastId();
     if ($id && $id > 0) {
         $Url = Url::get($id);
-        Index::createSnapshot($Url);
+        try {
+            Index::createSnapshot($Url);
+        } catch (rex_exception $e) {
+            // ignore
+        }
     }
 });
 

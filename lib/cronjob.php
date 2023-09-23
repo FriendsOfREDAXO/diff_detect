@@ -33,7 +33,7 @@ class rex_cronjob_diff_detect extends rex_cronjob
         $messages = [];
 
         for ($i = 0; $i < $sql->getRows(); ++$i) {
-            $Url = \FriendsOfRedaxo\DiffDetect\Url::get((int) $sql->getValue('id'));
+            $Url = \FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id'));
             try {
                 if (Index::createSnapshot($Url)) {
                     $messages[] = 'snapshot created for ' . $Url->getName() . ' [' . $Url->getId() . ']';

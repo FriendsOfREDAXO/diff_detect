@@ -21,7 +21,7 @@ $extensions = [
     '../../../../redaxo/src/addons/rexstan/vendor/phpstan/phpstan-strict-rules/rules.neon',
     '../../../../redaxo/src/addons/rexstan/vendor/phpstan/phpstan-deprecation-rules/rules.neon',
     '../../../../redaxo/src/addons/rexstan/config/phpstan-phpunit.neon',
-    // '../../../../redaxo/src/addons/rexstan/config/phpstan-dba.neon',
+    '../../../../redaxo/src/addons/rexstan/config/phpstan-dba.neon',
     // '../../../../redaxo/src/addons/rexstan/config/cognitive-complexity.neon',
     // '../../../../redaxo/src/addons/rexstan/config/code-complexity.neon',
     '../../../../redaxo/src/addons/rexstan/config/dead-code.neon'

@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => 'dev-ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
-        'version' => 'dev-ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
-        'reference' => 'ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
+        'pretty_version' => 'dev-d33a7413a743c27477ff97f4e895f757c50a4197',
+        'version' => 'dev-d33a7413a743c27477ff97f4e895f757c50a4197',
+        'reference' => 'd33a7413a743c27477ff97f4e895f757c50a4197',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => 'dev-ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
-            'version' => 'dev-ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
-            'reference' => 'ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
+            'pretty_version' => 'dev-d33a7413a743c27477ff97f4e895f757c50a4197',
+            'version' => 'dev-d33a7413a743c27477ff97f4e895f757c50a4197',
+            'reference' => 'd33a7413a743c27477ff97f4e895f757c50a4197',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

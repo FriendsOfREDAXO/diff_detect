@@ -230,13 +230,13 @@ class ComposerStaticInit012b20d9a5110c6c939db9f89be8be51
         ),
         'Jfcherng\\Utility\\' => 
         array (
-            0 => __DIR__ . '/..' . '/jfcherng/php-color-output/src',
-            1 => __DIR__ . '/..' . '/jfcherng/php-mb-string/src',
+            0 => __DIR__ . '/..' . '/jfcherng/php-mb-string/src',
+            1 => __DIR__ . '/..' . '/jfcherng/php-color-output/src',
         ),
         'Jfcherng\\Diff\\' => 
         array (
-            0 => __DIR__ . '/..' . '/jfcherng/php-diff/src',
-            1 => __DIR__ . '/..' . '/jfcherng/php-sequence-matcher/src',
+            0 => __DIR__ . '/..' . '/jfcherng/php-sequence-matcher/src',
+            1 => __DIR__ . '/..' . '/jfcherng/php-diff/src',
         ),
         'Html2Text\\' => 
         array (

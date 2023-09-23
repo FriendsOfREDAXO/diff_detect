@@ -114,7 +114,7 @@ final class Url
         $response = $socket->doGet();
         $cookie = $response->getHeader('Set-Cookie');
 
-        if (null !== $cookie) {
+        if (null !== $cookie && false !== strpos($cookie, ';')) {
             $socket->addHeader('Cookie', substr($cookie, 0, strpos($cookie, ';')));
             $response = $socket->doGet();
         }

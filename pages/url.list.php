@@ -96,7 +96,7 @@ $list->setColumnFormat('url', 'custom', static function ($params) {
     if (60 < mb_strlen($value)) {
         $value = mb_substr($value, 0, 25) . ' ... ' . mb_substr($value, -25);
     }
-    $value = '<span class="nowrap"><a href="' . rex_escape($params['value']) . '" title="' . rex_escape($params['value']) . '" target="_blank">' . $value . '</a></span>';
+    $value = '<span class="nowrap"><a href="' . rex_escape($params['value']) . '" title="' . rex_escape($params['value']) . '" target="_blank" rel="noreferrer noopener">' . $value . '</a></span>';
 
     $categories = (string) $list->getValue('categories');
     $categories = '<br /><span>' . implode(' ', array_map(static fn ($item) => '<span class="label label-default">' . $item . '</span>', explode(',', $categories))) . '</span>';

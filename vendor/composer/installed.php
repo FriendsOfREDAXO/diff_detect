@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '7ac1a5ff7ffb6102348b4f7d62b57290e5d88b1e',
+        'pretty_version' => 'dev-ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
+        'version' => 'dev-ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
+        'reference' => 'ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '7ac1a5ff7ffb6102348b4f7d62b57290e5d88b1e',
+            'pretty_version' => 'dev-ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
+            'version' => 'dev-ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
+            'reference' => 'ce4fb28145726f2c0481f1b6cddb516c24a40dd9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -8,8 +8,8 @@ use rex;
 use rex_addon;
 use rex_exception;
 use rex_instance_pool_trait;
-use rex_socket_exception;
 use rex_sql;
+use rex_sql_exception;
 use voku\helper\HtmlDomParser;
 
 final class Index
@@ -98,7 +98,7 @@ final class Index
     }
 
     /**
-     * @throws \rex_sql_exception
+     * @throws rex_sql_exception
      */
     public static function createSnapshot(Url $url): bool
     {

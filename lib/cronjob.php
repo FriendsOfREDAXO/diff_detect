@@ -40,7 +40,7 @@ class rex_cronjob_diff_detect extends rex_cronjob
                 } else {
                     $messages[] = 'snapshot not created for ' . $Url->getName() . ' [' . $Url->getId() . ']';
                 }
-            } catch (Exception $e) {
+            } catch (rex_exception $e) {
                 $messages[] = 'snapshot error for ' . $Url->getName() . ' [' . $Url->getId() . ']';
                 break;
             }

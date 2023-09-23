@@ -8,8 +8,8 @@ use rex;
 use rex_addon;
 use rex_exception;
 use rex_instance_pool_trait;
-use rex_socket_exception;
 use rex_sql;
+use rex_sql_exception;
 use voku\helper\HtmlDomParser;
 
 final class Index
@@ -97,49 +97,48 @@ final class Index
         return $dataset;
     }
 
+    /**
+     * @throws rex_sql_exception
+     */
     public static function createSnapshot(Url $url): bool
     {
-        try {
-            $url->setLastScan();
-            $response = $url->getContent();
-            $content = $response->getBody();
+        $url->setLastScan();
+        $response = $url->getContent();
+        $content = $response->getBody();
 
-            if ('HTML' === $url->getType()) {
-                $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $content);
-                $content = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $content);
-                $content = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is', '', $content);
-                $content = strip_tags($content, ['img', 'video']);
-            }
+        if ('HTML' === $url->getType()) {
+            $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $content);
+            $content = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $content);
+            $content = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is', '', $content);
+            $content = strip_tags($content, ['img', 'video']);
+        }
 
-            $hash = md5($content);
+        $hash = md5($content);
 
-            $sql = rex_sql::factory();
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('diff_detect_index'));
+        $sql->setWhere('url_id = ? ORDER BY createdate DESC LIMIT 1', [$url->getId()]);
+        $sql->select('id,`hash`');
+
+        if (0 !== ($sql->getRows() ?? 0) && $sql->getValue('hash') === $hash) {
             $sql->setTable(rex::getTable('diff_detect_index'));
-            $sql->setWhere('url_id = ? ORDER BY createdate DESC LIMIT 1', [$url->getId()]);
-            $sql->select('id,`hash`');
-
-            if (0 !== ($sql->getRows() ?? 0) && $sql->getValue('hash') === $hash) {
-                $sql->setTable(rex::getTable('diff_detect_index'));
-                $sql->setValue('updatedate', date(rex_sql::FORMAT_DATETIME));
-                $sql->setWhere('id = :id', ['id' => $sql->getValue('id')]);
-                $sql->update();
-                return false;
-            }
-
-            $sql->setTable(rex::getTable('diff_detect_index'));
-            $sql->addGlobalCreateFields();
-            $sql->addGlobalUpdateFields();
-            $sql->setValue('url_id', $url->getId());
-            $sql->setValue('content', $response->getBody());
-            $sql->setValue('hash', $hash);
-            $sql->setValue('header', $response->getHeader());
-            $sql->setValue('statusCode', $response->getStatusCode());
-            $sql->setValue('statusMessage', $response->getStatusMessage());
-            $sql->insert();
-        } catch (rex_socket_exception $e) {
-            // throw new \rex_exception($e->getMessage());
+            $sql->setValue('updatedate', date(rex_sql::FORMAT_DATETIME));
+            $sql->setWhere('id = :id', ['id' => $sql->getValue('id')]);
+            $sql->update();
             return false;
         }
+
+        $sql->setTable(rex::getTable('diff_detect_index'));
+        $sql->addGlobalCreateFields();
+        $sql->addGlobalUpdateFields();
+        $sql->setValue('url_id', $url->getId());
+        $sql->setValue('content', $response->getBody());
+        $sql->setValue('hash', $hash);
+        $sql->setValue('header', $response->getHeader());
+        $sql->setValue('statusCode', $response->getStatusCode());
+        $sql->setValue('statusMessage', $response->getStatusMessage());
+        $sql->insert();
+
         return true;
     }
 

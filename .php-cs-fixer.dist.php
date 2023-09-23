@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
-    ->exclude('vendor')
+    ->filter(static function (SplFileInfo $file) {
+        return !str_contains('vendor', $file->getRealPath());
+    })
 ;
 
 return (new Redaxo\PhpCsFixerConfig\Config())

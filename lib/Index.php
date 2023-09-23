@@ -8,8 +8,8 @@ use rex;
 use rex_addon;
 use rex_exception;
 use rex_instance_pool_trait;
+use rex_socket_exception;
 use rex_sql;
-use rex_sql_exception;
 use voku\helper\HtmlDomParser;
 
 final class Index
@@ -40,7 +40,7 @@ final class Index
         $sql->setWhere('id = ?', [$id]);
         $sql->select();
 
-        if ($sql->getRows() === null) {
+        if (null === $sql->getRows()) {
             return null;
         }
 
@@ -74,7 +74,7 @@ final class Index
 
     public function getValue(string $key): mixed
     {
-        if ($key === 'id') {
+        if ('id' === $key) {
             return $this->id;
         }
 
@@ -98,7 +98,7 @@ final class Index
     }
 
     /**
-     * @throws rex_sql_exception
+     * @throws \rex_sql_exception
      */
     public static function createSnapshot(Url $url): bool
     {
@@ -106,7 +106,7 @@ final class Index
         $response = $url->getContent();
         $content = $response->getBody();
 
-        if ($url->getType() === 'HTML') {
+        if ('HTML' === $url->getType()) {
             $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $content);
             $content = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $content);
             $content = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is', '', $content);
@@ -147,7 +147,7 @@ final class Index
         $addon = rex_addon::get('diff_detect');
         $cleanup_interval = $addon->getConfig('cleanup_interval');
 
-        if ($cleanup_interval === null || $cleanup_interval === 0) {
+        if (null === $cleanup_interval || 0 === $cleanup_interval) {
             return;
         }
 
@@ -160,9 +160,10 @@ final class Index
             'interval' => $cleanup_interval,
         ]);
         $sql->delete();
-        if ($sql->getError() !== null) {
+        if (null !== $sql->getError()) {
             throw new rex_exception($sql->getError());
         }
+
     }
 
     public function setUrl(Url $url): self
@@ -179,7 +180,7 @@ final class Index
 
     public function getContent(): string
     {
-        if ($this->url?->getType() === 'RSS') {
+        if ('RSS' === $this->url?->getType()) {
             return $this->getValue('content');
         }
 

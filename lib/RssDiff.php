@@ -48,7 +48,7 @@ class RssDiff
                 $diff = HtmlDiffAdvanced::create($this->renderItem($item), $this->renderItem($itemsAfter[$id]));
                 $diffContent = $diff->build();
 
-                if ($diff->getDifference() !== '') {
+                if ('' !== $diff->getDifference()) {
                     $class = 'modified';
                     $label = '<span class="label label-info">' . rex_addon::get('diff_detect')->i18n('modified') . '</span>';
                 } else {

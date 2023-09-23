@@ -39,7 +39,7 @@ final class Url
         $sql->setWhere('id = ?', [$id]);
         $sql->select();
 
-        if ($sql->getRows() === null) {
+        if (null === $sql->getRows()) {
             return null;
         }
 
@@ -74,7 +74,7 @@ final class Url
 
     public function getValue(string $key): mixed
     {
-        if ($key === 'id') {
+        if ('id' === $key) {
             return $this->id;
         }
 
@@ -107,14 +107,14 @@ final class Url
         $login = $this->getValue('http_auth_login');
         $password = $this->getValue('http_auth_password');
 
-        if ($login === '' && $password === '') {
+        if ('' === $login && '' === $password) {
             $socket->addBasicAuthorization($login, $password);
         }
 
         $response = $socket->doGet();
         $cookie = $response->getHeader('Set-Cookie');
 
-        if ($cookie !== null) {
+        if (null !== $cookie) {
             $socket->addHeader('Cookie', substr($cookie, 0, strpos($cookie, ';')));
             $response = $socket->doGet();
         }

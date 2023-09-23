@@ -9,7 +9,7 @@ $id = rex_request('id', 'int');
 
 switch (rex_get('func')) {
     case 'status':
-        if ($id > 0) {
+        if (0 < $id) {
             $status = (bool) rex_get('status', 'bool');
 
             $sql = rex_sql::factory();
@@ -22,7 +22,7 @@ switch (rex_get('func')) {
         break;
 
     case 'snapshot':
-        if ($id > 0) {
+        if (0 < $id) {
             $Url = Url::get($id);
             try {
                 if (Index::createSnapshot($Url)) {
@@ -82,17 +82,18 @@ $list->setColumnFormat('id', 'url');
 $list->removeColumn('name');
 
 $list->setColumnFormat('url', 'custom', static function ($params) {
+
     /** @var rex_list $list */
     $list = $params['list'];
 
     $title = (string) $list->getValue('name');
-    if (mb_strlen($title) > 60) {
+    if (60 < mb_strlen($title)) {
         $title = mb_substr($title, 0, 25) . ' ... ' . mb_substr($title, -25);
     }
     $title = '<span class="nowrap" title="' . rex_escape($list->getValue('name')) . '">' . rex_escape($title) . '</span>';
 
     $value = $params['value'];
-    if (mb_strlen($value) > 60) {
+    if (60 < mb_strlen($value)) {
         $value = mb_substr($value, 0, 25) . ' ... ' . mb_substr($value, -25);
     }
     $value = '<span class="nowrap"><a href="' . rex_escape($params['value']) . '" title="' . rex_escape($params['value']) . '" target="_blank">' . $value . '</a></span>';
@@ -123,11 +124,11 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
     $urlParams = [
         'func' => 'status',
         'id' => $list->getValue('id'),
-        'status' => ($list->getValue('status') === '0') ? '0' : '1',
+        'status' => ('0' === $list->getValue('status')) ? '0' : '1',
     ];
 
     $start = rex_request($startKey = $list->getName() . '_start', 'string', '');
-    if ($start !== '') {
+    if ('' !== $start) {
         $urlParams[$startKey] = $start;
     }
 
@@ -135,7 +136,7 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
     return '<div><a href="' . $list->getUrl(
         $urlParams,
     ) . '" title="' . $addon->i18n(
-        ($list->getValue('status') === '1')
+        ('1' === $list->getValue('status'))
                 ? 'active_title'
                 : 'inactive_title',
     ) . '" class="diff-status-' . ($list->getValue(
@@ -174,7 +175,7 @@ $list->setColumnFormat('checked', 'custom', static function ($params) {
     $list = $params['list'];
     $addon = rex_addon::get('diff_detect');
     $checked = $list->getValue('checked');
-    if ($checked === 1) {
+    if (1 === $checked) {
         $checked = '<span class="label label-success">' . $addon->i18n('checked') . '</span>';
     } else {
         $checked = '<span class="label label-warning">' . $addon->i18n('not_checked') . '</span>';
@@ -193,7 +194,7 @@ $list->setColumnFormat('last_scan', 'custom', static function ($params) {
     ];
 
     $start = rex_request($startKey = $list->getName() . '_start', 'string', '');
-    if ($start !== '') {
+    if ('' !== $start) {
         $urlParams[$startKey] = $start;
     }
 

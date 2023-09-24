@@ -5,11 +5,14 @@
 use FriendsOfRedaxo\DiffDetect\Index;
 use FriendsOfRedaxo\DiffDetect\Url;
 
+$addon = rex_addon::get('diff_detect');
+
 $id = rex_request('id', 'int');
 
 switch (rex_get('func')) {
     case 'status':
         if (0 < $id) {
+            $Url = Url::get($id);
             $status = (bool) rex_get('status', 'bool');
 
             $sql = rex_sql::factory();
@@ -18,6 +21,14 @@ switch (rex_get('func')) {
             $sql->setValue('status', $status ? 1 : 0);
             $sql->addGlobalUpdateFields();
             $sql->update();
+
+            echo rex_view::success(
+                rex_i18n::msg(
+                    'diff_detect_status_changed',
+                    $Url->getName(),
+                    $addon->i18n($status ? 'active' : 'inactive'),
+                ),
+            );
         }
         break;
 
@@ -124,7 +135,7 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
     $urlParams = [
         'func' => 'status',
         'id' => $list->getValue('id'),
-        'status' => ('0' === $list->getValue('status')) ? '0' : '1',
+        'status' => ('0' == $list->getValue('status')) ? '1' : '0',
     ];
 
     $start = rex_request($startKey = $list->getName() . '_start', 'string', '');

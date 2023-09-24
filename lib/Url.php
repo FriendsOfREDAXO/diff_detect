@@ -116,7 +116,7 @@ final class Url
 
         if (null !== $cookie) {
             // separate cookie value from optional attributes
-            list($cookieValue) = explode(';', $cookie);
+            [$cookieValue] = explode(';', $cookie);
             $socket->addHeader('Cookie', $cookieValue);
             $response = $socket->doGet();
         }

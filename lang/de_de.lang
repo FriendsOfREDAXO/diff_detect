@@ -58,7 +58,7 @@ createdate = Erstellt am
 createuser = Erstellt von
 size = Größe
 
-diff_title = <a href="{0}">{0}</a> <span class="label label-success">{1}</span> ↔ <span class="label label-danger">{2}</span>
+diff_title = <a href="{0}" target="_blank" rel="noreferrer noopener">{0}</a> <span class="label label-success">{1}</span> ↔ <span class="label label-danger">{2}</span>
 diff_error = Vergleich nicht möglich.
 old = alt
 new = neu

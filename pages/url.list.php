@@ -26,8 +26,8 @@ switch (rex_get('func')) {
                 rex_i18n::msg(
                     'diff_detect_status_changed',
                     $Url->getName(),
-                    $addon->i18n($status ? 'active' : 'inactive')
-                )
+                    $addon->i18n($status ? 'active' : 'inactive'),
+                ),
             );
         }
         break;

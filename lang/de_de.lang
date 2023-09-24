@@ -64,6 +64,7 @@ old = alt
 new = neu
 modified = geändert
 
+diff_detect_status_changed = Status von `{0}` erfolgreich geändert.
 diff_detect_snapshot_created = Snapshot von `{0}` wurde erstellt.
 diff_detect_snapshot_not_created = Es wurde kein neuer Snapshot von `{0}` erstellt.
 diff_detect_snapshot_error = Snapshot von `{0}` konnte nicht erstellt werden. Fehlermeldung: `{1}`

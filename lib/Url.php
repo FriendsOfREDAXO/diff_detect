@@ -51,6 +51,24 @@ final class Url
         return self::fromSqlData($data);
     }
 
+    /**
+     * @throws rex_sql_exception
+     * @return array<Url>
+     */
+    public static function getAll(): array
+    {
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('diff_detect_url'));
+        $sql->select();
+
+        $urls = [];
+        foreach ($sql->getArray() as $data) {
+            $urls[] = self::fromSqlData($data);
+        }
+
+        return $urls;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

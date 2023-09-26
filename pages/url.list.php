@@ -134,7 +134,7 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
     $urlParams = [
         'func' => 'status',
         'id' => $list->getValue('id'),
-        'status' => ('0' == $list->getValue('status')) ? '1' : '0',
+        'status' => ('0' === $list->getValue('status')) ? '1' : '0',
     ];
 
     $start = rex_request($startKey = $list->getName() . '_start', 'string', '');

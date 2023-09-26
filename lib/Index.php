@@ -153,17 +153,31 @@ final class Index
 
         $cleanup_interval = (int) $cleanup_interval;
 
-        $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('diff_detect_index'));
-        $sql->setWhere('createdate < DATE_SUB(:datetime, INTERVAL :interval SECOND)', [
-            'datetime' => date(rex_sql::FORMAT_DATETIME),
-            'interval' => $cleanup_interval,
-        ]);
-        $sql->delete();
-        if (null !== $sql->getError()) {
-            throw new rex_exception($sql->getError());
-        }
+        foreach (Url::getAll() as $URL) {
+            $indeces = rex_sql::factory()->getArray('
+                SELECT *
+                FROM ' . rex::getTable('diff_detect_index') . ' as t1
+                JOIN (
+                    SELECT id
+                    FROM ' . rex::getTable('diff_detect_index') . '
+                    WHERE url_id = :url_id
+                    ORDER BY createdate DESC
+                    LIMIT 2,100000
+                ) as t2 ON t1.id = t2.id
+                WHERE
+                url_id = :url_id
+                AND createdate < DATE_SUB(:datetime, INTERVAL :interval SECOND)
+            ', [
+                'url_id' => $URL->getId(),
+                'datetime' => date(rex_sql::FORMAT_DATETIME),
+                'interval' => $cleanup_interval,
+            ]);
 
+            foreach ($indeces as $Index) {
+                $Index = self::fromSqlData($Index);
+                $Index->delete();
+            }
+        }
     }
 
     public function setUrl(Url $url): self
@@ -188,5 +202,22 @@ final class Index
         // $content = HtmlDomParser::str_get_html($content)->findOne('#content')->innerHtml();
         $content = (new Html2Text($content))->getText();
         return $content;
+    }
+
+    public function delete(): void
+    {
+        $sql = rex_sql::factory()->setQuery(
+            '
+        DELETE from ' . rex::getTable('diff_detect_index') . '
+        WHERE id = :id
+        ',
+            [
+                'id' => $this->getId(),
+            ],
+        );
+
+        if (null !== $sql->getError()) {
+            throw new rex_exception($sql->getError());
+        }
     }
 }

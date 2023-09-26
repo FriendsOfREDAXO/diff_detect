@@ -131,7 +131,6 @@ $list->removeColumn('categories');
 $list->setColumnFormat('status', 'custom', static function ($params) {
     /** @var \rex_list $list */
     $list = $params['list'];
-    $containerId = 'status-' . $list->getName() . '-' . $list->getValue('id');
     $urlParams = [
         'func' => 'status',
         'id' => $list->getValue('id'),

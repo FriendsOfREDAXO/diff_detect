@@ -166,7 +166,7 @@ final class Index
                 ) as t2 ON t1.id = t2.id
                 WHERE
                 url_id = :url_id
-                AND createdate < DATE_SUB(:datetime, INTERVAL :interval SECOND)
+                AND createdate < DATE_SUB(:datetime, INTERVAL :interval MINUTE)
             ', [
                 'url_id' => $URL->getId(),
                 'datetime' => date(rex_sql::FORMAT_DATETIME),

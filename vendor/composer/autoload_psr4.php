@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'voku\\helper\\' => array($vendorDir . '/voku/simple_html_dom/src/voku/helper'),
-    'ZipStream\\' => array($vendorDir . '/maennchen/zipstream-php/src'),
     'Symfony\\Polyfill\\Php81\\' => array($vendorDir . '/symfony/polyfill-php81'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
@@ -26,15 +25,10 @@ return array(
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Redaxo\\PhpCsFixerConfig\\' => array($vendorDir . '/redaxo/php-cs-fixer-config/src'),
-    'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
-    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-factory/src'),
-    'Psr\\Http\\Client\\' => array($vendorDir . '/psr/http-client/src'),
     'Psr\\EventDispatcher\\' => array($vendorDir . '/psr/event-dispatcher/src'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
-    'PhpOffice\\PhpSpreadsheet\\' => array($vendorDir . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet'),
     'PhpCsFixer\\' => array($vendorDir . '/friendsofphp/php-cs-fixer/src'),
     'PhpCsFixerCustomFixers\\' => array($vendorDir . '/kubawerlos/php-cs-fixer-custom-fixers/src'),
-    'Matrix\\' => array($vendorDir . '/markbaker/matrix/classes/src'),
     'Laminas\\Stdlib\\' => array($vendorDir . '/laminas/laminas-stdlib/src'),
     'Laminas\\Feed\\' => array($vendorDir . '/laminas/laminas-feed/src'),
     'Laminas\\Escaper\\' => array($vendorDir . '/laminas/laminas-escaper/src'),
@@ -46,5 +40,4 @@ return array(
     'Composer\\XdebugHandler\\' => array($vendorDir . '/composer/xdebug-handler/src'),
     'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
     'Composer\\Pcre\\' => array($vendorDir . '/composer/pcre/src'),
-    'Complex\\' => array($vendorDir . '/markbaker/complex/classes/src'),
 );

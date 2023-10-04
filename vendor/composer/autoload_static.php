@@ -27,10 +27,6 @@ class ComposerStaticInit012b20d9a5110c6c939db9f89be8be51
         array (
             'voku\\helper\\' => 12,
         ),
-        'Z' => 
-        array (
-            'ZipStream\\' => 10,
-        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php81\\' => 23,
@@ -57,18 +53,10 @@ class ComposerStaticInit012b20d9a5110c6c939db9f89be8be51
         ),
         'P' => 
         array (
-            'Psr\\SimpleCache\\' => 16,
-            'Psr\\Http\\Message\\' => 17,
-            'Psr\\Http\\Client\\' => 16,
             'Psr\\EventDispatcher\\' => 20,
             'PhpParser\\' => 10,
-            'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PhpCsFixer\\' => 11,
             'PhpCsFixerCustomFixers\\' => 23,
-        ),
-        'M' => 
-        array (
-            'Matrix\\' => 7,
         ),
         'L' => 
         array (
@@ -95,7 +83,6 @@ class ComposerStaticInit012b20d9a5110c6c939db9f89be8be51
             'Composer\\XdebugHandler\\' => 23,
             'Composer\\Semver\\' => 16,
             'Composer\\Pcre\\' => 14,
-            'Complex\\' => 8,
         ),
     );
 
@@ -103,10 +90,6 @@ class ComposerStaticInit012b20d9a5110c6c939db9f89be8be51
         'voku\\helper\\' => 
         array (
             0 => __DIR__ . '/..' . '/voku/simple_html_dom/src/voku/helper',
-        ),
-        'ZipStream\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
         ),
         'Symfony\\Polyfill\\Php81\\' => 
         array (
@@ -180,18 +163,6 @@ class ComposerStaticInit012b20d9a5110c6c939db9f89be8be51
         array (
             0 => __DIR__ . '/..' . '/redaxo/php-cs-fixer-config/src',
         ),
-        'Psr\\SimpleCache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
-        ),
-        'Psr\\Http\\Message\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-        ),
-        'Psr\\Http\\Client\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-client/src',
-        ),
         'Psr\\EventDispatcher\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
@@ -200,10 +171,6 @@ class ComposerStaticInit012b20d9a5110c6c939db9f89be8be51
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'PhpOffice\\PhpSpreadsheet\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
-        ),
         'PhpCsFixer\\' => 
         array (
             0 => __DIR__ . '/..' . '/friendsofphp/php-cs-fixer/src',
@@ -211,10 +178,6 @@ class ComposerStaticInit012b20d9a5110c6c939db9f89be8be51
         'PhpCsFixerCustomFixers\\' => 
         array (
             0 => __DIR__ . '/..' . '/kubawerlos/php-cs-fixer-custom-fixers/src',
-        ),
-        'Matrix\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
         ),
         'Laminas\\Stdlib\\' => 
         array (
@@ -262,10 +225,6 @@ class ComposerStaticInit012b20d9a5110c6c939db9f89be8be51
         'Composer\\Pcre\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/pcre/src',
-        ),
-        'Complex\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
     );
 

@@ -25,7 +25,7 @@ final class NoCommentedOutCodeFixer extends AbstractFixer
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'There can be no commented out code.',
+            'There must be no commented out code.',
             [new CodeSample("<?php\n//var_dump(\$_POST);\nprint_r(\$_POST);\n")],
             '',
         );
@@ -63,7 +63,6 @@ final class NoCommentedOutCodeFixer extends AbstractFixer
             if (\strpos($tokens[$index]->getContent(), '/*') === 0) {
                 $commentIndices = [$index];
             } else {
-                /** @var array<int> $commentIndices */
                 $commentIndices = $commentsAnalyzer->getCommentBlockIndices($tokens, $index);
             }
 
@@ -82,9 +81,9 @@ final class NoCommentedOutCodeFixer extends AbstractFixer
     }
 
     /**
-     * @param array<int> $commentIndices
+     * @param list<int> $commentIndices
      *
-     * @return array<int>
+     * @return list<int>
      */
     private function getIndicesToRemove(Tokens $tokens, array $commentIndices): array
     {
@@ -100,7 +99,7 @@ final class NoCommentedOutCodeFixer extends AbstractFixer
                 continue;
             }
 
-            foreach (Preg::split('/\s+/u', $content) as $line) {
+            foreach (Preg::split('/\\s+/u', $content) as $line) {
                 if (\filter_var($line, \FILTER_VALIDATE_URL) !== false) {
                     return [];
                 }
@@ -122,7 +121,7 @@ final class NoCommentedOutCodeFixer extends AbstractFixer
         $content = $token->getContent();
 
         if (\strpos($content, '/*') === 0) {
-            $content = Preg::replace('~^/\*+|\R\s*\*\s+|\*+/$~', \PHP_EOL, $content);
+            $content = Preg::replace('~^/\\*+|\\R\\s*\\*\\s+|\\*+/$~', \PHP_EOL, $content);
         }
 
         return \ltrim($content, '#/');
@@ -132,7 +131,7 @@ final class NoCommentedOutCodeFixer extends AbstractFixer
     {
         try {
             @Tokens::fromCode($content);
-        } catch (\ParseError $error) {
+        } catch (\CompileError $error) {
             return false;
         }
 

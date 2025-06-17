@@ -24,7 +24,7 @@ final class DeclareAfterOpeningTagFixer extends AbstractFixer
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'Declare statement for strict types must be placed in the same line, after opening tag.',
+            'Declare statement for strict types must be placed on the same line, after the opening tag.',
             [new CodeSample("<?php\n\$foo;\ndeclare(strict_types=1);\n\$bar;\n")],
             '',
         );
@@ -91,7 +91,7 @@ final class DeclareAfterOpeningTagFixer extends AbstractFixer
         }
 
         if ($tokens[$semicolonIndex + 1]->isGivenKind(\T_WHITESPACE)) {
-            $content = Preg::replace('/^(\R?)(?=\R)/', '', $tokens[$semicolonIndex + 1]->getContent());
+            $content = Preg::replace('/^(\\R?)(?=\\R)/', '', $tokens[$semicolonIndex + 1]->getContent());
 
             $tokens->ensureWhitespaceAtIndex($semicolonIndex + 1, 0, $content);
         }

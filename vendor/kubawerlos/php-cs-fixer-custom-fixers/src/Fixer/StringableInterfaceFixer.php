@@ -22,7 +22,7 @@ final class StringableInterfaceFixer extends AbstractFixer
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'A class that implements the `__toString ()` method must explicitly implement the `Stringable` interface.',
+            'A class that implements the `__toString()` method must explicitly implement the `Stringable` interface.',
             [new CodeSample('<?php
 class Foo
 {
@@ -46,6 +46,7 @@ class Foo
 
     public function isCandidate(Tokens $tokens): bool
     {
+        // @phpstan-ignore greaterOrEqual.alwaysTrue
         return \PHP_VERSION_ID >= 80000 && $tokens->isAllTokenKindsFound([\T_CLASS, \T_STRING]);
     }
 
@@ -77,7 +78,7 @@ class Foo
                 continue;
             }
 
-            if ($this->doesImplementStringable($tokens, $namespaceStartIndex, $index + 1, $classStartIndex - 1)) {
+            if ($this->doesImplementStringable($tokens, $namespaceStartIndex, $index, $classStartIndex)) {
                 continue;
             }
 
@@ -118,7 +119,7 @@ class Foo
             return false;
         }
 
-        if (\in_array('\stringable', $interfaces, true)) {
+        if (\in_array('\\stringable', $interfaces, true)) {
             return true;
         }
 
@@ -136,33 +137,30 @@ class Foo
     }
 
     /**
-     * @return array<string>
+     * @return list<string>
      */
     private function getInterfaces(Tokens $tokens, int $classKeywordIndex, int $classOpenBraceIndex): array
     {
-        $startIndex = $tokens->getNextTokenOfKind($classKeywordIndex, ['{', [\T_IMPLEMENTS]]);
-        \assert(\is_int($startIndex));
+        $implementsIndex = $tokens->getNextTokenOfKind($classKeywordIndex, ['{', [\T_IMPLEMENTS]]);
+        \assert(\is_int($implementsIndex));
 
         $interfaces = [];
-        for ($index = $startIndex; $index < $classOpenBraceIndex; $index++) {
-            if (!$tokens[$index]->isGivenKind(\T_STRING)) {
+        $interface = '';
+        for (
+            $index = $tokens->getNextMeaningfulToken($implementsIndex);
+            $index < $classOpenBraceIndex;
+            $index = $tokens->getNextMeaningfulToken($index)
+        ) {
+            \assert(\is_int($index));
+            if ($tokens[$index]->equals(',')) {
+                $interfaces[] = \strtolower($interface);
+                $interface = '';
                 continue;
             }
-
-            $interface = \strtolower($tokens[$index]->getContent());
-
-            $prevIndex = $tokens->getPrevMeaningfulToken($index);
-            \assert(\is_int($prevIndex));
-            if ($tokens[$prevIndex]->isGivenKind(\T_NS_SEPARATOR)) {
-                $interface = '\\' . $interface;
-                $prevPrevIndex = $tokens->getPrevMeaningfulToken($prevIndex);
-                \assert(\is_int($prevPrevIndex));
-                if ($tokens[$prevPrevIndex]->isGivenKind(\T_STRING)) {
-                    continue;
-                }
-            }
-
-            $interfaces[] = $interface;
+            $interface .= $tokens[$index]->getContent();
+        }
+        if ($interface !== '') {
+            $interfaces[] = \strtolower($interface);
         }
 
         return $interfaces;
@@ -212,26 +210,23 @@ class Foo
                     new Token([\T_IMPLEMENTS, 'implements']),
                     new Token([\T_WHITESPACE, ' ']),
                     new Token([\T_NS_SEPARATOR, '\\']),
-                    new Token([\T_STRING, 'Stringable']),
+                    new Token([\T_STRING, \Stringable::class]),
                 ],
             );
 
             return;
         }
 
-        $implementsEndIndex = $tokens->getNextTokenOfKind($implementsIndex, ['{']);
-        \assert(\is_int($implementsEndIndex));
-
-        $prevIndex = $tokens->getPrevMeaningfulToken($implementsEndIndex);
-        \assert(\is_int($prevIndex));
+        $afterImplementsIndex = $tokens->getNextMeaningfulToken($implementsIndex);
+        \assert(\is_int($afterImplementsIndex));
 
         $tokens->insertAt(
-            $prevIndex + 1,
+            $afterImplementsIndex,
             [
+                new Token([\T_NS_SEPARATOR, '\\']),
+                new Token([\T_STRING, \Stringable::class]),
                 new Token(','),
                 new Token([\T_WHITESPACE, ' ']),
-                new Token([\T_NS_SEPARATOR, '\\']),
-                new Token([\T_STRING, 'Stringable']),
             ],
         );
     }

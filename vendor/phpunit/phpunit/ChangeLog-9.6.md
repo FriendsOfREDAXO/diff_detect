@@ -2,6 +2,80 @@
 
 All notable changes of the PHPUnit 9.6 release series are documented in this file using the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## [9.6.23] - 2025-05-02
+
+### Changed
+
+* [#5956](https://github.com/sebastianbergmann/phpunit/issues/5956): Improved handling of deprecated `E_STRICT` constant
+* Improved message when test is considered risky for printing unexpected output
+
+## [9.6.22] - 2024-12-05
+
+### Fixed
+
+* [#6071](https://github.com/sebastianbergmann/phpunit/issues/6071): PHP Archives (PHARs) of PHPUnit 8.5 and PHPUnit 9.6 bundle outdated versions of Prophecy
+
+## [9.6.21] - 2024-09-19
+
+### Changed
+
+* [#5956](https://github.com/sebastianbergmann/phpunit/issues/5956): Deprecation of the `E_STRICT` constant in PHP 8.4
+* Removed `.phpstorm.meta.php` file as methods such as `TestCase::createStub()` use generics / template types for their return types and PhpStorm, for example, uses that information
+
+## [9.6.20] - 2024-07-10
+
+### Changed
+
+* Updated dependencies (so that users that install using Composer's `--prefer-lowest` CLI option also get recent versions)
+
+## [9.6.19] - 2024-04-05
+
+### Changed
+
+* The namespaces of dependencies are now prefixed with `PHPUnitPHAR` instead of just `PHPUnit` for the PHAR distribution of PHPUnit
+
+## [9.6.18] - 2024-03-21
+
+### Changed
+
+* [#5763](https://github.com/sebastianbergmann/phpunit/issues/5763): Release nullable type changes for PHPUnit 9.6
+
+## [9.6.17] - 2024-02-23
+
+### Changed
+
+* Improve output of `--check-version` CLI option
+* Improve description of `--check-version` CLI option
+* Show help for `--manifest`, `--sbom`, and `--composer-lock` when the PHAR is used
+
+### Fixed
+
+* [#5712](https://github.com/sebastianbergmann/phpunit/issues/5712): Update dependencies for PHAR distribution of PHPUnit 9.6
+
+## [9.6.16] - 2024-01-19
+
+### Changed
+
+* Make PHAR build reproducible (the only remaining differences were in the timestamps for the files in the PHAR)
+
+### Fixed
+
+* [#5516](https://github.com/sebastianbergmann/phpunit/issues/5516): Assertions that use the `LogicalNot` constraint (`assertNotEquals()`, `assertStringNotContainsString()`, ...) can generate confusing failure messages
+* [#5666](https://github.com/sebastianbergmann/phpunit/issues/5666): `--no-extensions` CLI option does not work
+* [#5673](https://github.com/sebastianbergmann/phpunit/issues/5673): Confusing error message when migration of a configuration is requested that does not need to be migrated
+
+## [9.6.15] - 2023-12-01
+
+### Fixed
+
+* [#5596](https://github.com/sebastianbergmann/phpunit/issues/5596): `PHPUnit\Framework\TestCase` has `@internal` annotation in PHAR
+
+## [9.6.14] - 2023-12-01
+
+### Added
+
+* [#5577](https://github.com/sebastianbergmann/phpunit/issues/5577): `--composer-lock` CLI option for PHAR binary that displays the `composer.lock` used to build the PHAR
+
 ## [9.6.13] - 2023-09-19
 
 ### Changed
@@ -95,6 +169,16 @@ All notable changes of the PHPUnit 9.6 release series are documented in this fil
 * [#5064](https://github.com/sebastianbergmann/phpunit/issues/5064): Deprecate `PHPUnit\Framework\TestCase::getMockClass()`
 * [#5132](https://github.com/sebastianbergmann/phpunit/issues/5132): Deprecate `Test` suffix for abstract test case classes
 
+[9.6.23]: https://github.com/sebastianbergmann/phpunit/compare/9.6.22...9.6.23
+[9.6.22]: https://github.com/sebastianbergmann/phpunit/compare/9.6.21...9.6.22
+[9.6.21]: https://github.com/sebastianbergmann/phpunit/compare/9.6.20...9.6.21
+[9.6.20]: https://github.com/sebastianbergmann/phpunit/compare/9.6.19...9.6.20
+[9.6.19]: https://github.com/sebastianbergmann/phpunit/compare/9.6.18...9.6.19
+[9.6.18]: https://github.com/sebastianbergmann/phpunit/compare/9.6.17...9.6.18
+[9.6.17]: https://github.com/sebastianbergmann/phpunit/compare/9.6.16...9.6.17
+[9.6.16]: https://github.com/sebastianbergmann/phpunit/compare/9.6.15...9.6.16
+[9.6.15]: https://github.com/sebastianbergmann/phpunit/compare/9.6.14...9.6.15
+[9.6.14]: https://github.com/sebastianbergmann/phpunit/compare/9.6.13...9.6.14
 [9.6.13]: https://github.com/sebastianbergmann/phpunit/compare/9.6.12...9.6.13
 [9.6.12]: https://github.com/sebastianbergmann/phpunit/compare/9.6.11...9.6.12
 [9.6.11]: https://github.com/sebastianbergmann/phpunit/compare/9.6.10...9.6.11

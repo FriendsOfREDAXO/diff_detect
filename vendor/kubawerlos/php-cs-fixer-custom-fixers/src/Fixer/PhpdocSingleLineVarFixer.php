@@ -23,7 +23,7 @@ final class PhpdocSingleLineVarFixer extends AbstractFixer
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'The `@var` annotations must be on a single line if they are the only content.',
+            'The `@var` annotation must be on a single line if it is the only content.',
             [new CodeSample('<?php
 class Foo {
     /**
@@ -61,14 +61,11 @@ class Foo {
                 continue;
             }
 
-            if (!Preg::match('#^/\*\*[\s\*]+(@var[^\r\n]+)[\s\*]*\*\/$#u', $tokens[$index]->getContent(), $matches)) {
-                continue;
-            }
-
-            $var = $matches[1];
-            \assert(\is_string($var));
-
-            $newContent = '/** ' . \rtrim($var) . ' */';
+            $newContent = Preg::replace(
+                '#^/\\*\\*[\\s\\*]+(@var[^\\r\\n]+)(?<!\\s)[\\s\\*]*\\*\\/$#',
+                '/** $1 */',
+                $tokens[$index]->getContent(),
+            );
 
             if ($newContent === $tokens[$index]->getContent()) {
                 continue;

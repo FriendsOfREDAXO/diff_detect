@@ -22,7 +22,7 @@ final class NoReferenceInFunctionDefinitionFixer extends AbstractFixer
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'There must be no parameters with reference in funcion methods.',
+            'There must be no parameters passed by reference in functions.',
             [new CodeSample('<?php
 function foo(&$x) {}
 ')],
@@ -64,7 +64,7 @@ function foo(&$x) {}
     }
 
     /**
-     * @return array<int>
+     * @return list<int>
      */
     private function getArgumentStartIndices(Tokens $tokens, int $functionNameIndex): array
     {

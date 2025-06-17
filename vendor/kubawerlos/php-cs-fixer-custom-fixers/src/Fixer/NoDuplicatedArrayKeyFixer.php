@@ -25,15 +25,20 @@ use PhpCsFixerCustomFixers\Analyzer\Analysis\ArrayElementAnalysis;
 use PhpCsFixerCustomFixers\Analyzer\ArrayAnalyzer;
 use PhpCsFixerCustomFixers\TokenRemover;
 
+/**
+ * @implements ConfigurableFixerInterface<_InputConfig, _Config>
+ *
+ * @phpstan-type _InputConfig array{ignore_expressions?: bool}
+ * @phpstan-type _Config array{ignore_expressions: bool}
+ */
 final class NoDuplicatedArrayKeyFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
-    /** @var bool */
-    private $ignoreExpressions = true;
+    private bool $ignoreExpressions = true;
 
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'There can be no duplicate array keys.',
+            'There must be no duplicate array keys.',
             [new CodeSample('<?php
 $x = [
     "foo" => 1,
@@ -108,7 +113,7 @@ $x = [
                 $endIndex = $tokens->getNextMeaningfulToken($arrayElementAnalysis->getValueEndIndex());
                 \assert(\is_int($endIndex));
 
-                if ($tokens[$endIndex + 1]->isWhitespace() && Preg::match('/^\h+$/', $tokens[$endIndex + 1]->getContent())) {
+                if ($tokens[$endIndex + 1]->isWhitespace() && Preg::match('/^\\h+$/', $tokens[$endIndex + 1]->getContent())) {
                     $endIndex++;
                 }
 

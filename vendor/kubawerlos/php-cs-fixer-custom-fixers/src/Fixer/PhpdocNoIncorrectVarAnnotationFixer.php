@@ -61,7 +61,7 @@ $bar = new Foo();
             }
 
             // remove ones not having type at the beginning
-            $this->removeVarAnnotationNotMatchingPattern($tokens, $index, '/@var\s+[\?\\\\a-zA-Z_\x7f-\xff]/');
+            $this->removeVarAnnotationNotMatchingPattern($tokens, $index, '/@var\\s+[\\?\\\\a-zA-Z_\\x7f-\\xff]/');
 
             $nextIndex = $tokens->getNextMeaningfulToken($index);
 
@@ -70,7 +70,7 @@ $bar = new Foo();
                 continue;
             }
 
-            if ($tokens[$nextIndex]->isGivenKind([\T_PRIVATE, \T_PROTECTED, \T_PUBLIC, \T_VAR, \T_STATIC])) {
+            if ($tokens[$nextIndex]->isGivenKind([\T_PRIVATE, \T_PROTECTED, \T_PUBLIC, \T_VAR, \T_STATIC, CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PUBLIC, CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PROTECTED, CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PRIVATE])) {
                 $this->removeForClassElement($tokens, $index, $nextIndex);
                 continue;
             }
@@ -107,20 +107,20 @@ $bar = new Foo();
             return;
         }
 
-        if (Preg::match('/@var\h+(.+\h+)?\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $tokens[$index]->getContent())) {
+        if (Preg::match('/@var\\h+(.+\\h+)?\\$[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*/', $tokens[$index]->getContent())) {
             $this->removeVarAnnotation($tokens, $index, [$tokens[$variableIndex]->getContent()]);
         }
     }
 
     /**
-     * @param array<string> $allowedVariables
+     * @param list<string> $allowedVariables
      */
     private function removeVarAnnotation(Tokens $tokens, int $index, array $allowedVariables): void
     {
         $this->removeVarAnnotationNotMatchingPattern(
             $tokens,
             $index,
-            '/(\Q' . \implode('\E|\Q', $allowedVariables) . '\E)\b/i',
+            '/(\\Q' . \implode('\\E|\\Q', $allowedVariables) . '\\E)\\b/i',
         );
     }
 

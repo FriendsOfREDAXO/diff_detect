@@ -24,6 +24,11 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @deprecated
+ *
+ * @implements ConfigurableFixerInterface<_InputConfig, _Config>
+ *
+ * @phpstan-type _InputConfig array{force?: bool}
+ * @phpstan-type _Config array{force: bool}
  */
 final class DataProviderStaticFixer extends AbstractFixer implements ConfigurableFixerInterface, DeprecatedFixerInterface
 {
@@ -90,7 +95,7 @@ class FooTest extends TestCase {
 
     public function isRisky(): bool
     {
-        return $this->force;
+        return $this->phpUnitDataProviderStaticFixer->isRisky();
     }
 
     public function fix(\SplFileInfo $file, Tokens $tokens): void
@@ -99,7 +104,7 @@ class FooTest extends TestCase {
     }
 
     /**
-     * @return array<string>
+     * @return list<string>
      */
     public function getSuccessorsNames(): array
     {

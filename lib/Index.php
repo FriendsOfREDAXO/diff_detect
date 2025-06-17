@@ -2,6 +2,7 @@
 
 namespace FriendsOfRedaxo\DiffDetect;
 
+use Exception;
 use Html2Text\Html2Text;
 use InvalidArgumentException;
 use rex;
@@ -10,7 +11,9 @@ use rex_exception;
 use rex_instance_pool_trait;
 use rex_sql;
 use rex_sql_exception;
-use voku\helper\HtmlDomParser;
+
+use function is_array;
+use function sprintf;
 
 final class Index
 {
@@ -27,7 +30,7 @@ final class Index
     }
 
     /**
-     * @return null|static
+     * @return static|null
      */
     public static function get(int $id): ?self
     {
@@ -103,18 +106,28 @@ final class Index
     public static function createSnapshot(Url $url): bool
     {
         $url->setLastScan();
-        $response = $url->getContent();
-        $content = $response->getBody();
+        $content = '';
+        $headers = [];
+        try {
+            $response = $url->getResponse();
+            $content = $response['Content'] ?? '';
+            $headers = $response['Headers'] ?? [];
+            $statusCode = $response['StatusCode'] ?? 0;
+            $statusMessage = '[' . $statusCode . '] OK';
+        } catch (Exception $e) {
+            $statusCode = $e->getCode();
+            $statusMessage = '[' . $statusCode . '] ' . $e->getMessage();
+        }
+
+        $url->setLastMessage($statusMessage);
+
+        $headers = self::flattenArray($headers);
 
         if ('HTML' === $url->getType()) {
-            $content = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $content);
-            $content = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $content);
-            $content = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is', '', $content);
-            $content = strip_tags($content, ['img', 'video']);
+            $content = (new Html2Text($content))->getText();
         }
 
         $hash = md5($content);
-
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('diff_detect_index'));
         $sql->setWhere('url_id = ? ORDER BY createdate DESC LIMIT 1', [$url->getId()]);
@@ -132,11 +145,11 @@ final class Index
         $sql->addGlobalCreateFields();
         $sql->addGlobalUpdateFields();
         $sql->setValue('url_id', $url->getId());
-        $sql->setValue('content', $response->getBody());
+        $sql->setValue('content', $content);
         $sql->setValue('hash', $hash);
-        $sql->setValue('header', $response->getHeader());
-        $sql->setValue('statusCode', $response->getStatusCode());
-        $sql->setValue('statusMessage', $response->getStatusMessage());
+        $sql->setValue('header', implode(',', $headers));
+        $sql->setValue('statusCode', $statusCode);
+        $sql->setValue('statusMessage', $statusMessage);
         $sql->insert();
 
         return true;
@@ -167,6 +180,8 @@ final class Index
                 WHERE
                 url_id = :url_id
                 AND createdate < DATE_SUB(:datetime, INTERVAL :interval MINUTE)
+                ORDER BY createdate ASC
+                LIMIT 100
             ', [
                 'url_id' => $URL->getId(),
                 'datetime' => date(rex_sql::FORMAT_DATETIME),
@@ -176,6 +191,7 @@ final class Index
             foreach ($indeces as $Index) {
                 $Index = self::fromSqlData($Index);
                 $Index->delete();
+                echo ' Deleted index with ID: ' . $Index->getId() . ' for URL: ' . $URL->getName() . "\n";
             }
         }
     }
@@ -194,14 +210,7 @@ final class Index
 
     public function getContent(): string
     {
-        if ('RSS' === $this->url?->getType()) {
-            return $this->getValue('content');
-        }
-
-        $content = $this->getValue('content');
-        // $content = HtmlDomParser::str_get_html($content)->findOne('#content')->innerHtml();
-        $content = (new Html2Text($content))->getText();
-        return $content;
+        return $this->getValue('content');
     }
 
     public function delete(): void
@@ -219,5 +228,22 @@ final class Index
         if (null !== $sql->getError()) {
             throw new rex_exception($sql->getError());
         }
+    }
+
+    private static function flattenArray($array, $prefix = '')
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            $newKey = '' === $prefix ? $key : $prefix . '.' . $key;
+
+            if (is_array($value)) {
+                $result = array_merge($result, self::flattenArray($value, $newKey));
+            } else {
+                $result[$newKey] = $value;
+            }
+        }
+
+        return $result;
     }
 }

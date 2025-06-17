@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\DiffDetect\Url;
+
 /** @var rex_addon $this */
 
 $urlId = rex_request('id', 'int');
@@ -19,7 +21,7 @@ if (null !== $checked && null !== $indexId) {
     echo rex_view::success((1 === $checked) ? rex_i18n::msg('index_checked') : rex_i18n::msg('index_not_checked'));
 }
 
-$Url = \FriendsOfRedaxo\DiffDetect\Url::get((int) $urlId);
+$Url = Url::get((int) $urlId);
 if (null === $Url) {
     echo rex_view::error(rex_i18n::msg('diff_detect_url_not_found'));
     return;
@@ -39,9 +41,9 @@ foreach ($Snapshots as $snapshot) {
     if ($idBefore === $snapshot['id']) {
         $checkedBefore = ' checked';
     }
-    if ($idAfter === $snapshot['id'] ||
-        1 === count($Snapshots) ||
-        (null === $idAfter && 2 === $counter)) {
+    if ($idAfter === $snapshot['id']
+        || 1 === count($Snapshots)
+        || (null === $idAfter && 2 === $counter)) {
         $checkedAfter = ' checked';
     }
 

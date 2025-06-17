@@ -120,7 +120,21 @@ class Sample
                 continue;
             }
 
+            if ($token->isGivenKind(T_FN)) {
+                $i = $tokensAnalyzer->getLastTokenIndexOfArrowFunction($i);
+                $i = $tokens->getNextMeaningfulToken($i);
+
+                continue;
+            }
+
             if ($token->isGivenKind(T_FUNCTION)) {
+                if ($tokensAnalyzer->isLambda($i)) {
+                    $i = $tokens->getNextTokenOfKind($i, ['{']);
+                    $i = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_CURLY_BRACE, $i);
+
+                    continue;
+                }
+
                 $i = $tokens->getNextTokenOfKind($i, ['(']);
                 $insideMethodSignatureUntil = $tokens->getNextTokenOfKind($i, ['{', ';']);
 
@@ -170,7 +184,7 @@ class Sample
     {
         $namespace = ('' !== $namespace ? '\\'.$namespace : '').'\\';
 
-        foreach (array_reverse(Preg::split('/(\\\\)/', $namespace, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE)) as $piece) {
+        foreach (array_reverse(Preg::split('/(\\\)/', $namespace, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE)) as $piece) {
             $index = $tokens->getPrevMeaningfulToken($index);
             if ('\\' === $piece) {
                 if (!$tokens[$index]->isGivenKind(T_NS_SEPARATOR)) {

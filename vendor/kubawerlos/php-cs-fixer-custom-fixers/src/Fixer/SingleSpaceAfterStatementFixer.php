@@ -22,10 +22,16 @@ use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Tokens;
 
+/**
+ * @implements ConfigurableFixerInterface<_InputConfig, _Config>
+ *
+ * @phpstan-type _InputConfig array{allow_linebreak?: bool}
+ * @phpstan-type _Config array{allow_linebreak: bool}
+ */
 final class SingleSpaceAfterStatementFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
     /** @var list<int> */
-    private $tokens = [
+    private array $tokens = [
         \T_ABSTRACT,
         \T_AS,
         \T_BREAK,
@@ -78,8 +84,7 @@ final class SingleSpaceAfterStatementFixer extends AbstractFixer implements Conf
         CT::T_USE_LAMBDA,
     ];
 
-    /** @var bool */
-    private $allowLinebreak = false;
+    private bool $allowLinebreak = false;
 
     public function getDefinition(): FixerDefinitionInterface
     {
@@ -143,7 +148,7 @@ final class SingleSpaceAfterStatementFixer extends AbstractFixer implements Conf
     private function canAddSpaceAfter(Tokens $tokens, int $index): bool
     {
         if ($tokens[$index + 1]->isGivenKind(\T_WHITESPACE)) {
-            return !$this->allowLinebreak || !Preg::match('/\R/', $tokens[$index + 1]->getContent());
+            return !$this->allowLinebreak || !Preg::match('/\\R/', $tokens[$index + 1]->getContent());
         }
 
         if ($tokens[$index]->isGivenKind(\T_CLASS) && $tokens[$index + 1]->equals('(')) {

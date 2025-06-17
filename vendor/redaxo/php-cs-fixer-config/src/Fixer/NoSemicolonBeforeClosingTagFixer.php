@@ -13,6 +13,8 @@ use SplFileInfo;
 
 use function count;
 
+use const T_CLOSE_TAG;
+
 final class NoSemicolonBeforeClosingTagFixer extends AbstractFixer
 {
     public function getName(): string

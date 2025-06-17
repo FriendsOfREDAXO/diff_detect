@@ -24,21 +24,22 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @deprecated
+ *
+ * @implements ConfigurableFixerInterface<_InputConfig, _Config>
+ *
+ * @phpstan-type _InputConfig array{prefix?: string, suffix?: string}
+ * @phpstan-type _Config array{prefix: string, suffix: string}
  */
 final class DataProviderNameFixer extends AbstractFixer implements ConfigurableFixerInterface, DeprecatedFixerInterface
 {
     private PhpUnitDataProviderNameFixer $phpUnitDataProviderNameFixer;
+    private string $prefix = 'provide';
+    private string $suffix = 'Cases';
 
     public function __construct()
     {
         $this->phpUnitDataProviderNameFixer = new PhpUnitDataProviderNameFixer();
     }
-
-    /** @var string */
-    private $prefix = 'provide';
-
-    /** @var string */
-    private $suffix = 'Cases';
 
     public function getDefinition(): FixerDefinitionInterface
     {
@@ -76,9 +77,6 @@ class FooTest extends TestCase {
         ]);
     }
 
-    /**
-     * @param array<string, string> $configuration
-     */
     public function configure(array $configuration): void
     {
         $this->phpUnitDataProviderNameFixer->configure($configuration);
@@ -105,7 +103,7 @@ class FooTest extends TestCase {
     }
 
     /**
-     * @return array<string>
+     * @return list<string>
      */
     public function getSuccessorsNames(): array
     {

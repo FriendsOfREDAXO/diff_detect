@@ -1,13 +1,14 @@
 <?php
 
 use FriendsOfRedaxo\DiffDetect\Index;
+use FriendsOfRedaxo\DiffDetect\Url;
 
 class rex_cronjob_diff_detect extends rex_cronjob
 {
     public function execute()
     {
         $sql = rex_sql::factory();
-        $sql->setQuery(
+        $URLs = $sql->getArray(
             '
             SELECT      u.*
                         , i.createdate AS last_index_date
@@ -24,6 +25,7 @@ class rex_cronjob_diff_detect extends rex_cronjob
                 OR  u.last_scan < DATE_SUB(:datetime, INTERVAL u.interval MINUTE)
             )
             order by u.last_scan
+            LIMIT 5
         ',
             [
                 'datetime' => date(rex_sql::FORMAT_DATETIME),
@@ -32,8 +34,8 @@ class rex_cronjob_diff_detect extends rex_cronjob
 
         $messages = [];
 
-        for ($i = 0; $i < $sql->getRows(); ++$i) {
-            $Url = \FriendsOfRedaxo\DiffDetect\Url::get($sql->getValue('id'));
+        foreach ($URLs as $URLArray) {
+            $Url = Url::get($URLArray['id']);
             try {
                 if (Index::createSnapshot($Url)) {
                     $messages[] = 'snapshot created for ' . $Url->getName() . ' [' . $Url->getId() . ']';
@@ -44,10 +46,9 @@ class rex_cronjob_diff_detect extends rex_cronjob
                 $messages[] = 'snapshot error for ' . $Url->getName() . ' [' . $Url->getId() . ']';
                 break;
             }
-            $sql->next();
         }
 
-        if (0 === $sql->getRows()) {
+        if (0 === count($URLs)) {
             $messages[] = 'no snapshots';
         }
 

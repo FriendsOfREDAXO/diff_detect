@@ -11,7 +11,9 @@
 
 namespace PhpCsFixerCustomFixers\Fixer;
 
+use PhpCsFixer\Fixer\Basic\NumericLiteralSeparatorFixer as NLSFixer;
 use PhpCsFixer\Fixer\ConfigurableFixerInterface;
+use PhpCsFixer\Fixer\DeprecatedFixerInterface;
 use PhpCsFixer\FixerConfiguration\FixerConfigurationResolver;
 use PhpCsFixer\FixerConfiguration\FixerConfigurationResolverInterface;
 use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
@@ -23,22 +25,21 @@ use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
-final class NumericLiteralSeparatorFixer extends AbstractFixer implements ConfigurableFixerInterface
+/**
+ * @deprecated
+ *
+ * @implements ConfigurableFixerInterface<_InputConfig, _Config>
+ *
+ * @phpstan-type _InputConfig array{binary?: bool, decimal?: bool, float?: bool, hexadecimal?: bool, octal?: bool}
+ * @phpstan-type _Config array{binary: bool, decimal: bool, float: bool, hexadecimal: bool, octal: bool}
+ */
+final class NumericLiteralSeparatorFixer extends AbstractFixer implements ConfigurableFixerInterface, DeprecatedFixerInterface
 {
-    /** @var null|bool */
-    private $binarySeparator = false;
-
-    /** @var null|bool */
-    private $decimalSeparator = false;
-
-    /** @var null|bool */
-    private $floatSeparator = false;
-
-    /** @var null|bool */
-    private $hexadecimalSeparator = false;
-
-    /** @var null|bool */
-    private $octalSeparator = false;
+    private ?bool $binarySeparator = false;
+    private ?bool $decimalSeparator = false;
+    private ?bool $floatSeparator = false;
+    private ?bool $hexadecimalSeparator = false;
+    private ?bool $octalSeparator = false;
 
     public function getDefinition(): FixerDefinitionInterface
     {
@@ -103,7 +104,7 @@ echo 0123_4567; // octal
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return \PHP_VERSION_ID >= 70400 && $tokens->isAnyTokenKindsFound([\T_DNUMBER, \T_LNUMBER]);
+        return $tokens->isAnyTokenKindsFound([\T_DNUMBER, \T_LNUMBER]);
     }
 
     public function isRisky(): bool
@@ -130,6 +131,14 @@ echo 0123_4567; // octal
         }
     }
 
+    /**
+     * @return list<string>
+     */
+    public function getSuccessorsNames(): array
+    {
+        return [(new NLSFixer())->getName()];
+    }
+
     private function getNewContent(string $content): string
     {
         if (\strpos($content, '.') !== false) {
@@ -147,7 +156,7 @@ echo 0123_4567; // octal
             return $this->updateContent($content, 'x', null, 2, $this->hexadecimalSeparator);
         }
 
-        if (Preg::match('/e-?[\d_]+$/i', $content)) {
+        if (Preg::match('/e-?[\\d_]+$/i', $content)) {
             $content = $this->updateContent($content, null, 'e', 3, $this->floatSeparator);
 
             return $this->updateContent($content, 'e', null, 3, $this->floatSeparator);
@@ -180,7 +189,7 @@ echo 0123_4567; // octal
                 $substringToUpdate = \strrev($substringToUpdate);
             }
 
-            $substringToUpdate = Preg::replace(\sprintf('/[\da-fA-F]{%d}(?!-)(?!$)/', $groupSize), '$0_', $substringToUpdate);
+            $substringToUpdate = Preg::replace(\sprintf('/[\\da-fA-F]{%d}(?!-)(?!$)/', $groupSize), '$0_', $substringToUpdate);
 
             if ($fromRight) {
                 $substringToUpdate = \strrev($substringToUpdate);

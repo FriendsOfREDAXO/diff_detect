@@ -24,7 +24,7 @@ final class MultilineCommentOpeningClosingAloneFixer extends AbstractFixer
     {
         return new FixerDefinition(
             'Multiline comments or PHPDocs must contain an opening and closing line with no additional content.',
-            [new CodeSample("<?php\n/** Hello\n * World!\n */;\n")],
+            [new CodeSample("<?php\n/** Hello\n * World!\n */\n")],
             '',
         );
     }
@@ -54,7 +54,7 @@ final class MultilineCommentOpeningClosingAloneFixer extends AbstractFixer
                 continue;
             }
 
-            if (!Preg::match('/\R/', $tokens[$index]->getContent())) {
+            if (!Preg::match('/\\R/', $tokens[$index]->getContent())) {
                 continue;
             }
 
@@ -65,35 +65,29 @@ final class MultilineCommentOpeningClosingAloneFixer extends AbstractFixer
 
     private function fixOpening(Tokens $tokens, int $index): void
     {
-        if (Preg::match('#^/\*+\R#', $tokens[$index]->getContent())) {
+        if (Preg::match('#^/\\*+\\R#', $tokens[$index]->getContent())) {
             return;
         }
 
-        Preg::match('#\R(\h*)#', $tokens[$index]->getContent(), $matches);
+        Preg::match('#\\R(\\h*)#', $tokens[$index]->getContent(), $matches);
+
         $indent = $matches[1] . '*';
 
-        Preg::match('#^(?<opening>/\*+)(?<before_newline>.*?)(?<newline>\R)(?<after_newline>.*)$#s', $tokens[$index]->getContent(), $matches);
+        Preg::match('#^(?<opening>/\\*+)(?<before_newline>.*?)(?<newline>\\R)(?<after_newline>.*)$#s', $tokens[$index]->getContent(), $matches);
         if ($matches === []) {
             return;
         }
 
         $opening = $matches['opening'];
-        \assert(\is_string($opening));
-
         $beforeNewline = $matches['before_newline'];
-        \assert(\is_string($beforeNewline));
-
         $newline = $matches['newline'];
-        \assert(\is_string($newline));
-
         $afterNewline = $matches['after_newline'];
-        \assert(\is_string($afterNewline));
 
         if ($beforeNewline[0] !== ' ') {
             $indent .= ' ';
         }
 
-        if (Preg::match('#^\h+$#', $beforeNewline)) {
+        if (Preg::match('#^\\h+$#', $beforeNewline)) {
             $insert = '';
         } else {
             $insert = $newline . $indent . $beforeNewline;
@@ -102,22 +96,21 @@ final class MultilineCommentOpeningClosingAloneFixer extends AbstractFixer
         $newContent = $opening . $insert . $newline . $afterNewline;
 
         if ($newContent !== $tokens[$index]->getContent()) {
-            $tokens[$index] = new Token([Preg::match('~/\*{2}\s~', $newContent) ? \T_DOC_COMMENT : \T_COMMENT, $newContent]);
+            $tokens[$index] = new Token([Preg::match('~/\\*{2}\\s~', $newContent) ? \T_DOC_COMMENT : \T_COMMENT, $newContent]);
         }
     }
 
     private function fixClosing(Tokens $tokens, int $index): void
     {
-        if (Preg::match('#\R\h*\*+/$#', $tokens[$index]->getContent())) {
+        if (Preg::match('#\\R\\h*\\*+/$#', $tokens[$index]->getContent())) {
             return;
         }
 
-        Preg::match('#\R(\h*)#', $tokens[$index]->getContent(), $matches);
+        Preg::match('#\\R(\\h*)#', $tokens[$index]->getContent(), $matches);
 
         $indent = $matches[1];
-        \assert(\is_string($indent));
 
-        $newContent = Preg::replace('#(\R)(.+?)\h*(\*+/)$#', \sprintf('$1$2$1%s$3', $indent), $tokens[$index]->getContent());
+        $newContent = Preg::replace('#(\\R)(.+?)\\h*(\\*+/)$#', \sprintf('$1$2$1%s$3', $indent), $tokens[$index]->getContent());
 
         if ($newContent !== $tokens[$index]->getContent()) {
             $id = $tokens[$index]->getId();

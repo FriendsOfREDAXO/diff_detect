@@ -1,0 +1,28 @@
+name: Code Style
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+    php-cs-fixer:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        if: github.event.pull_request.draft == false
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2
+                with:
+                    php-version: 8.1
+                    coverage: none # disable xdebug, pcov
+                    tools: cs2pr
+
+            -   name: Composer install
+                uses: ramsey/composer-install@v3
+
+            -   name: Run php-cs-fixer
+                run: vendor/bin/php-cs-fixer check --ansi --diff --format=checkstyle | cs2pr

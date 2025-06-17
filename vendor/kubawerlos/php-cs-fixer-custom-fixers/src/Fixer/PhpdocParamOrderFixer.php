@@ -22,8 +22,7 @@ use PhpCsFixer\Tokenizer\Tokens;
  */
 final class PhpdocParamOrderFixer extends AbstractFixer implements DeprecatedFixerInterface
 {
-    /** @var \PhpCsFixer\Fixer\Phpdoc\PhpdocParamOrderFixer */
-    private $phpdocParamOrderFixer;
+    private \PhpCsFixer\Fixer\Phpdoc\PhpdocParamOrderFixer $phpdocParamOrderFixer;
 
     public function __construct()
     {
@@ -33,7 +32,7 @@ final class PhpdocParamOrderFixer extends AbstractFixer implements DeprecatedFix
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'The `@param` annotations must be in the same order as the function parameters.',
+            $this->phpdocParamOrderFixer->getDefinition()->getSummary(),
             [new CodeSample('<?php
 /**
  * @param int $b
@@ -71,7 +70,7 @@ function foo($a, $b, $c) {}
     }
 
     /**
-     * @return array<string>
+     * @return list<string>
      */
     public function getSuccessorsNames(): array
     {

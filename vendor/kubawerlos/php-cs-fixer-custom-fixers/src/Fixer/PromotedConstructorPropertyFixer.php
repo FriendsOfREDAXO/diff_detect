@@ -29,13 +29,18 @@ use PhpCsFixerCustomFixers\Analyzer\Analysis\ConstructorAnalysis;
 use PhpCsFixerCustomFixers\Analyzer\ConstructorAnalyzer;
 use PhpCsFixerCustomFixers\TokenRemover;
 
+/**
+ * @implements ConfigurableFixerInterface<_InputConfig, _Config>
+ *
+ * @phpstan-type _InputConfig array{promote_only_existing_properties?: bool}
+ * @phpstan-type _Config array{promote_only_existing_properties: bool}
+ */
 final class PromotedConstructorPropertyFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
-    /** @var array<int, array<Token>> */
-    private $tokensToInsert;
+    /** @var array<int, array<int, Token>> */
+    private array $tokensToInsert;
 
-    /** @var bool */
-    private $promoteOnlyExistingProperties = false;
+    private bool $promoteOnlyExistingProperties = false;
 
     public function getDefinition(): FixerDefinitionInterface
     {
@@ -79,7 +84,7 @@ class Foo {
     }
 
     /**
-     * Must run before BracesFixer, ClassAttributesSeparationFixer, ConstructorEmptyBracesFixer, MultilinePromotedPropertiesFixer, NoExtraBlankLinesFixer, ReadonlyPromotedPropertiesFixer.
+     * Must run before ClassAttributesSeparationFixer, ConstructorEmptyBracesFixer, MultilinePromotedPropertiesFixer, NoExtraBlankLinesFixer, ReadonlyPromotedPropertiesFixer.
      */
     public function getPriority(): int
     {
@@ -88,6 +93,7 @@ class Foo {
 
     public function isCandidate(Tokens $tokens): bool
     {
+        // @phpstan-ignore greaterOrEqual.alwaysTrue
         return \PHP_VERSION_ID >= 80000 && $tokens->isAllTokenKindsFound([\T_CLASS, \T_VARIABLE]);
     }
 
@@ -185,7 +191,7 @@ class Foo {
         $docBlock = new DocBlock($tokens[$phpDocIndex]->getContent());
 
         foreach ($docBlock->getAnnotations() as $annotation) {
-            if (Preg::match('/\*\h+(@Document|@Entity|@Mapping\\\\Entity|@ODM\\\\Document|@ORM\\\\Entity|@ORM\\\\Mapping\\\\Entity)/', $annotation->getContent())) {
+            if (Preg::match('/\\*\\h+(@Document|@Entity|@Mapping\\\\Entity|@ODM\\\\Document|@ORM\\\\Entity|@ORM\\\\Mapping\\\\Entity)/', $annotation->getContent())) {
                 return true;
             }
         }
@@ -194,7 +200,7 @@ class Foo {
     }
 
     /**
-     * @param array<int> $properties
+     * @param array<string, int> $properties
      */
     private function getPropertyIndex(Tokens $tokens, array $properties, int $assignmentIndex): ?int
     {
@@ -301,7 +307,7 @@ class Foo {
     }
 
     /**
-     * @return array<Token>
+     * @return list<Token>
      */
     private function removePropertyAndReturnTokensToInsert(Tokens $tokens, ?int $propertyIndex): array
     {
@@ -397,7 +403,7 @@ class Foo {
     }
 
     /**
-     * @param array<Token> $tokensToInsert
+     * @param list<Token> $tokensToInsert
      */
     private function updateParameterSignature(Tokens $tokens, int $constructorParameterIndex, array $tokensToInsert, bool $makeTypeNullable): void
     {

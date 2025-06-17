@@ -42,7 +42,7 @@ class RssDiff
         $itemsAfter = $this->getItems($this->after);
 
         $output = '';
-        /** @var \Laminas\Feed\Reader\Entry\Rss $item */
+        /** @var Rss $item */
         foreach ($itemsBefore as $id => $item) {
             if (array_key_exists($id, $itemsAfter)) {
                 $diff = HtmlDiffAdvanced::create($this->renderItem($item), $this->renderItem($itemsAfter[$id]));

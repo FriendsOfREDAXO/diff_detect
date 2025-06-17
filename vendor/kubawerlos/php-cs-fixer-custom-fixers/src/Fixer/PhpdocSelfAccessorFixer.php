@@ -26,7 +26,7 @@ final class PhpdocSelfAccessorFixer extends AbstractFixer
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'In PHPDoc, the class or interface element `self` should be preferred over the class name itself.',
+            'In PHPDoc, the class or interface element `self` must be used instead of the class name itself.',
             [new CodeSample('<?php
 class Foo {
     /**
@@ -122,7 +122,7 @@ class Foo {
             $types = [];
             foreach ($annotation->getTypes() as $type) {
                 $type = Preg::replace(
-                    \sprintf('/(?<![a-zA-Z0-9_\x7f-\xff\\\\])(%s|%s)\b(?!\\\\)/', $classyName, \preg_quote($fqcn, '/')),
+                    \sprintf('/(?<![a-zA-Z0-9_\\x7f-\\xff\\\\])(%s|%s)\\b(?!\\\\)/', $classyName, \preg_quote($fqcn, '/')),
                     'self',
                     $type,
                 );

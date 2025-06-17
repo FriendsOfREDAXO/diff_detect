@@ -109,7 +109,6 @@ rex_extension::register('REX_FORM_SAVED', static function ($ep) {
 });
 
 rex_extension::register('REX_FORM_DELETED', static function ($ep) {
-
     /** @var rex_extension_point $ep */
     /** @var array<string, mixed> $params */
     $params = $ep->getParams();
@@ -122,7 +121,6 @@ rex_extension::register('REX_FORM_DELETED', static function ($ep) {
         rex_sql::factory()->setQuery('delete from `' . rex::getTable('diff_detect_index') . '` where url_id=:url_id', [
             'url_id' => $form_params['id'],
         ]);
-
     }
 });
 

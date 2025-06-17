@@ -26,6 +26,7 @@ use function substr;
 use function trim;
 use DOMDocument;
 use DOMElement;
+use DOMNode;
 use DOMNodeList;
 use DOMXPath;
 use PHPUnit\Runner\TestSuiteSorter;
@@ -49,6 +50,7 @@ use PHPUnit\TextUI\XmlConfiguration\Logging\TestDox\Text as TestDoxText;
 use PHPUnit\TextUI\XmlConfiguration\Logging\TestDox\Xml as TestDoxXml;
 use PHPUnit\TextUI\XmlConfiguration\Logging\Text;
 use PHPUnit\TextUI\XmlConfiguration\TestSuite as TestSuiteConfiguration;
+use PHPUnit\TextUI\XmlConfigurationTest;
 use PHPUnit\Util\TestDox\CliTestDoxPrinter;
 use PHPUnit\Util\VersionComparisonOperator;
 use PHPUnit\Util\Xml;
@@ -701,7 +703,7 @@ final class Loader
      * If $value is 'false' or 'true', this returns the value that $value represents.
      * Otherwise, returns $default, which may be a string in rare cases.
      *
-     * @see \PHPUnit\TextUI\XmlConfigurationTest::testPHPConfigurationIsReadCorrectly
+     * @see XmlConfigurationTest::testPHPConfigurationIsReadCorrectly
      *
      * @param bool|string $default
      *
@@ -749,6 +751,8 @@ final class Loader
         $files = [];
 
         foreach ($xpath->query($query) as $file) {
+            assert($file instanceof DOMNode);
+
             $filePath = (string) $file->textContent;
 
             if ($filePath) {
@@ -775,10 +779,14 @@ final class Loader
         $exclude = [];
 
         foreach ($xpath->query($root . '/include/group') as $group) {
+            assert($group instanceof DOMNode);
+
             $include[] = new Group((string) $group->textContent);
         }
 
         foreach ($xpath->query($root . '/exclude/group') as $group) {
+            assert($group instanceof DOMNode);
+
             $exclude[] = new Group((string) $group->textContent);
         }
 
@@ -848,6 +856,8 @@ final class Loader
         $includePaths = [];
 
         foreach ($xpath->query('php/includePath') as $includePath) {
+            assert($includePath instanceof DOMNode);
+
             $path = (string) $includePath->textContent;
 
             if ($path) {

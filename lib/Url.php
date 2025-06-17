@@ -2,13 +2,15 @@
 
 namespace FriendsOfRedaxo\DiffDetect;
 
+use Exception;
 use InvalidArgumentException;
 use rex;
 use rex_instance_pool_trait;
-use rex_socket;
-use rex_socket_response;
 use rex_sql;
 use rex_sql_exception;
+use Symfony\Component\HttpClient\HttpClient;
+
+use function sprintf;
 
 final class Url
 {
@@ -26,7 +28,7 @@ final class Url
     }
 
     /**
-     * @return null|static
+     * @return static|null
      */
     public static function get(int $id): ?self
     {
@@ -115,31 +117,60 @@ final class Url
         return $dataset;
     }
 
-    public function getContent(): rex_socket_response
+    public function getResponse(): array
     {
-        $socket = rex_socket::factoryUrl($this->getValue('url'));
-        $socket->acceptCompression();
-        $socket->followRedirects(self::$maxRedirects);
-        $socket->setTimeout(self::$timeout);
+        $Options = [
+            'timeout' => self::$timeout,
+            'max_redirects' => self::$maxRedirects,
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                // 'Accept-Encoding' => 'gzip, deflate, br',
+            ],
+        ];
 
         $login = $this->getValue('http_auth_login');
         $password = $this->getValue('http_auth_password');
-
-        if ('' === $login && '' === $password) {
-            $socket->addBasicAuthorization($login, $password);
+        if ('' !== $login && '' !== $password) {
+            $Options['headers']['Authorization'] = 'Basic ' . base64_encode($login . ':' . $password);
         }
 
-        $response = $socket->doGet();
-        $cookie = $response->getHeader('Set-Cookie');
+        $client = HttpClient::create();
+        $response = $client->request('GET', $this->getValue('url'), $Options);
 
-        if (null !== $cookie) {
-            // separate cookie value from optional attributes
-            [$cookieValue] = explode(';', $cookie);
-            $socket->addHeader('Cookie', $cookieValue);
-            $response = $socket->doGet();
+        $stream = $client->stream($response);
+
+        $content = '';
+        foreach ($stream as $chunk) {
+            $content .= $chunk->getContent();
         }
 
-        return $response->decompressContent(true);
+        $headers = $response->getHeaders();
+        $statusCode = $response->getStatusCode();
+
+        // $cookie = $response->getHeader('Set-Cookie');
+        //
+        // if (null !== $cookie) {
+        //     // separate cookie value from optional attributes
+        //     [$cookieValue] = explode(';', $cookie);
+        //     $socket->addHeader('Cookie', $cookieValue);
+        //     $response = $socket->doGet();
+        // }
+
+        if (200 !== $response->getStatusCode()) {
+            throw new Exception(sprintf('Failed to fetch content from URL "%s". HTTP status code: %d', $this->getValue('url'), $response->getStatusCode()));
+        }
+
+        if ('' === $content) {
+            throw new Exception(sprintf('No content received from URL "%s".', $this->getValue('url')));
+        }
+
+        unset($response);
+
+        return [
+            'Content' => $content,
+            'Headers' => $headers,
+            'StatusCode' => $statusCode,
+        ];
     }
 
     public function getType(): string
@@ -175,6 +206,17 @@ ORDER BY    i.createdate DESC',
             [
                 'id' => $this->getId(),
                 'last_scan' => date(rex_sql::FORMAT_DATETIME),
+            ],
+        );
+    }
+
+    public function setLastMessage(string $message): void
+    {
+        rex_sql::factory()->setQuery(
+            'update ' . rex::getTable('diff_detect_url') . ' set last_message = :last_message where id = :id',
+            [
+                'id' => $this->getId(),
+                'last_message' => $message,
             ],
         );
     }

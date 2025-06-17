@@ -24,10 +24,16 @@ use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixerCustomFixers\Analyzer\SwitchAnalyzer;
 
+/**
+ * @implements ConfigurableFixerInterface<_InputConfig, _Config>
+ *
+ * @phpstan-type _InputConfig array{functions?: list<string>}
+ * @phpstan-type _Config array{functions: list<string>}
+ */
 final class CommentedOutFunctionFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
-    /** @var array<string> */
-    private $functions = ['print_r', 'var_dump', 'var_export'];
+    /** @var list<string> */
+    private array $functions = ['print_r', 'var_dump', 'var_export'];
 
     public function getDefinition(): FixerDefinitionInterface
     {
@@ -52,7 +58,7 @@ var_dump($x);
     }
 
     /**
-     * @param array<string, array<string>> $configuration
+     * @param array<string, list<string>> $configuration
      */
     public function configure(array $configuration): void
     {
@@ -182,7 +188,7 @@ var_dump($x);
             return true;
         }
 
-        if (Preg::match('/^\R/', $tokens[$endIndex + 1]->getContent())) {
+        if (Preg::match('/^\\R/', $tokens[$endIndex + 1]->getContent())) {
             return true;
         }
 
@@ -202,12 +208,12 @@ var_dump($x);
         $prefix = '//';
         if ($tokens[$startIndex - 1]->isWhitespace()) {
             $startIndex--;
-            $prefix = Preg::replace('/(^|\R)(\h*$)/D', '$1//$2', $tokens[$startIndex]->getContent());
+            $prefix = Preg::replace('/(^|\\R)(\\h*$)/D', '$1//$2', $tokens[$startIndex]->getContent());
         }
         $codeToCommentOut = $prefix . \str_replace("\n", "\n//", $codeToCommentOut);
 
         if ($tokens->offsetExists($endIndex + 1)) {
-            if (!Preg::match('/^\R/', $tokens[$endIndex + 1]->getContent())) {
+            if (!Preg::match('/^\\R/', $tokens[$endIndex + 1]->getContent())) {
                 $codeToCommentOut .= "\n";
                 if ($tokens[$endIndex + 1]->isWhitespace()) {
                     $endIndex++;

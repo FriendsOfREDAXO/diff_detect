@@ -22,15 +22,21 @@ use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
+/**
+ * @implements ConfigurableFixerInterface<_InputConfig, _Config>
+ *
+ * @phpstan-type _InputConfig array{allow_preventing_trailing_spaces?: bool}
+ * @phpstan-type _Config array{allow_preventing_trailing_spaces: bool}
+ */
 final class NoSuperfluousConcatenationFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
-    /** @var bool */
-    private $allowPreventingTrailingSpaces = false;
+    private bool $allowPreventingTrailingSpaces = false;
+    private bool $keepConcatenationForDifferentQuotes = false;
 
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'There should be no superfluous concatenation of strings.',
+            'There must be no superfluous concatenation of literal strings.',
             [new CodeSample("<?php\necho 'foo' . 'bar';\n")],
             '',
         );
@@ -43,6 +49,10 @@ final class NoSuperfluousConcatenationFixer extends AbstractFixer implements Con
                 ->setAllowedTypes(['bool'])
                 ->setDefault($this->allowPreventingTrailingSpaces)
                 ->getOption(),
+            (new FixerOptionBuilder('keep_concatenation_for_different_quotes', 'whether to keep concatenation if single-quoted and double-quoted would be concatenated'))
+                ->setAllowedTypes(['bool'])
+                ->setDefault($this->keepConcatenationForDifferentQuotes)
+                ->getOption(),
         ]);
     }
 
@@ -53,6 +63,9 @@ final class NoSuperfluousConcatenationFixer extends AbstractFixer implements Con
     {
         if (\array_key_exists('allow_preventing_trailing_spaces', $configuration)) {
             $this->allowPreventingTrailingSpaces = $configuration['allow_preventing_trailing_spaces'];
+        }
+        if (\array_key_exists('keep_concatenation_for_different_quotes', $configuration)) {
+            $this->keepConcatenationForDifferentQuotes = $configuration['keep_concatenation_for_different_quotes'];
         }
     }
 
@@ -81,28 +94,55 @@ final class NoSuperfluousConcatenationFixer extends AbstractFixer implements Con
                 continue;
             }
 
-            $firstIndex = $tokens->getPrevMeaningfulToken($index);
-            \assert(\is_int($firstIndex));
-
-            if (!$tokens[$firstIndex]->isGivenKind(\T_CONSTANT_ENCAPSED_STRING)) {
-                continue;
-            }
-            if (!$this->areOnlyHorizontalWhitespacesBetween($tokens, $firstIndex, $index)) {
+            $firstIndex = $this->getFirstIndex($tokens, $index);
+            if ($firstIndex === null) {
                 continue;
             }
 
-            $secondIndex = $tokens->getNextMeaningfulToken($index);
-            \assert(\is_int($secondIndex));
-
-            if (!$tokens[$secondIndex]->isGivenKind(\T_CONSTANT_ENCAPSED_STRING)) {
+            $secondIndex = $this->getSecondIndex($tokens, $index);
+            if ($secondIndex === null) {
                 continue;
             }
-            if (!$this->areOnlyHorizontalWhitespacesBetween($tokens, $index, $secondIndex)) {
+
+            if (
+                $this->keepConcatenationForDifferentQuotes
+                && \substr($tokens[$firstIndex]->getContent(), 0, 1) !== \substr($tokens[$secondIndex]->getContent(), 0, 1)
+            ) {
                 continue;
             }
 
             $this->fixConcat($tokens, $firstIndex, $secondIndex);
         }
+    }
+
+    private function getFirstIndex(Tokens $tokens, int $index): ?int
+    {
+        $firstIndex = $tokens->getPrevMeaningfulToken($index);
+        \assert(\is_int($firstIndex));
+
+        if (!$tokens[$firstIndex]->isGivenKind(\T_CONSTANT_ENCAPSED_STRING)) {
+            return null;
+        }
+        if (!$this->areOnlyHorizontalWhitespacesBetween($tokens, $firstIndex, $index)) {
+            return null;
+        }
+
+        return $firstIndex;
+    }
+
+    private function getSecondIndex(Tokens $tokens, int $index): ?int
+    {
+        $secondIndex = $tokens->getNextMeaningfulToken($index);
+        \assert(\is_int($secondIndex));
+
+        if (!$tokens[$secondIndex]->isGivenKind(\T_CONSTANT_ENCAPSED_STRING)) {
+            return null;
+        }
+        if (!$this->areOnlyHorizontalWhitespacesBetween($tokens, $index, $secondIndex)) {
+            return null;
+        }
+
+        return $secondIndex;
     }
 
     private function areOnlyHorizontalWhitespacesBetween(Tokens $tokens, int $indexStart, int $indexEnd): bool
@@ -111,7 +151,7 @@ final class NoSuperfluousConcatenationFixer extends AbstractFixer implements Con
             if (!$tokens[$index]->isGivenKind(\T_WHITESPACE)) {
                 return false;
             }
-            if (Preg::match('/\R/', $tokens[$index]->getContent())) {
+            if (Preg::match('/\\R/', $tokens[$index]->getContent())) {
                 return false;
             }
         }
@@ -127,8 +167,8 @@ final class NoSuperfluousConcatenationFixer extends AbstractFixer implements Con
 
         if (
             $this->allowPreventingTrailingSpaces
-            && Preg::match('/\h(\\\'|")$/', $firstContent)
-            && Preg::match('/^(\\\'|")\R/', $secondContent)
+            && Preg::match('/\\h(\\\'|")$/', $firstContent)
+            && Preg::match('/^(\\\'|")\\R/', $secondContent)
         ) {
             return;
         }
@@ -166,7 +206,7 @@ final class NoSuperfluousConcatenationFixer extends AbstractFixer implements Con
 
         if ($currentBorder === '"') {
             if ($escapeDollarWhenIsLastCharacter && $content[\strlen($content) - 1] === '$') {
-                $content = \substr($content, 0, -1) . '\$';
+                $content = \substr($content, 0, -1) . '\\$';
             }
 
             return $content;

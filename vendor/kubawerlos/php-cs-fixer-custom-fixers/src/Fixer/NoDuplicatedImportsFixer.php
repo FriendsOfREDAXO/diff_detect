@@ -25,7 +25,7 @@ final class NoDuplicatedImportsFixer extends AbstractFixer
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'There can be no duplicate `use` statements.',
+            'There must be no duplicate `use` statements.',
             [new CodeSample('<?php
 namespace FooBar;
 use Foo;
@@ -58,34 +58,19 @@ use Bar;
         foreach ((new NamespacesAnalyzer())->getDeclarations($tokens) as $namespace) {
             $currentNamespaceUseDeclarations = \array_filter(
                 $useDeclarations,
-                static function (NamespaceUseAnalysis $useDeclaration) use ($namespace): bool {
-                    return $useDeclaration->getStartIndex() >= $namespace->getScopeStartIndex()
-                        && $useDeclaration->getEndIndex() <= $namespace->getScopeEndIndex();
-                },
+                static fn (NamespaceUseAnalysis $useDeclaration): bool => $useDeclaration->getStartIndex() >= $namespace->getScopeStartIndex()
+                        && $useDeclaration->getEndIndex() <= $namespace->getScopeEndIndex(),
             );
 
             $foundDeclarations = [];
             foreach ($currentNamespaceUseDeclarations as $useDeclaration) {
-                $key = $this->getUniqueKey($useDeclaration);
+                $key = \sprintf('key_%d_%s', $useDeclaration->getType(), $useDeclaration->getShortName());
                 if (\in_array($key, $foundDeclarations, true)) {
                     $this->removeUseDeclaration($tokens, $useDeclaration);
                 }
                 $foundDeclarations[] = $key;
             }
         }
-    }
-
-    private function getUniqueKey(NamespaceUseAnalysis $useDeclaration): string
-    {
-        if ($useDeclaration->isClass()) {
-            return $useDeclaration->getShortName();
-        }
-
-        if ($useDeclaration->isFunction()) {
-            return 'function ' . $useDeclaration->getShortName();
-        }
-
-        return 'constant ' . $useDeclaration->getShortName();
     }
 
     private function removeUseDeclaration(Tokens $tokens, NamespaceUseAnalysis $useDeclaration): void
@@ -95,6 +80,7 @@ use Bar;
             Tokens $tokens,
             NamespaceUseAnalysis $useDeclaration
         ): void {
+            // @phpstan-ignore method.private
             $noUnusedImportsFixer->removeUseDeclaration($tokens, $useDeclaration);
         };
 

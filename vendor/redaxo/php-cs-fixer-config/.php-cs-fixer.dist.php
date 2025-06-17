@@ -2,10 +2,16 @@
 
 declare(strict_types=1);
 
-$finder = (new PhpCsFixer\Finder())
+use PhpCsFixer\Finder;
+use Redaxo\PhpCsFixerConfig\Config;
+
+$finder = (new Finder())
     ->in(__DIR__)
+    ->append([
+        __FILE__,
+    ])
 ;
 
-return (new Redaxo\PhpCsFixerConfig\Config())
+return (new Config())
     ->setFinder($finder)
 ;

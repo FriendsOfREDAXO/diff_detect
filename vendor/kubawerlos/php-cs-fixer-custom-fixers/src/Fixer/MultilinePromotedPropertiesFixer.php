@@ -26,6 +26,12 @@ use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\WhitespacesFixerConfig;
 use PhpCsFixerCustomFixers\Analyzer\ConstructorAnalyzer;
 
+/**
+ * @implements ConfigurableFixerInterface<_InputConfig, _Config>
+ *
+ * @phpstan-type _InputConfig array{keep_blank_lines?: bool, minimum_number_of_parameters?: int}
+ * @phpstan-type _Config array{keep_blank_lines: bool, minimum_number_of_parameters: int}
+ */
 final class MultilinePromotedPropertiesFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
     private int $minimumNumberOfParameters = 1;
@@ -35,7 +41,7 @@ final class MultilinePromotedPropertiesFixer extends AbstractFixer implements Co
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'A constructor with promoted properties must have them in separate lines.',
+            'Promoted properties must be on separate lines.',
             [
                 new VersionSpecificCodeSample(
                     '<?php class Foo {
@@ -52,13 +58,13 @@ final class MultilinePromotedPropertiesFixer extends AbstractFixer implements Co
     public function getConfigurationDefinition(): FixerConfigurationResolverInterface
     {
         return new FixerConfigurationResolver([
-            (new FixerOptionBuilder('minimum_number_of_parameters', 'minimum number of parameters in the constructor to fix'))
-                ->setAllowedTypes(['int'])
-                ->setDefault($this->minimumNumberOfParameters)
-                ->getOption(),
             (new FixerOptionBuilder('keep_blank_lines', 'whether to keep blank lines between properties'))
                 ->setAllowedTypes(['bool'])
                 ->setDefault($this->keepBlankLines)
+                ->getOption(),
+            (new FixerOptionBuilder('minimum_number_of_parameters', 'minimum number of parameters in the constructor to fix'))
+                ->setAllowedTypes(['int'])
+                ->setDefault($this->minimumNumberOfParameters)
                 ->getOption(),
         ]);
     }
@@ -82,12 +88,12 @@ final class MultilinePromotedPropertiesFixer extends AbstractFixer implements Co
     }
 
     /**
-     * Must run before BracesFixer.
+     * Must run before BracesPositionFixer.
      * Must run after PromotedConstructorPropertyFixer.
      */
     public function getPriority(): int
     {
-        return 36;
+        return 0;
     }
 
     public function isCandidate(Tokens $tokens): bool

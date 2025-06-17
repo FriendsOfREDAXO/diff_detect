@@ -23,8 +23,7 @@ use PhpCsFixer\Tokenizer\Tokens;
  */
 final class InternalClassCasingFixer extends AbstractFixer implements DeprecatedFixerInterface
 {
-    /** @var ClassReferenceNameCasingFixer */
-    private $classReferenceNameCasingFixer;
+    private ClassReferenceNameCasingFixer $classReferenceNameCasingFixer;
 
     public function __construct()
     {
@@ -34,7 +33,7 @@ final class InternalClassCasingFixer extends AbstractFixer implements Deprecated
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'Classes defined internally by extension or core must be referenced with the correct case.',
+            'Classes defined internally by an extension or the core must be referenced with the correct case.',
             [new CodeSample("<?php\n\$foo = new STDClass();\n")],
             '',
         );
@@ -61,7 +60,7 @@ final class InternalClassCasingFixer extends AbstractFixer implements Deprecated
     }
 
     /**
-     * @return array<string>
+     * @return list<string>
      */
     public function getSuccessorsNames(): array
     {

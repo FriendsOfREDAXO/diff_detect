@@ -22,7 +22,7 @@ final class ConstructorEmptyBracesFixer extends AbstractFixer
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
-            'Constructor\'s empty braces must be single line.',
+            'Constructor\'s empty braces must be on a single line.',
             [
                 new CodeSample(
                     '<?php
@@ -41,7 +41,7 @@ class Foo {
     }
 
     /**
-     * Must run after BracesFixer, CurlyBracesPositionFixer, PromotedConstructorPropertyFixer.
+     * Must run after BracesPositionFixer, PromotedConstructorPropertyFixer.
      */
     public function getPriority(): int
     {

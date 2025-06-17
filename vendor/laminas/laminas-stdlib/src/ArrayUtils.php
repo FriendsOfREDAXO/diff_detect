@@ -192,13 +192,14 @@ abstract class ArrayUtils
      * non-strict check is implemented. if $strict = -1, the default in_array
      * non-strict behaviour is used.
      *
-     * @param array $haystack
+     * @deprecated This method will be removed in version 4.0 of this component
+     *
      * @param int|bool $strict
      * @return bool
      */
     public static function inArray(mixed $needle, array $haystack, $strict = false)
     {
-        if (! $strict) {
+        if ((bool) $strict === false) {
             if (is_int($needle) || is_float($needle)) {
                 $needle = (string) $needle;
             }
@@ -283,8 +284,6 @@ abstract class ArrayUtils
      * from the second array will be appended to the first array. If both values are arrays, they
      * are merged together, else the value of the second array overwrites the one of the first array.
      *
-     * @param  array $a
-     * @param  array $b
      * @param  bool  $preserveNumericKeys
      * @return array
      */

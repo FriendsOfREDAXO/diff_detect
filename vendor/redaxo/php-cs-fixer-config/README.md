@@ -1,4 +1,4 @@
-# php-cs-fixer config for REDAXO
+# [PHP-CS-Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) config for [REDAXO](https://github.com/redaxo/redaxo)
 
 ### Installation
 
@@ -15,7 +15,7 @@ $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
 ;
 
-return (new Redaxo\PhpCsFixerConfig\Config())
+return (Redaxo\PhpCsFixerConfig\Config::redaxo5()) // or `::redaxo6()`
     ->setFinder($finder)
 ;
 

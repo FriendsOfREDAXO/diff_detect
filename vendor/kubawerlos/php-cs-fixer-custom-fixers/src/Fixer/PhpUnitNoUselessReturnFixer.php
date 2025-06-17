@@ -28,7 +28,7 @@ final class PhpUnitNoUselessReturnFixer extends AbstractFixer
     {
         return new FixerDefinition(
             \sprintf(
-                'PHPUnit %s functions should not be followed directly by return.',
+                'PHPUnit %s functions must not be directly followed by `return`.',
                 Utils::naturalLanguageJoinWithBackticks(\array_map(
                     static fn (array $token): string => $token[1],
                     self::FUNCTION_TOKENS,
@@ -69,9 +69,9 @@ class FooTest extends TestCase {
     {
         $phpUnitTestCaseIndicator = new PhpUnitTestCaseIndicator();
 
-        /** @var array<int> $indexes */
-        foreach ($phpUnitTestCaseIndicator->findPhpUnitClasses($tokens) as $indexes) {
-            $this->removeUselessReturns($tokens, $indexes[0], $indexes[1]);
+        /** @var list<int> $indices */
+        foreach ($phpUnitTestCaseIndicator->findPhpUnitClasses($tokens) as $indices) {
+            $this->removeUselessReturns($tokens, $indices[0], $indices[1]);
         }
     }
 

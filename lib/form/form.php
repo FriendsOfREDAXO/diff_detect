@@ -10,6 +10,4 @@
  * @internal
  */
 
-class rex_diff_detect_form extends rex_form
-{
-}
+class rex_diff_detect_form extends rex_form {}

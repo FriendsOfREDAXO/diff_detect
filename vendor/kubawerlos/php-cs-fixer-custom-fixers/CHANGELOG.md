@@ -1,5 +1,41 @@
 # CHANGELOG for PHP CS Fixer: custom fixers
 
+## v3.25.0
+- Add ForeachUseValueFixer
+- Add NoUselessWriteVisibilityFixer
+- Add TrimKeyFixer
+- ReadonlyPromotedPropertiesFixer - support asymmetric visibility
+
+## v3.24.0
+- Add PhpUnitRequiresConstraintFixer
+
+## v3.23.0
+- Add ClassConstantUsageFixer
+
+## v3.22.0
+- NoSuperfluousConcatenationFixer - add option "keep_concatenation_for_different_quotes"
+- NoPhpStormGeneratedCommentFixer - handle more comments
+- Update minimum PHP CS Fixer version to 3.61.1
+
+## v3.21.0
+- Deprecate PhpdocArrayStyleFixer - use "phpdoc_array_type"
+- NoUselessParenthesisFixer - keep parentheses around `and`, `xor` and `or`
+- Update minimum PHP CS Fixer version to 3.50.0
+
+## v3.20.0
+- Deprecate PhpdocTypeListFixer - use "phpdoc_list_type"
+- Update minimum PHP CS Fixer version to 3.49.0
+
+## v3.19.0
+- Deprecate NumericLiteralSeparatorFixer - use "numeric_literal_separator"
+- Update minimum PHP CS Fixer version to 3.47.0
+
+## v3.18.0
+- Add PhpdocTypeListFixer
+
+## v3.17.0
+- PhpdocNoIncorrectVarAnnotationFixer - support promoted properties
+
 ## v3.16.0
 - Deprecate DataProviderReturnTypeFixer - use "php_unit_data_provider_return_type"
 - Update minimum PHP CS Fixer version to 3.22.0

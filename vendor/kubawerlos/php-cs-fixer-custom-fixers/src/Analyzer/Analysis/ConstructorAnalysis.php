@@ -19,11 +19,8 @@ use PhpCsFixer\Tokenizer\Tokens;
  */
 final class ConstructorAnalysis
 {
-    /** @var Tokens */
-    private $tokens;
-
-    /** @var int */
-    private $constructorIndex;
+    private Tokens $tokens;
+    private int $constructorIndex;
 
     public function __construct(Tokens $tokens, int $constructorIndex)
     {
@@ -37,7 +34,7 @@ final class ConstructorAnalysis
     }
 
     /**
-     * @return array<string>
+     * @return list<string>
      */
     public function getConstructorParameterNames(): array
     {
@@ -183,7 +180,7 @@ final class ConstructorAnalysis
     /**
      * @param array<int, string> $array
      *
-     * @return array<int>
+     * @return array<int, int>
      */
     private function getDuplicatesIndices(array $array): array
     {
@@ -191,7 +188,9 @@ final class ConstructorAnalysis
         $values = [];
         foreach ($array as $key => $value) {
             if (\array_key_exists($value, $values)) {
+                \assert(\is_int($values[$value]));
                 $duplicates[$values[$value]] = $values[$value];
+
                 $duplicates[$key] = $key;
             }
             $values[$value] = $key;

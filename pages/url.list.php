@@ -51,7 +51,7 @@ switch (rex_get('func')) {
 
 $list = rex_list::factory(
     '
-SELECT      u.id, u.name, u.url, u.`type`, u.categories, u.status, u.interval, i.createdate as snapshot, u.last_scan, i.checked
+SELECT      u.id, u.name, u.url, u.last_message, u.`type`, u.categories, u.status, u.interval, i.createdate as snapshot, u.last_scan, i.checked
 FROM        ' . rex::getTable('diff_detect_url') . ' u
 LEFT JOIN   (
     SELECT url_id, MAX(createdate) AS MaxTime
@@ -68,6 +68,7 @@ ORDER BY snapshot DESC
 $list->addTableAttribute('class', 'table-striped table-hover');
 
 $list->removeColumn('id');
+$list->removeColumn('last_message');
 
 // set column labels
 foreach ($list->getColumnNames() as $columnName) {
@@ -93,7 +94,6 @@ $list->setColumnFormat('id', 'url');
 $list->removeColumn('name');
 
 $list->setColumnFormat('url', 'custom', static function ($params) {
-
     /** @var rex_list $list */
     $list = $params['list'];
 
@@ -129,12 +129,14 @@ $list->setColumnFormat('type', 'custom', static function ($params) {
 $list->removeColumn('categories');
 
 $list->setColumnFormat('status', 'custom', static function ($params) {
-    /** @var \rex_list $list */
+    /** @var rex_list $list */
     $list = $params['list'];
+    $status = (int) $list->getValue('status');
+
     $urlParams = [
         'func' => 'status',
         'id' => $list->getValue('id'),
-        'status' => ('0' === $list->getValue('status')) ? '1' : '0',
+        'status' => (0 === $status) ? '1' : '0',
     ];
 
     $start = rex_request($startKey = $list->getName() . '_start', 'string', '');
@@ -146,12 +148,12 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
     return '<div><a href="' . $list->getUrl(
         $urlParams,
     ) . '" title="' . $addon->i18n(
-        ('1' === $list->getValue('status'))
+        (1 === $status)
                 ? 'active_title'
                 : 'inactive_title',
     ) . '" class="diff-status-' . ($list->getValue(
         'status',
-    ) ? 'green' : 'red') . '">' . $addon->i18n($list->getValue('status') ? 'active' : 'inactive') . '</a></div>';
+    ) ? 'green' : 'red') . '">' . $addon->i18n(1 === $status ? 'active' : 'inactive') . '</a></div>';
 });
 
 // $list->removeColumn('last_scan');
@@ -160,10 +162,23 @@ $list->setColumnFormat('interval', 'custom', static function ($params) {
     return rex_i18n::msg('interval_in_min_' . $params['value']);
 });
 
-$list->setColumnLabel('snapshot', $this->i18n('last_scan') . '/ <br />' . $this->i18n('last_snapshot'));
+$list->setColumnLabel('snapshot', $this->i18n('last_scan') . '/ <br />' . $this->i18n('last_snapshot') . '/ <br />' . $this->i18n('last_message'));
 $list->setColumnFormat('snapshot', 'custom', static function ($params) {
-    /** @var \rex_list $list */
+    /** @var rex_list $list */
     $list = $params['list'];
+    $last_message = (string) $list->getValue('last_message');
+    $show_last_message = $last_message;
+    if (40 < mb_strlen($last_message)) {
+        $show_last_message = mb_substr($last_message, 0, 15) . ' ... ' . mb_substr($last_message, -15);
+    }
+
+    if ('' === $last_message) {
+        $last_message = '';
+    } elseif ('[200]' === substr($last_message, 0, 5)) {
+        $last_message = '<span class="label label-success" title="' . rex_escape($last_message) . '">' . rex_escape($show_last_message) . '</span>';
+    } else {
+        $last_message = '<span class="label label-danger" title="' . rex_escape($last_message) . '">' . rex_escape($show_last_message) . '</span>';
+    }
 
     $timestamp_last_scan = '-';
     if ($params['list']->getValue('last_scan')) {
@@ -177,11 +192,11 @@ $list->setColumnFormat('snapshot', 'custom', static function ($params) {
         $timestamp = '-';
     }
 
-    return $timestamp_last_scan . '<div class="snapshot-action">' . $timestamp . '</div>';
+    return $timestamp_last_scan . '<div class="snapshot-action">' . $timestamp . '</div>' . $last_message;
 });
 
 $list->setColumnFormat('checked', 'custom', static function ($params) {
-    /** @var \rex_list $list */
+    /** @var rex_list $list */
     $list = $params['list'];
     $addon = rex_addon::get('diff_detect');
     $checked = $list->getValue('checked');
@@ -195,7 +210,7 @@ $list->setColumnFormat('checked', 'custom', static function ($params) {
 
 $list->setColumnLabel('last_scan', '-');
 $list->setColumnFormat('last_scan', 'custom', static function ($params) {
-    /** @var \rex_list $list */
+    /** @var rex_list $list */
     $list = $params['list'];
 
     $urlParams = [

@@ -1,5 +1,11 @@
 <?php
 
+use FriendsOfRedaxo\DiffDetect\Index;
+use FriendsOfRedaxo\DiffDetect\RssDiff;
+use FriendsOfRedaxo\DiffDetect\Url;
+use Jfcherng\Diff\Differ;
+use Jfcherng\Diff\DiffHelper;
+
 /** @var rex_addon $this */
 
 $urlId = rex_request('id', 'int', null);
@@ -11,11 +17,11 @@ if (null === $urlId || null === $idBefore || null === $idAfter) {
     $title = '';
     $content = '';
 } else {
-    $url = \FriendsOfRedaxo\DiffDetect\Url::get($urlId);
-    $indexBefore = \FriendsOfRedaxo\DiffDetect\Index::get($idBefore);
-    $indexAfter = \FriendsOfRedaxo\DiffDetect\Index::get($idAfter);
+    $url = Url::get($urlId);
+    $indexBefore = Index::get($idBefore);
+    $indexAfter = Index::get($idAfter);
 
-    $title = \rex_i18n::rawMsg(
+    $title = rex_i18n::rawMsg(
         'diff_title',
         $url->getValue('url'),
         rex_formatter::intlDateTime($indexBefore->getValue('createdate')),
@@ -24,14 +30,14 @@ if (null === $urlId || null === $idBefore || null === $idAfter) {
 
     $first_detect = '';
     if ('RSS' === $url->getType()) {
-        $content = (new \FriendsOfRedaxo\DiffDetect\RssDiff($indexBefore->getContent(), $indexAfter->getContent()))->calculate();
+        $content = (new RssDiff($indexBefore->getContent(), $indexAfter->getContent()))->calculate();
     } else {
-        $content = \Jfcherng\Diff\DiffHelper::calculate(
-            $indexAfter->getContent(),
-            $indexBefore->getContent(),
+        $content = DiffHelper::calculate(
+            (string) $indexAfter->getContent(),
+            (string) $indexBefore->getContent(),
             'Combined',
             [
-                'context' => \Jfcherng\Diff\Differ::CONTEXT_ALL,
+                'context' => Differ::CONTEXT_ALL,
                 'ignoreLineEnding' => true,
                 'ignoreWhitespace' => true,
             ],

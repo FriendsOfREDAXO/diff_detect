@@ -71,6 +71,7 @@ diff_detect_snapshot_error = Snapshot von `{0}` konnte nicht erstellt werden. Fe
 back_to_snapshots = Zurück zu Snapshots
 last_scan = Letzter Scanversuch
 last_snapshot = Letzter Snapshot
+last_message = Letzte Scaninfo
 
 interval_in_min_5 = 5 Minuten
 interval_in_min_15 = 15 Minuten

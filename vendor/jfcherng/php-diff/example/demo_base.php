@@ -26,12 +26,14 @@ $diffOptions = [
     'ignoreWhitespace' => false,
     // if the input sequence is too long, it will just gives up (especially for char-level diff)
     'lengthLimit' => 2000,
+    // if truthy, when inputs are identical, the whole inputs will be rendered in the output
+    'fullContextIfIdentical' => false,
 ];
 
 // options for renderer class
 $rendererOptions = [
     // how detailed the rendered HTML is? (none, line, word, char)
-    'detailLevel' => 'char',
+    'detailLevel' => 'line',
     // renderer language: eng, cht, chs, jpn, ...
     // or an array which has the same keys with a language file
     // check the "Custom Language" section in the readme for more advanced usage

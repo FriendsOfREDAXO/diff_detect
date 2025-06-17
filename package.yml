@@ -20,6 +20,9 @@ page:
         settings:
             title: 'translate:settings'
 
+console_commands:
+    diff_detect:execute: \FriendsOfRedaxo\DiffDetect\Command\Console
+
 installer_ignore:
     - .github
     - .gitignore

@@ -15,6 +15,7 @@ rex_sql_table::get(
     ->ensureColumn(new rex_sql_column('categories', 'text', false, ''))
     ->ensureColumn(new rex_sql_column('status', 'tinyint', false, '0'))
     ->ensureColumn(new rex_sql_column('interval', 'int(10) unsigned', false, '1440'))
+    ->ensureColumn(new rex_sql_column('last_message', 'text', false, ''))
     ->ensureColumn(new rex_sql_column('http_auth_login', 'VARCHAR(100)', true))
     ->ensureColumn(new rex_sql_column('http_auth_password', 'VARCHAR(100)', true))
     ->ensureColumn(new rex_sql_column('last_scan', 'datetime', true))

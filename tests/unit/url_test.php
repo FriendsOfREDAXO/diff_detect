@@ -1,5 +1,6 @@
 <?php
 
+use FriendsOfRedaxo\DiffDetect\Url;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,13 +23,12 @@ class rex_diff_detect_url_test extends TestCase
             'status' => 1,
         ]);
 
-        $url = FriendsOfRedaxo\DiffDetect\Url::get($id);
+        $url = Url::get($id);
 
-        static::assertNotNull($url);
+        self::assertNotNull($url);
 
         rex_sql::factory()->setQuery('delete from `' . rex::getTable('diff_detect_url') . '` where id=:id', [
             'id' => $id,
         ]);
-
     }
 }

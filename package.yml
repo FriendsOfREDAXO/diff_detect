@@ -1,11 +1,11 @@
 package: diff_detect
-version: '1.11'
+version: '1.12'
 author: Friends Of REDAXO
 supportpage: https://github.com/FriendsOfREDAXO/diff_detect
 requires:
     redaxo: '^5.15.1'
     packages:
-        yform: '>=4.1.0'
+        yform: '>=3.2,<6.0.0-dev'
         cronjob: '>=2.10.0'
     php:
         version: '>=8.2'

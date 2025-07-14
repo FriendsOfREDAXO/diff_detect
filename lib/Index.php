@@ -114,12 +114,15 @@ final class Index
             $headers = $response['Headers'] ?? [];
             $statusCode = $response['StatusCode'] ?? 0;
             $statusMessage = '[' . $statusCode . '] OK';
+            $url->setLastMessage($statusMessage);
         } catch (Exception $e) {
             $statusCode = $e->getCode();
             $statusMessage = '[' . $statusCode . '] ' . $e->getMessage();
+            $url->setLastMessage($statusMessage);
+            return false;
         }
 
-        $url->setLastMessage($statusMessage);
+        // todo if Exception -> no snapshot
 
         $headers = self::flattenArray($headers);
 

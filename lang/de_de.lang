@@ -89,6 +89,11 @@ interval_in_min_259200 = 6 Monate
 interval_in_min_518400 = 1 Jahr
 no_cleanup = CleanUp wird nicht durchgeführt
 
+seconds = {0} Sekunden
+timeout = Timeout
+proxy = Proxy
+proxy_notice = Formate: https://secure-proxy.com:8080, http://username:password@proxy-server.com:8080
+
 invalid_url = Die URL ist ungültig. Bitte inkl http[s]:// angeben.
 diff_detect_url_not_found = Die URL wurde nicht gefunden.
 checked = Geprüft

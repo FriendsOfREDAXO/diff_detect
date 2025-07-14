@@ -5,6 +5,7 @@ namespace FriendsOfRedaxo\DiffDetect;
 use Exception;
 use InvalidArgumentException;
 use rex;
+use rex_addon;
 use rex_instance_pool_trait;
 use rex_sql;
 use rex_sql_exception;
@@ -15,11 +16,12 @@ use function sprintf;
 final class Url
 {
     use rex_instance_pool_trait;
+    public const DefaultTimeOut = 5;
+    public const DefaultUserAgent = 'Mozilla/5.0 (DiffDetect Bot)';
 
     protected ?int $id = null;
     /** @var array<string, mixed> */
     protected array $data = [];
-    private static int $timeout = 5;
     private static int $maxRedirects = 5;
 
     private function __construct(int $id)
@@ -119,19 +121,28 @@ final class Url
 
     public function getResponse(): array
     {
+        $addon = rex_addon::get('diff_detect');
+
         $Options = [
-            'timeout' => self::$timeout,
+            'timeout' => $addon->getConfig('timeout') ?? self::DefaultTimeOut,
             'max_redirects' => self::$maxRedirects,
             'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'User-Agent' => $addon->getConfig('user_agent') ?? self::DefaultUserAgent,
                 // 'Accept-Encoding' => 'gzip, deflate, br',
             ],
         ];
 
+        // Opt. Basic Auth
         $login = $this->getValue('http_auth_login');
         $password = $this->getValue('http_auth_password');
         if ('' !== $login && '' !== $password) {
             $Options['headers']['Authorization'] = 'Basic ' . base64_encode($login . ':' . $password);
+        }
+
+        // Opt. Proxy
+        $proxy = trim($addon->getConfig('proxy'));
+        if ('' !== $proxy) {
+            $Options['proxy'] = $proxy;
         }
 
         $client = HttpClient::create();
@@ -146,15 +157,6 @@ final class Url
 
         $headers = $response->getHeaders();
         $statusCode = $response->getStatusCode();
-
-        // $cookie = $response->getHeader('Set-Cookie');
-        //
-        // if (null !== $cookie) {
-        //     // separate cookie value from optional attributes
-        //     [$cookieValue] = explode(';', $cookie);
-        //     $socket->addHeader('Cookie', $cookieValue);
-        //     $response = $socket->doGet();
-        // }
 
         if (200 !== $response->getStatusCode()) {
             throw new Exception(sprintf('Failed to fetch content from URL "%s". HTTP status code: %d', $this->getValue('url'), $response->getStatusCode()));

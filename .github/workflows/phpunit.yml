@@ -18,6 +18,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v3
+            - uses: ramsey/composer-install@v2
 
             # setup PHP v8, install some extensions
             - name: Setup PHP

@@ -12,8 +12,7 @@
     "replace": {
         "psr/container": "*",
         "psr/http-message": "*",
-        "psr/log": "*",
-        "symfony/console": "*"
+        "psr/log": "*"
     },
     "require-dev": {
         "redaxo/php-cs-fixer-config": "^2.0",

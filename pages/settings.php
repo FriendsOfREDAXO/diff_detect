@@ -75,10 +75,8 @@ $n['field'] = '<input type="text" class="form-control" id="diff_detect_user_agen
 $formElements[] = $n;
 
 $n = [];
-$n['label'] = '<label for="diff_detect_proxy">' . rex_escape($this->i18n('proxy')) . '</label>';
-$n['field'] = '<input type="text" class="form-control" id="diff_detect_proxy" name="diff_detect_proxy" value="' . rex_escape($this->getConfig('proxy') ?? '') . '" />
-<small>' . rex_escape($this->i18n('proxy_notice')) . '</small>
-';
+$n['label'] = '<label for="diff_detect_proxy">' . rex_escape($this->i18n('proxies')) . '</label>';
+$n['field'] = '<input type="text" class="form-control" id="diff_detect_proxy" name="diff_detect_proxy" value="' . rex_escape($this->getConfig('proxy') ?? '') . '" /><small>' . rex_escape($this->i18n('proxies_notice')) . '</small>';
 $formElements[] = $n;
 
 $n = [];

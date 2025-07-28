@@ -140,9 +140,8 @@ final class Url
         }
 
         // Opt. Proxy
-        $proxy = trim($addon->getConfig('proxy'));
-        if ('' !== $proxy) {
-            $Options['proxy'] = $proxy;
+        if ('' !== trim($this->getValue('proxy') ?? '')) {
+            $Options['proxy'] = trim($this->getValue('proxy'));
         }
 
         $client = HttpClient::create();

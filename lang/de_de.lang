@@ -92,7 +92,11 @@ no_cleanup = CleanUp wird nicht durchgeführt
 seconds = {0} Sekunden
 timeout = Timeout
 proxy = Proxy
-proxy_notice = Formate: https://secure-proxy.com:8080, http://username:password@proxy-server.com:8080
+proxy_notice = Aktueller Eintrag: {0}
+no_proxy_entered = Kein Proxy eingetragen
+no_proxy = Kein Proxy
+proxies = Proxies (kommasepariert)
+proxies_notice = Formate: https://secure-proxy.com:8080, http://username:password@proxy-server.com:8080
 
 invalid_url = Die URL ist ungültig. Bitte inkl http[s]:// angeben.
 diff_detect_url_not_found = Die URL wurde nicht gefunden.

@@ -19,6 +19,7 @@ rex_sql_table::get(
     ->ensureColumn(new rex_sql_column('http_auth_login', 'VARCHAR(100)', true))
     ->ensureColumn(new rex_sql_column('http_auth_password', 'VARCHAR(100)', true))
     ->ensureColumn(new rex_sql_column('last_scan', 'datetime', true))
+    ->ensureColumn(new rex_sql_column('proxy', 'VARCHAR(255)', true))
     ->ensureGlobalColumns()
     ->ensure();
 

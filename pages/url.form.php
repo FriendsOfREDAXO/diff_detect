@@ -26,6 +26,20 @@ $field->getValidator()
     ->add('notEmpty', $this->i18n('empty_url'))
     ->add('url', $this->i18n('invalid_url'));
 
+$field = $form->addSelectField('proxy');
+$field->setLabel($this->i18n('proxy'));
+$ProxySelections = [];
+$ProxySelections[''] = $this->i18n('no_proxy');
+if ('' !== trim(rex_addon::get('diff_detect')->getConfig('proxy'))) {
+    foreach (explode(',', rex_addon::get('diff_detect')->getConfig('proxy')) as $key => $value) {
+        $ProxySelections[$value] = $value;
+    }
+}
+$ProxySelect = new rex_select();
+$ProxySelect->addOptions($ProxySelections);
+$field->setSelect($ProxySelect);
+$field->setNotice($this->i18n('proxy_notice', $field->getValue() ?: $this->i18n('no_proxy_entered')));
+
 $field = $form->addSelectField('type');
 $field->setLabel($this->i18n('type'));
 $select = new rex_select();

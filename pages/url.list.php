@@ -51,7 +51,7 @@ switch (rex_get('func')) {
 
 $list = rex_list::factory(
     '
-SELECT      u.id, u.name, u.url, u.last_message, u.`type`, u.categories, u.status, u.interval, i.createdate as snapshot, u.last_scan, i.checked
+SELECT      u.id, u.name, u.url, u.last_message, u.`type`, u.categories, u.status, u.interval, u.proxy, i.createdate as snapshot, u.last_scan, i.checked
 FROM        ' . rex::getTable('diff_detect_url') . ' u
 LEFT JOIN   (
     SELECT url_id, MAX(createdate) AS MaxTime
@@ -160,6 +160,18 @@ $list->setColumnFormat('status', 'custom', static function ($params) {
 
 $list->setColumnFormat('interval', 'custom', static function ($params) {
     return rex_i18n::msg('interval_in_min_' . $params['value']);
+});
+
+$list->setColumnFormat('proxy', 'custom', static function ($params) {
+    if ('' !== trim($params['value'] ?? '')) {
+        $proxies = rex_config::get('diff_detect', 'proxy', '');
+        $proxies = explode(',', $proxies);
+        if (!in_array($params['value'], $proxies, true)) {
+            return '<span class="label label-default" title="' . $params['value'] . '">' . rex_i18n::msg('old') . '</span>';
+        }
+        return '<span class="label label-default" title="' . $params['value'] . '">' . rex_i18n::msg('yes') . '</span>';
+    }
+    return '';
 });
 
 $list->setColumnLabel('snapshot', $this->i18n('last_scan') . '/ <br />' . $this->i18n('last_snapshot') . '/ <br />' . $this->i18n('last_message'));

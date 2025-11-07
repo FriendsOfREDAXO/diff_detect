@@ -17,7 +17,7 @@ final class Url
 {
     use rex_instance_pool_trait;
     public const DefaultTimeOut = 5;
-    public const DefaultUserAgent = 'Mozilla/5.0 (DiffDetect Bot)';
+    public const DefaultUserAgent = 'Mozilla/5.0 (DiffDetect for REDAXO)';
 
     protected ?int $id = null;
     /** @var array<string, mixed> */

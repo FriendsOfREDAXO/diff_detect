@@ -30,7 +30,7 @@ $field = $form->addSelectField('proxy');
 $field->setLabel($this->i18n('proxy'));
 $ProxySelections = [];
 $ProxySelections[''] = $this->i18n('no_proxy');
-if ('' !== trim(rex_addon::get('diff_detect')->getConfig('proxy'))) {
+if ('' !== trim(rex_addon::get('diff_detect')->getConfig('proxy') ?? '')) {
     foreach (explode(',', rex_addon::get('diff_detect')->getConfig('proxy')) as $key => $value) {
         $ProxySelections[$value] = $value;
     }
